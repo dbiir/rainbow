@@ -13,9 +13,9 @@ javadoc/
 # lock file, a part of Oracle Credential Store Framework
 cwallet.sso.lck
 
-# IDE
+# IDE generated files
 .idea/
 *.iml
 
-# Jar
+# Jar packing
 MANIFEST.MF
