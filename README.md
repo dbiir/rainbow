@@ -1,5 +1,6 @@
 # rainbow
-Column ordering and duplication framework.
+Column ordering and duplication framework for very wide tables stored on HDFS. See paper for details: 
+https://github.com/dbiir/rainbow/blob/master/paper.pdf
 
 Project structure:
 * **rainbow-common**
