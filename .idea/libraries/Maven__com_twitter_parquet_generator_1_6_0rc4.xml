@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.twitter:parquet-generator:1.6.0rc4">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/twitter/parquet-generator/1.6.0rc4/parquet-generator-1.6.0rc4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/twitter/parquet-generator/1.6.0rc4/parquet-generator-1.6.0rc4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/twitter/parquet-generator/1.6.0rc4/parquet-generator-1.6.0rc4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
