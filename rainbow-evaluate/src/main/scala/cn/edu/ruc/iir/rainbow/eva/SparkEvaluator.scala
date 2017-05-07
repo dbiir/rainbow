@@ -1,7 +1,6 @@
 package cn.edu.ruc.iir.rainbow.eva
 
 import cn.edu.ruc.iir.rainbow.eva.metrics.{Crawler, StageMetrics}
-import cn.edu.ruc.iir.rainbow.eva.metrics.{Crawler, StageMetrics}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 
