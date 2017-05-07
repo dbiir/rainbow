@@ -5,5 +5,5 @@ package cn.edu.ruc.iir.rainbow.common.cmd;
  */
 public interface Receiver
 {
-    public void action (Object result);
+    public void action (String result);
 }

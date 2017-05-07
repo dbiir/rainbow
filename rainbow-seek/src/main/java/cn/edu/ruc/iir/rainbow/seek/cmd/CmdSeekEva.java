@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by hank on 16-12-25.
@@ -35,24 +36,30 @@ public class CmdSeekEva implements Command
     }
 
     /**
+     * @param params --method hdfs --path pathOfFiles --num-seeks numSeeks
+     *               --seek-distance seekDistance --read-length readLength
+     *               --skip-file-num skipFileNum --log-dir LogDir
+     *               --start-num startFileNum --end-num endFileNum /
      *
-     * @param params hdfs pathOfFiles numSeeks seekDistance readLength skipFileNum LogDir [startFileNum] [endFileNum] /
-     *               local pathOfFiles numSeeks seekDistance readLength skipDistance LogDir [startFileNum] [endFileNum]
+     *               --method local --path pathOfFiles --num-seeks numSeeks
+     *               --seek-distance seekDistance --read-length readLength
+     *               --skip-distance skipDistance --log-dir LogDir
+     *               --start-offset startOffset --end-offset endOffset
      */
-    public void execute(String[] params)
+    public void execute(Properties params)
     {
         // test the seek cost
-        if ((!params[1].equalsIgnoreCase("hdfs")) && (!params[1].equalsIgnoreCase("local")))
+        if (params.getProperty("--method") == null)
         {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, params[0] +
-                    " not supported. Exiting...", new ParameterNotSupportedException(params[0]));
+            ExceptionHandler.Instance().log(ExceptionType.ERROR, "method is null. Exiting...",
+                    new NullPointerException());
             return;
         }
-        String path = params[1];
-        int numSeeks = Integer.parseInt(params[2]);
-        long seekDistance = Long.parseLong(params[3]);
-        int readLength = Integer.parseInt(params[4]);
-        String logDir = params[6];
+        String path = params.getProperty("--path");
+        int numSeeks = Integer.parseInt(params.getProperty("--num-seeks"));
+        long seekDistance = Long.parseLong(params.getProperty("--seek-distance"));
+        int readLength = Integer.parseInt(params.getProperty("--read-length"));
+        String logDir = params.getProperty("--log-dir");
         if (logDir.charAt(logDir.length()-1) != '/' && logDir.charAt(logDir.length()-1) != '\\')
         {
             logDir += "/";
@@ -65,10 +72,10 @@ public class CmdSeekEva implements Command
             System.exit(1);
         }
         dir.mkdirs();
-        if (params[0].equalsIgnoreCase("hdfs"))
+        if (params.getProperty("--method").equalsIgnoreCase("hdfs"))
         {
             //test hdfs seek cost
-            int skipFileNum = Integer.parseInt(params[5]);
+            int skipFileNum = Integer.parseInt(params.getProperty("--skip-file-num"));
             Configuration conf  = new Configuration();
             try
             {
@@ -77,10 +84,10 @@ public class CmdSeekEva implements Command
                 writer.write("fileNumber\tseekDistance\treadSize\tfileSeekTime(us)\n");
                 System.out.print((seekDistance / 1024));
                 int startFileNumber = 0, endFileNumber = statuses.length;
-                if (params.length > 7)
+                if (params.size() > 7)
                 {
-                    startFileNumber = Integer.parseInt(params[7]);
-                    endFileNumber = Integer.parseInt(params[8]);
+                    startFileNumber = Integer.parseInt(params.getProperty("--start-num"));
+                    endFileNumber = Integer.parseInt(params.getProperty("--end-num"));
                 }
 
                 for (int i = startFileNumber; i < endFileNumber; i += skipFileNum)
@@ -101,32 +108,32 @@ public class CmdSeekEva implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "hdfs seek evaluation error", e);
             }
-        } else if (params[0].equalsIgnoreCase("local"))
+        } else if (params.getProperty("--method").equalsIgnoreCase("local"))
         {
             //test local seek cost
-            long skipDistance = Long.parseLong(params[5]);
+            long skipDistance = Long.parseLong(params.getProperty("--skip-distance"));
 
             try
             {
                 File file = new File(path);
-                long initPos = 0, endPos = file.length();
+                long startOffset = 0, endOffset = file.length();
                 BufferedWriter writer = new BufferedWriter(new FileWriter(logDir + "aggregate"));
                 writer.write("initPos\tseekDistance\treadSize\tsegSeekTime(us)\n");
                 System.out.print((seekDistance / 1024));
-                if (params.length > 7)
+                if (params.size() > 7)
                 {
-                    initPos = Long.parseLong(params[7]);
-                    endPos = Long.parseLong(params[8]);
+                    startOffset = Long.parseLong(params.getProperty("--start-offset"));
+                    endOffset = Long.parseLong(params.getProperty("--end-offset"));
                 }
-                while (initPos < endPos)
+                while (startOffset < endOffset)
                 {
                     long[] seekCosts = new long[numSeeks];
-                    int realNumSeeks = seekPerformer.localSeekTest(seekCosts, file, initPos, numSeeks, readLength, seekDistance);
-                    double segMidCost = seekPerformer.logSeekCost(seekCosts, realNumSeeks, logDir + "details-of-seg-" + initPos);
-                    writer.write(initPos + "\t" + seekDistance + "\t" + readLength + "\t" + segMidCost + "\n");
+                    int realNumSeeks = seekPerformer.localSeekTest(seekCosts, file, startOffset, numSeeks, readLength, seekDistance);
+                    double segMidCost = seekPerformer.logSeekCost(seekCosts, realNumSeeks, logDir + "details-of-seg-" + startOffset);
+                    writer.write(startOffset + "\t" + seekDistance + "\t" + readLength + "\t" + segMidCost + "\n");
 
                     System.out.print("\t" + segMidCost);
-                    initPos += skipDistance;
+                    startOffset += skipDistance;
                 }
                 writer.flush();
                 writer.close();
@@ -135,6 +142,13 @@ public class CmdSeekEva implements Command
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "local seek evaluation error", e);
+            }
+        } else
+        {
+            {
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("--method") +
+                        " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("--method")));
+                return;
             }
         }
     }
