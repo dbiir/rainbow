@@ -2,6 +2,8 @@ package cn.edu.ruc.iir.rainbow.common.cmd;
 
 import cn.edu.ruc.iir.rainbow.common.exception.CommandException;
 
+import java.util.Properties;
+
 /**
  * Created by hank on 17-5-4.
  */
@@ -26,7 +28,7 @@ public class Invoker
         }
     }
 
-    public void executeCommand (String[] params) throws CommandException
+    public void executeCommand (Properties params) throws CommandException
     {
         if (this.command != null)
         {

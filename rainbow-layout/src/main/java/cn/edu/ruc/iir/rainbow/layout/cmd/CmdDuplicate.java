@@ -3,6 +3,8 @@ package cn.edu.ruc.iir.rainbow.layout.cmd;
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 
+import java.util.Properties;
+
 /**
  * Created by hank on 17-5-4.
  */
@@ -17,7 +19,7 @@ public class CmdDuplicate implements Command
     }
 
     @Override
-    public void execute(String[] params)
+    public void execute(Properties params)
     {
 
     }
