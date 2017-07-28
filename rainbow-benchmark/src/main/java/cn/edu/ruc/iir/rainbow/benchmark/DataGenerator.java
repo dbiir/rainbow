@@ -124,4 +124,38 @@ public class DataGenerator {
         }
     }
 
+
+    public String[] getColumnName() {
+        filePath = this.getClass().getClassLoader()
+                .getResource((schema_origin)).getFile();
+        String curLine;
+        BufferedReader br = null;
+        int i = 0;
+        String columnName[] = new String[0];
+        String splitLine[];
+        String columnLine = "";
+        try {
+            br = new BufferedReader(new FileReader(filePath));
+            while ((curLine = br.readLine()) != null) {
+                splitLine = curLine.split("\t");
+                columnLine += splitLine[0] + ",";
+            }
+            columnLine = columnLine.substring(0, columnLine.length() - 1);
+            columnName = columnLine.split(",");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null)
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return columnName;
+    }
+
+
 }
