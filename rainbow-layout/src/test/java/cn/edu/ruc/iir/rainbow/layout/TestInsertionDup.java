@@ -39,7 +39,7 @@ public class TestInsertionDup
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
         }
 
-        WorkloadBuilder.saveAsWorkloadFile(new File(TestInsertionDup.class.getResource("/duped_jobs.txt").getFile()), dup.getWorkloadPattern());
-        ColumnOrderBuilder.saveAsDDLSegment(new File(TestInsertionDup.class.getResource("/duped_schema.txt").getFile()), dup.getColumnOrder());
+        WorkloadBuilder.saveAsWorkloadFile(new File(TestInsertionDup.class.getResource("/").getFile() + "dupped_workload.txt"), dup.getWorkloadPattern());
+        ColumnOrderBuilder.saveAsDDLSegment(new File(TestInsertionDup.class.getResource("/").getFile() + "dupped_schema.txt"), dup.getColumnOrder());
     }
 }

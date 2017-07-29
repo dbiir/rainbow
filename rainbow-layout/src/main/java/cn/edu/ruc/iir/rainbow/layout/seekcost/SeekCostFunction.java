@@ -2,5 +2,12 @@ package cn.edu.ruc.iir.rainbow.layout.seekcost;
 
 public interface SeekCostFunction
 {
-    public double calculate(double distance);
+    enum Type
+    {
+        LINEAR,
+        POWER,
+        SIMULATED
+    }
+
+    double calculate(double distance);
 }
