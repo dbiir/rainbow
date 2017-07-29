@@ -92,6 +92,7 @@ public class DataGenerator {
         String outWorkloadPath = filePath.replace(workload, "workload_new.txt");
         String splitLine[] = null;
         String columnsLine[] = null;
+        String columnName = null;
         try {
             br = new BufferedReader(new FileReader(filePath));
             bw = new BufferedWriter(new FileWriter(outWorkloadPath));
@@ -101,8 +102,11 @@ public class DataGenerator {
                 // curLine = curLine.replace(splitLine[0], UUID.randomUUID().toString());
                 columnsLine = splitLine[2].split(",");
                 for (int k = 0; k < columnsLine.length; k++) {
-                    if (columnMap.get(columnsLine[k]) != null) {
-                        curLine = curLine.replace(columnsLine[k], columnMap.get(columnsLine[k]));
+                    columnName = columnMap.get(columnsLine[k]);
+                    if (columnName != null) {
+                        // According to the column, each once, not replace all -> "abc, abcd"(note)
+                        // or generate a new String(the same to replace)
+                        curLine = curLine.replaceFirst(columnsLine[k], columnName);
                     } else {
                         System.out.println(columnsLine[k] + " do not have a mapping");
                     }
