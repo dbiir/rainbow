@@ -37,7 +37,7 @@ public class TestAutoPart
         container.waitForCompletion();
 
         double finalSeekCost = algo.getCurrentWorkloadSeekCost();
-        ColumnOrderBuilder.saveAsDDLSegment(new File(TestAutoPart.class.getResource("/autopart_ordered_schema.txt").getFile()), algo.getColumnOrder());
+        ColumnOrderBuilder.saveAsDDLSegment(new File(TestAutoPart.class.getResource("/").getFile() + "autopart_ordered_schema.txt"), algo.getColumnOrder());
         System.out.println(initSeekCost + ", " + finalSeekCost);
         System.exit(0);
     }

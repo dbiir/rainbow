@@ -27,6 +27,7 @@
         <module>rainbow-evaluate</module>
         <module>rainbow-layout</module>
         <module>rainbow-redirect</module>
+        <module>rainbow-benchmark</module>
     </modules>
 
 
