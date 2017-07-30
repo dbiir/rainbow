@@ -60,12 +60,15 @@ public class TestDataGen {
         if (d > 120) {
             System.out.println(d);
         }
+        int i = 0;
+        while (i++ < 4) {
+            System.out.println(i);
+        }
     }
 
     @Test
     public void TestGenDataBySize() {
-        DataGen instance = DataGen.Instance();
-
+        DataGen instance = DataGen.getInstance();
         long startTime = System.currentTimeMillis();
         int dataSize = 1;
         instance.genDataBySize(dataSize);
@@ -75,7 +78,7 @@ public class TestDataGen {
 
     @Test
     public void TestGetValueByBinarySearch() {
-        DataGen instance = DataGen.Instance();
+        DataGen instance = DataGen.getInstance();
         Random random = new Random();
         List<Column> columnList = new ArrayList<>();
         Column c = new Column(3000, "Good");
@@ -92,15 +95,15 @@ public class TestDataGen {
         columnList.add(c);
         c = new Column(40000, "You");
         columnList.add(c);
-//        for (int i = 0; i < 10; i++) {
-//            int randNum = random.nextInt(40000) + 1;
-//            String str = instance.getValueByBinarySearch(randNum, columnList);
-//            System.out.println(randNum + " -> " + str);
-//        }
+        for (int i = 0; i < 10; i++) {
+            int randNum = random.nextInt(40000) + 1;
+            String str = instance.getValueByBinarySearch(randNum, columnList);
+            System.out.println(randNum + " -> " + str);
+        }
         // test the boundary of the interval
-        int randNum = 38000;
-        String str = instance.getValueByBinarySearch(randNum, columnList);
-        System.out.println(randNum + " -> " + str);
+        int randNum = 3000;
+        String str1 = instance.getValueByBinarySearch(randNum, columnList);
+        System.out.println(randNum + " -> " + str1);
     }
 
 
