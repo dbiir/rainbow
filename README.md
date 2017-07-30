@@ -1,6 +1,6 @@
 # rainbow
 Column ordering and duplication framework for very wide tables stored on HDFS. See paper for details: 
-https://github.com/dbiir/rainbow/blob/master/paper.pdf
+http://dl.acm.org/citation.cfm?id=3035930
 
 Project structure:
 * **rainbow-common**
