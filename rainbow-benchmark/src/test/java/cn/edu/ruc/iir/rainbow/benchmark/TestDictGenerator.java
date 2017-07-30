@@ -67,7 +67,7 @@ public class TestDictGenerator {
     */
     @Test
     public void TestGetDataDictByIndexAndColumnName() {
-        DataGenerator dataGenerator = DataGenerator.Instance();
+        ColumnGenerator dataGenerator = ColumnGenerator.Instance();
         String columnName[] = dataGenerator.getColumnName();
         long startTime = System.currentTimeMillis();
         for (int j = 0; j < columnName.length; j++) {

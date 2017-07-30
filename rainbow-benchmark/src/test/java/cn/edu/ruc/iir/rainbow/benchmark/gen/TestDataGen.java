@@ -50,7 +50,7 @@ public class TestDataGen
     public void TestGenDataBySize() {
         DataGen instance = new DataGen(4);
         long startTime = System.currentTimeMillis();
-        int dataSize = 2000;
+        int dataSize = 800;
         instance.genDataBySize(dataSize);
         long endTime = System.currentTimeMillis();
         System.out.println("dataSize * 200M run time : ： " + (endTime - startTime) / 1000 + "s");

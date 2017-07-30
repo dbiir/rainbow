@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.benchmark.gen;
 
-import cn.edu.ruc.iir.rainbow.benchmark.DataGenerator;
+import cn.edu.ruc.iir.rainbow.benchmark.ColumnGenerator;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.ColumnArray;
 
 import java.io.*;
@@ -15,8 +15,7 @@ import java.util.List;
  * @author: Tao
  * @date: Create in 2017-07-30 15:22
  **/
-public class DataGen
-{
+public class DataGen {
     private int threadNum;
 
     private String data_origin = "data/schema_origin.txt";
@@ -30,8 +29,9 @@ public class DataGen
 
     /**
      * Generate data by size
+     *
      * @param dataSize size in MB
-     * */
+     */
     public void genDataBySize(int dataSize) {
         long startTime = System.currentTimeMillis();
         filePath = this.getClass().getClassLoader()
@@ -50,13 +50,10 @@ public class DataGen
             genThreads[i] = t;
             t.run();
         }
-        for (DataGenThread t : genThreads)
-        {
-            try
-            {
+        for (DataGenThread t : genThreads) {
+            try {
                 t.join();
-            } catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -102,7 +99,7 @@ public class DataGen
     }
 
     private void initColumns() {
-        DataGenerator dataGenerator = DataGenerator.Instance();
-        columnName = dataGenerator.getColumnName();
+        ColumnGenerator columnGenerator = ColumnGenerator.Instance();
+        columnName = columnGenerator.getColumnName();
     }
 }

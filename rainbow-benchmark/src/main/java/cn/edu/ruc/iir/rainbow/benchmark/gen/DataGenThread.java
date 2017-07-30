@@ -17,8 +17,7 @@ import java.util.Random;
  * @author guodong
  */
 public class DataGenThread
-     extends Thread
-{
+        extends Thread {
     private String filePath;
     private String[] columnNames;
     private List<ColumnArray> columnList;
@@ -28,10 +27,9 @@ public class DataGenThread
     private long fileS = 0L;
 
     private final int DATA_MAX = 40000;
-    private final long MB1 = 1 * 1024 * 1024 * 1024L;
+    private final long MB1 = 1 * 1024 * 1024L;
 
-    public DataGenThread(String filePath, String[] columnNames, List<ColumnArray> columnList, int size)
-    {
+    public DataGenThread(String filePath, String[] columnNames, List<ColumnArray> columnList, int size) {
         this.filePath = filePath;
         this.columnNames = columnNames;
         this.columnList = columnList;
@@ -40,13 +38,11 @@ public class DataGenThread
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         generateData(size);
     }
 
-    private void generateData(int dataSize)
-    {
+    private void generateData(int dataSize) {
         BufferedWriter bw = null;
         String directory = filePath + "GenThread/" + DataUtil.getCurTime() + "/";
         String outGenPath = directory + DataUtil.getCurTime() + "_" + dataSize + ".txt";
@@ -57,13 +53,12 @@ public class DataGenThread
                 f.mkdirs();
             }
             bw = new BufferedWriter(new FileWriter(outGenPath), 1024 * 1024 * 32);
-            int col = 1;
+            int col = 0;
             String fileSize = "";
             while (true) {
                 StringBuilder writeLine = new StringBuilder();
                 int randNum;
                 String value = "";
-
 //                long startTime = System.currentTimeMillis();
                 for (int i = 0; i < columnNames.length; i++) {
                     ColumnArray colArray = columnList.get(i);

@@ -41,7 +41,7 @@ public class DictGenerator {
         String curLine = null;
         BufferedReader br = null;
         BufferedWriter bw = null;
-        DataGenerator dataGenerator = DataGenerator.Instance();
+        ColumnGenerator dataGenerator = ColumnGenerator.Instance();
         String columnName[] = dataGenerator.getColumnName();
         filePath = this.getClass().getClassLoader()
                 .getResource((data_test)).getFile();
@@ -101,7 +101,7 @@ public class DictGenerator {
         // note that "filePath" is contained in DataGenerator.java too
         filePath = this.getClass().getClassLoader()
                 .getResource((data_test)).getFile();
-        DataGenerator dataGenerator = DataGenerator.Instance();
+        ColumnGenerator dataGenerator = ColumnGenerator.Instance();
         String columnName[] = dataGenerator.getColumnName();
         String outDictPath = null;
         String columnsLine[] = null;
