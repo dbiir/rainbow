@@ -1,5 +1,9 @@
 package cn.edu.ruc.iir.rainbow.benchmark.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
@@ -11,12 +15,12 @@ package cn.edu.ruc.iir.rainbow.benchmark.util;
 public class DataUtil {
 
     /**
-    * @ClassName: DataUtil
-    * @Title:
-    * @Description: judge "abc,ab," contains "abc" ?
-    * @param:
-    * @date: 7:15 2017/7/28
-    */
+     * @ClassName: DataUtil
+     * @Title:
+     * @Description: judge "abc,ab," contains "abc" ?
+     * @param:
+     * @date: 7:15 2017/7/28
+     */
     public static boolean isContainsStr(String str1, String str2) {
         boolean flag = false;
         str1 = str1.substring(0, str1.length() - 1);
@@ -30,5 +34,9 @@ public class DataUtil {
         return flag;
     }
 
+    public static String getCurTime() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//set the style
+        return df.format(new Date());
+    }
 
 }

@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.benchmark;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @version V1.0
@@ -26,6 +26,13 @@ public class TestDataGenerator {
         System.out.println("path is : " + path);
     }
 
+    /**
+     * @ClassName: TestDataGenerator
+     * @Title:
+     * @Description: main method for the first task, for workload.txt & schema.txt
+     * @param:
+     * @date: 9:24 2017/7/29
+     */
     @Test
     public void TestSetWorkloadShift() {
         dataGenerator.setColumnShift();

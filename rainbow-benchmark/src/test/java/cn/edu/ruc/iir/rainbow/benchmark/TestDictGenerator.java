@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.benchmark;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
