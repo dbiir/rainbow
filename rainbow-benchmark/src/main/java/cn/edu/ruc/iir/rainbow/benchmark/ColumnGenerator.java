@@ -7,12 +7,12 @@ import java.util.Map;
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
- * @ClassName: DataGenerator
+ * @ClassName: ColumnGenerator
  * @Description: To generate data for test
  * @author: Tao
  * @date: Create in 2017-07-27 14:20
  **/
-public class DataGenerator {
+public class ColumnGenerator {
 
     public String schema_origin = "data/schema.txt";
     public String workload = "data/workload.txt";
@@ -21,17 +21,17 @@ public class DataGenerator {
     // column mapping
     public Map<String, String> columnMap = new HashMap<String, String>();
 
-    private static DataGenerator instance = null;
+    private static ColumnGenerator instance = null;
 
-    public static DataGenerator Instance() {
+    public static ColumnGenerator Instance() {
         if (instance == null) {
-            instance = new DataGenerator();
+            instance = new ColumnGenerator();
         }
         return instance;
     }
 
     /**
-     * @ClassName: DataGenerator
+     * @ClassName: ColumnGenerator
      * @Title:
      * @Description: Change Column, make column_mapping.csv & schema_new.txt
      * @param:
@@ -77,7 +77,7 @@ public class DataGenerator {
     }
 
     /**
-     * @ClassName: DataGenerator
+     * @ClassName: ColumnGenerator
      * @Title:
      * @Description: make workload_new.csv
      * @param:

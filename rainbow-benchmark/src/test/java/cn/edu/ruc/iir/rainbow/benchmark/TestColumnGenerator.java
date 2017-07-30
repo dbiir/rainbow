@@ -5,29 +5,29 @@ import org.junit.jupiter.api.Test;
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
- * @ClassName: TestDataGenerator
- * @Description: To Test functions of Class DataGenerator
+ * @ClassName: TestColumnGenerator
+ * @Description: To Test functions of Class ColumnGenerator
  * @author: Tao
  * @date: Create in 2017-07-27 15:02
  **/
-public class TestDataGenerator {
+public class TestColumnGenerator {
 
-    private DataGenerator dataGenerator = DataGenerator.Instance();
+    private ColumnGenerator columnGenerator = ColumnGenerator.Instance();
 
     @Test
     public void TestSetColumnShift() {
-        dataGenerator.setColumnShift();
+        columnGenerator.setColumnShift();
     }
 
     @Test
     public void TestFilePath() {
         String path = this.getClass().getClassLoader()
-                .getResource((dataGenerator.schema_origin)).getFile();
+                .getResource((columnGenerator.schema_origin)).getFile();
         System.out.println("path is : " + path);
     }
 
     /**
-     * @ClassName: TestDataGenerator
+     * @ClassName: TestColumnGenerator
      * @Title:
      * @Description: main method for the first task, for workload.txt & schema.txt
      * @param:
@@ -35,8 +35,8 @@ public class TestDataGenerator {
      */
     @Test
     public void TestSetWorkloadShift() {
-        dataGenerator.setColumnShift();
-        dataGenerator.setWorkloadShift();
+        columnGenerator.setColumnShift();
+        columnGenerator.setWorkloadShift();
     }
 
 
