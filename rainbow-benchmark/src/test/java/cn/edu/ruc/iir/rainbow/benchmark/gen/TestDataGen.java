@@ -10,14 +10,13 @@ import java.util.Random;
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark.gen
- * @ClassName: TestDataGener
- * @Description: To test functions of DataGener.java
+ * @ClassName: TestDataGen
+ * @Description: To test functions of DataGen.java
  * @author: Tao
  * @date: Create in 2017-07-30 17:03
  **/
-public class TestDataGener {
-
-
+public class TestDataGen
+{
     @Test
     public void TestGetValueByArray() {
         Random random = new Random();
@@ -49,9 +48,9 @@ public class TestDataGener {
 
     @Test
     public void TestGenDataBySize() {
-        DataGener instance = DataGener.getInstance();
+        DataGen instance = new DataGen(4);
         long startTime = System.currentTimeMillis();
-        int dataSize = 1;
+        int dataSize = 2000;
         instance.genDataBySize(dataSize);
         long endTime = System.currentTimeMillis();
         System.out.println("dataSize * 200M run time : ： " + (endTime - startTime) / 1000 + "s");
