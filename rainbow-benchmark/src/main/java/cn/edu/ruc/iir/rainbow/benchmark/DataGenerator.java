@@ -134,7 +134,6 @@ public class DataGenerator {
                 .getResource((schema_origin)).getFile();
         String curLine;
         BufferedReader br = null;
-        int i = 0;
         String columnName[] = new String[0];
         String splitLine[];
         String columnLine = "";
