@@ -22,21 +22,18 @@ public class CmdInitIndex implements Command
     @Override
     public void execute(Properties params)
     {
-        BufferedReader reader = null;
-        try
+        try (BufferedReader reader = new BufferedReader(new FileReader("")))
         {
-            reader = new BufferedReader(new FileReader(""));
+            // create the dupped column order.
+            List<String> columnOrder = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                String[] tokens = line.split("\t");
+                columnOrder.add(tokens[0]);
+            }
 
-
-        List<String> columnOrder = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null)
-        {
-            String[] tokens = line.split("\t");
-            columnOrder.add(tokens[0]);
-        }
-
-        reader.close();
+            // TODO: build and cache the index
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();// new buffer

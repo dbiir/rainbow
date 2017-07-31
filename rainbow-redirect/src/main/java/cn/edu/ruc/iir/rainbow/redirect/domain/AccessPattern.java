@@ -37,6 +37,11 @@ public class AccessPattern
         return this.columnToReplicaMap.get(column);
     }
 
+    public ColumnSet getColumnSet ()
+    {
+        return new ColumnSet(this.columnToReplicaMap.keySet());
+    }
+
     public AccessPattern generatePattern (ColumnSet columnSet, List<String> columnOrder) throws ColumnOrderException
     {
         AccessPattern result = new AccessPattern();
