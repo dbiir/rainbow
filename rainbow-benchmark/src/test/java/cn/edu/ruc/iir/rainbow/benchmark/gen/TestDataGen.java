@@ -15,8 +15,7 @@ import java.util.Random;
  * @author: Tao
  * @date: Create in 2017-07-30 17:03
  **/
-public class TestDataGen
-{
+public class TestDataGen {
     @Test
     public void TestGetValueByArray() {
         Random random = new Random();
@@ -53,7 +52,7 @@ public class TestDataGen
         int dataSize = 800;
         instance.genDataBySize(dataSize);
         long endTime = System.currentTimeMillis();
-        System.out.println("dataSize * 200M run time : ： " + (endTime - startTime) / 1000 + "s");
+        System.out.println(dataSize + " run time : ： " + (endTime - startTime) / 1000 + "s");
     }
 
 }

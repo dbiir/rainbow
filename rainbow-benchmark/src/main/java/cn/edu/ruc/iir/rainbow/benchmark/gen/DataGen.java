@@ -33,14 +33,11 @@ public class DataGen {
      * @param dataSize size in MB
      */
     public void genDataBySize(int dataSize) {
-        long startTime = System.currentTimeMillis();
         filePath = this.getClass().getClassLoader()
                 .getResource((data_origin)).getFile();
         filePath = filePath.replace(data_origin, "");
         initColumns();
         initColumnRate();
-        long endTime = System.currentTimeMillis();
-        System.out.println("init runtime : ： " + (endTime - startTime) / 1000 + "s");
 
         long genStartTime = System.currentTimeMillis();
         DataGenThread[] genThreads = new DataGenThread[threadNum];

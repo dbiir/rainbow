@@ -20,17 +20,19 @@ import java.util.List;
  **/
 public class DataGenerator {
 
-    public String data_origin = "data/schema_origin.txt";
-    public String filePath = null;
-    String columnName[];
-    List<List<Column>> columnList = new ArrayList();
+    private String data_origin = "data/schema_origin.txt";
+    private String filePath = "";
+    private String columnName[];
+    private List<List<Column>> columnList = new ArrayList();
+    private int threadNum;
 
     private static DataGenerator instance = new DataGenerator();
 
     private DataGenerator() {
     }
 
-    public static DataGenerator getInstance() {
+    public static DataGenerator getInstance(int threadNum) {
+        instance.threadNum = threadNum;
         return instance;
     }
 
@@ -51,14 +53,15 @@ public class DataGenerator {
         initColumnRate();
 
         long startTime = System.currentTimeMillis();
-        GenThread[] genThreads = new GenThread[4];
+        DataGeneratorThread[] dataGeneratorThreads = new DataGeneratorThread[threadNum];
+        int size = Math.floorDiv(dataSize, threadNum);
         try {
-            for (int i = 0; i < 4; i++) {
-                GenThread t = new GenThread(filePath, columnName, columnList);
-                genThreads[i] = t;
+            for (int i = 0; i < threadNum; i++) {
+                DataGeneratorThread t = new DataGeneratorThread(filePath, columnName, columnList, size);
+                dataGeneratorThreads[i] = t;
                 t.run();
             }
-            for (GenThread t : genThreads) {
+            for (DataGeneratorThread t : dataGeneratorThreads) {
                 try {
                     t.join();
                 } catch (InterruptedException e) {
@@ -70,7 +73,6 @@ public class DataGenerator {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("gen thread run time : ： " + (endTime - startTime) / 1000 + "s");
-
     }
 
     /**
@@ -138,50 +140,5 @@ public class DataGenerator {
                 }
         }
     }
-
-    /**
-     * @ClassName: DataGen
-     * @Title:
-     * @Description: To search the interval of the random number
-     * @param: randNum: the input random number, columnRate: the list of domain(Column)
-     * @date: 8:37 2017/7/30
-     */
-    protected String getValueByBinarySearch(int randNum, List<Column> columnRate) {
-        String columnValue = null;
-        int lo = 0;
-        int hi = columnRate.size() - 1;
-        int mid;
-        int top;
-        Column col, col1;
-        while (lo <= hi) {
-            mid = (lo + hi) / 2;
-            col = columnRate.get(mid);
-            top = col.getUpperBound();
-            if (mid > 0) {
-                col1 = columnRate.get(mid - 1);
-                if (top >= randNum && randNum > col1.getUpperBound()) {
-                    columnValue = columnRate.get(mid).getValue();
-                    return columnValue;
-                } else if (top < randNum) {
-                    lo = mid + 1;
-                } else {
-                    hi = mid - 1;
-                }
-            } else {
-                if (top >= randNum && randNum > 0) {
-                    columnValue = columnRate.get(mid).getValue();
-                    return columnValue;
-                } else if (top < randNum) {
-                    lo = mid + 1;
-                } else {
-                    hi = mid - 1;
-                }
-            }
-        }
-        columnValue = "search_error";
-        System.out.println("Problem is : " + columnValue);
-        return columnValue;
-    }
-
 
 }

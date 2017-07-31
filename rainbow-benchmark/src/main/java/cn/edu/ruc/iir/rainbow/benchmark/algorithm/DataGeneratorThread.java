@@ -1,54 +1,56 @@
-package cn.edu.ruc.iir.rainbow.benchmark.thread;
+package cn.edu.ruc.iir.rainbow.benchmark.algorithm;
 
+import cn.edu.ruc.iir.rainbow.benchmark.common.SysSettings;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
 import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * @version V1.0
- * @Package: cn.edu.ruc.iir.rainbow.benchmark.thread
- * @ClassName: GenThread
+ * @Package: cn.edu.ruc.iir.rainbow.benchmark.algorithm
+ * @ClassName: DataGeneratorThread
  * @Description: To make threads to run the programe
  * @author: Tao
  * @date: Create in 2017-07-30 15:59
  **/
-public class GenThread extends Thread {
+public class DataGeneratorThread extends Thread {
 
-    public Long fileS = 0L;
+    // parameters needed to be created
+    private String filePath;
+    private String columnName[];
+    private List<List<Column>> columnList;
+    private int dataSize;
+    private Random random;
 
-    public int DATA_MAX = 40000;
-    Random random = new Random();
+    private Long fileS = 0L;
 
-    public String filePath = null;
-    String columnName[];
-    List<List<Column>> columnList = new ArrayList();
-
-    public GenThread() {
+    public DataGeneratorThread() {
     }
 
-    public GenThread(String filePath, String[] columnName, List<List<Column>> columnList) {
+    public DataGeneratorThread(String filePath, String[] columnName, List<List<Column>> columnList, int dataSize) {
         this.filePath = filePath;
         this.columnName = columnName;
         this.columnList = columnList;
+        this.dataSize = dataSize;
+        this.random = new Random();
     }
 
     @Override
     public void run() {
         try {
             // programe runtime
-            generateData(1);
+            generateData(dataSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * @ClassName: GenThread
+     * @ClassName: DataGeneratorThread
      * @Title:
      * @Description: To generate datas by dataSize, contains the algorithm(biSearch)
      * @param: dataSize -> *.GB
@@ -64,16 +66,16 @@ public class GenThread extends Thread {
             if (!f.exists()) {
                 f.mkdirs();
             }
-            bw = new BufferedWriter(new FileWriter(outGenPath), 1024 * 1024 * 32);
-            int col = 1;
-            String fileSize = "";
+            bw = new BufferedWriter(new FileWriter(outGenPath), SysSettings.BUFFER_SIZE);
+            int col = 0;
+            String fileSize;
+            int randNum;
             while (true) {
                 StringBuilder writeLine = new StringBuilder();
-                int randNum;
-                String value = "";
+                String value;
                 for (int i = 0; i < columnName.length; i++) {
                     List<Column> columnRate = columnList.get(i);
-                    randNum = random.nextInt(DATA_MAX) + 1;
+                    randNum = random.nextInt(SysSettings.DATA_MAX) + 1;
                     // binary search -> content
                     value = getValueByBinarySearch(randNum, columnRate);
                     writeLine.append(value);
@@ -87,22 +89,15 @@ public class GenThread extends Thread {
                 fileS += writeLine.toString().getBytes().length;
                 // set "", start next line to write
                 DecimalFormat df = new DecimalFormat("#.00");
-                if (fileS >= 1073741824) {
-                    fileSize = df.format((double) fileS / 1073741824); // "G"
-                    if (Double.valueOf(fileSize) >= dataSize) {
-                        break;
-                    }
-                } else if (fileS >= 1048576) {
-                    fileSize = df.format((double) fileS / 1048576); // "M"
-                    if (Double.valueOf(fileSize) >= 100) {
-                        break;
-                    }
+                fileSize = df.format((double) fileS / SysSettings.MB);
+                if (Double.valueOf(fileSize) >= dataSize) {
+                    break;
                 }
             }
             bw.flush();
             // size, col -> memo.txt
             bw = new BufferedWriter(new FileWriter(outGenMemoPath));
-            String memo = "{\"size\": \"" + fileSize + "\",\"colNum\":\"" + col + "\"}";
+            String memo = "{\"dataSize\": \"" + fileSize + "\",\"colCount\":\"" + col + "\"}";
             bw.write(memo + "\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -119,14 +114,14 @@ public class GenThread extends Thread {
     }
 
     /**
-     * @ClassName: GenThread
+     * @ClassName: DataGeneratorThread
      * @Title:
      * @Description: To search the interval of the random number
      * @param: randNum: the input random number, columnRate: the list of domain(Column)
      * @date: 8:37 2017/7/30
      */
     protected String getValueByBinarySearch(int randNum, List<Column> columnRate) {
-        String columnValue = null;
+        String columnValue;
         int lo = 0;
         int hi = columnRate.size() - 1;
         int mid;

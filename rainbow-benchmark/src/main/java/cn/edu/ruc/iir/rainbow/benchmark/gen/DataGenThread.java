@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.benchmark.gen;
 
+import cn.edu.ruc.iir.rainbow.benchmark.common.SysSettings;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.ColumnArray;
 import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
 
@@ -12,22 +13,22 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * rainbow
- *
- * @author guodong
- */
+ * @version V1.0
+ * @Package: cn.edu.ruc.iir.rainbow.benchmark.gen
+ * @ClassName: DataGeneratorThread
+ * @Description: To make threads to run the programe
+ * @author: Tao
+ * @date: Create in 2017-07-30 15:59
+ **/
 public class DataGenThread
         extends Thread {
     private String filePath;
     private String[] columnNames;
     private List<ColumnArray> columnList;
     private int size;
-
     private Random random;
-    private long fileS = 0L;
 
-    private final int DATA_MAX = 40000;
-    private final long MB1 = 1 * 1024 * 1024L;
+    private long fileS = 0L;
 
     public DataGenThread(String filePath, String[] columnNames, List<ColumnArray> columnList, int size) {
         this.filePath = filePath;
@@ -52,26 +53,22 @@ public class DataGenThread
             if (!f.exists()) {
                 f.mkdirs();
             }
-            bw = new BufferedWriter(new FileWriter(outGenPath), 1024 * 1024 * 32);
+            bw = new BufferedWriter(new FileWriter(outGenPath), SysSettings.BUFFER_SIZE);
             int col = 0;
-            String fileSize = "";
+            String fileSize;
             while (true) {
                 StringBuilder writeLine = new StringBuilder();
                 int randNum;
-                String value = "";
-//                long startTime = System.currentTimeMillis();
+                String value;
                 for (int i = 0; i < columnNames.length; i++) {
                     ColumnArray colArray = columnList.get(i);
-                    randNum = random.nextInt(DATA_MAX);
+                    randNum = random.nextInt(SysSettings.DATA_MAX);
                     // binary search -> content
                     value = colArray.getArray()[randNum];
                     writeLine.append(value);
                     if (i < columnNames.length - 1)
                         writeLine.append("\t");
                 }
-//                long endTime = System.currentTimeMillis();
-//                System.out.println("getArray & set runtime : ： " + (endTime - startTime) + "ms");
-
                 writeLine.append("\n");
                 bw.write(writeLine.toString());
                 col++;
@@ -79,7 +76,7 @@ public class DataGenThread
                 fileS += writeLine.toString().getBytes().length;
                 // set "", start next line to write
                 DecimalFormat df = new DecimalFormat("#.00");
-                fileSize = df.format((double) fileS / MB1);
+                fileSize = df.format((double) fileS / SysSettings.MB);
                 if (Double.valueOf(fileSize) >= dataSize) {
                     break;
                 }
@@ -87,7 +84,7 @@ public class DataGenThread
             bw.flush();
             // size, col -> memo.txt
             bw = new BufferedWriter(new FileWriter(outGenMemoPath));
-            String memo = "{\"size\": \"" + fileSize + "\",\"colNum\":\"" + col + "\"}";
+            String memo = "{\"dataSize\": \"" + fileSize + "\",\"colCount\":\"" + col + "\"}";
             bw.write(memo + "\n");
         } catch (IOException e) {
             e.printStackTrace();
