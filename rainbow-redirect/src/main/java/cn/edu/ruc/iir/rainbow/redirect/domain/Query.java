@@ -5,18 +5,25 @@ import java.util.Set;
 
 public class Query
 {
+    private String uuid = null;
     private ColumnSet columnSet = null;
     private AccessPattern accessPattern = null;
 
-    public Query (ColumnSet columnSet, AccessPattern accessPattern)
+    public Query (String uuid, ColumnSet columnSet, AccessPattern accessPattern)
     {
+        this.uuid = uuid;
         this.columnSet = columnSet;
         this.accessPattern = accessPattern;
     }
 
-    public Query (Set<String> columnSet, List<String> accessPattern)
+    public Query (String uuid, Set<String> columnSet, List<String> accessPattern)
     {
-        this (new ColumnSet(columnSet), new AccessPattern(accessPattern));
+        this (uuid, new ColumnSet(columnSet), new AccessPattern(accessPattern));
+    }
+
+    public String getUuid()
+    {
+        return uuid;
     }
 
     public ColumnSet getColumnSet()
@@ -27,6 +34,11 @@ public class Query
     public AccessPattern getAccessPattern()
     {
         return accessPattern;
+    }
+
+    public void setUuid(String uuid)
+    {
+        this.uuid = uuid;
     }
 
     public void setColumnSet(ColumnSet columnSet)
