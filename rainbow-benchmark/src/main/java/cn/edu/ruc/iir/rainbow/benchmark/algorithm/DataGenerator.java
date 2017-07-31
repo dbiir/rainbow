@@ -20,7 +20,7 @@ import java.util.List;
  **/
 public class DataGenerator {
 
-    private String data_origin = "data/schema_origin.txt";
+    private String data_origin = "_data/schema_origin.txt";
     private String filePath = "";
     private String columnName[];
     private List<List<Column>> columnList = new ArrayList();

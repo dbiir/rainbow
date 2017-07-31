@@ -10,14 +10,14 @@ import java.util.Map;
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
  * @ClassName: DictGenerator
- * @Description: get data dicts with the statistic
+ * @Description: get _data dicts with the statistic
  * @author: Tao
  * @date: Create in 2017-07-28 7:08
  **/
 public class DictGenerator {
 
-    //    public String data_test = "data/test.txt";
-    public String data_test = "data/40000-line.txt";
+    //    public String data_test = "__data/test.txt";
+    public String data_test = "_data/40000-line.txt";
     public String filePath = null;
 
     private static DictGenerator instance = null;
@@ -32,7 +32,7 @@ public class DictGenerator {
     /**
      * @ClassName: DataGenerator
      * @Title:
-     * @Description: get data dicts with the statistic
+     * @Description: get _data dicts with the statistic
      * @param:
      * @problem: cost time much
      * @date: 16:55 2017/7/27

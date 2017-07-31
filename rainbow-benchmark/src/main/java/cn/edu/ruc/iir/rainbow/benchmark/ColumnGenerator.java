@@ -8,14 +8,14 @@ import java.util.Map;
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
  * @ClassName: ColumnGenerator
- * @Description: To generate data for test
+ * @Description: To generate _data for test
  * @author: Tao
  * @date: Create in 2017-07-27 14:20
  **/
 public class ColumnGenerator {
 
-    public String schema_origin = "data/schema.txt";
-    public String workload = "data/workload.txt";
+    public String schema_origin = "_data/schema.txt";
+    public String workload = "_data/workload.txt";
     public String filePath = null;
 
     // column mapping

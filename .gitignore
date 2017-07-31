@@ -9,8 +9,8 @@ target/
 classes/
 deploy/
 javadoc/
-resources/data/
-resources/sql/
+_data/
+_sql/
 
 # lock file, a part of Oracle Credential Store Framework
 cwallet.sso.lck

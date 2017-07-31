@@ -29,7 +29,7 @@ public class TestDataGenAlgorithm {
         }
     }
 
-    public String data_origin = "data/schema_origin.txt";
+    public String data_origin = "_data/schema_origin.txt";
 
     @Test
     public void TestGetFileSize() {

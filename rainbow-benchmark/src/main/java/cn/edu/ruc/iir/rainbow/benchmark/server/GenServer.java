@@ -19,9 +19,9 @@ public class GenServer {
     public static void main(String args[]) {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("ruc.iir.rainbow.benchmark")
                 .defaultHelp(true)
-                .description("Generate data by given dataSize and threadNum.");
+                .description("Generate _data by given dataSize and threadNum.");
         parser.addArgument("-s", "--dataSize").setDefault("800")
-                .help("Specify the size of data generated");
+                .help("Specify the size of _data generated");
         parser.addArgument("-t", "--threadNum").setDefault("4")
                 .help("Specify the number of threads to run");
         Namespace ns = null;

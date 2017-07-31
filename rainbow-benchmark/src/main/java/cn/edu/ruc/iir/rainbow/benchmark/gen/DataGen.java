@@ -18,7 +18,7 @@ import java.util.List;
 public class DataGen {
     private int threadNum;
 
-    private String data_origin = "data/schema_origin.txt";
+    private String data_origin = "_data/schema_origin.txt";
     private String filePath = null;
     private String columnName[];
     private List<ColumnArray> columnList = new ArrayList();
@@ -28,7 +28,7 @@ public class DataGen {
     }
 
     /**
-     * Generate data by size
+     * Generate _data by size
      *
      * @param dataSize size in MB
      */
