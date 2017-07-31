@@ -39,6 +39,18 @@ public class ColumnSet
         return new ArrayList<>(this.columns);
     }
 
+    public static ColumnSet toColumnSet (List<String> columnOrder)
+    {
+        ColumnSet columnSet  = new ColumnSet();
+        for (String columnReplica : columnOrder)
+        {
+            int i = columnReplica.lastIndexOf('_');
+            String column = columnReplica.substring(0, i > 0 ? i :columnReplica.length());
+            columnSet.addColumn(column);
+        }
+        return columnSet;
+    }
+
     @Override
     public int hashCode()
     {

@@ -46,7 +46,7 @@ public class CmdOrdering implements Command
      *   <li>computation.budget</li>
      * </ol>
      *
-     * this method will pass two integer results to receiver:
+     * this method will pass the following results to receiver:
      * <ol>
      *   <li>init.cost, in milliseconds</li>
      *   <li>final.cost, in milliseconds</li>
