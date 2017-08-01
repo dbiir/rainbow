@@ -36,30 +36,30 @@ public class CmdSeekEva implements Command
     }
 
     /**
-     * @param params --method hdfs --path pathOfFiles --num-seeks numSeeks
-     *               --seek-distance seekDistance --read-length readLength
-     *               --skip-file-num skipFileNum --log-dir LogDir
-     *               --start-num startFileNum --end-num endFileNum /
+     * @param params method hdfs path pathOfFiles num.seeks numSeeks
+     *               seek.distance seekDistance read.length readLength
+     *               skip.file.num skipFileNum log.dir LogDir
+     *               start.num startFileNum end.num endFileNum /
      *
-     *               --method local --path pathOfFiles --num-seeks numSeeks
-     *               --seek-distance seekDistance --read-length readLength
-     *               --skip-distance skipDistance --log-dir LogDir
-     *               --start-offset startOffset --end-offset endOffset
+     *               method local path pathOfFiles num.seeks numSeeks
+     *               seek.distance seekDistance read.length readLength
+     *               skip.distance skipDistance log.dir LogDir
+     *               start.offset startOffset end.offset endOffset
      */
     public void execute(Properties params)
     {
         // test the seek cost
-        if (params.getProperty("--method") == null)
+        if (params.getProperty("method") == null)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "method is null. Exiting...",
                     new NullPointerException());
             return;
         }
-        String path = params.getProperty("--path");
-        int numSeeks = Integer.parseInt(params.getProperty("--num-seeks"));
-        long seekDistance = Long.parseLong(params.getProperty("--seek-distance"));
-        int readLength = Integer.parseInt(params.getProperty("--read-length"));
-        String logDir = params.getProperty("--log-dir");
+        String path = params.getProperty("path");
+        int numSeeks = Integer.parseInt(params.getProperty("num.seeks"));
+        long seekDistance = Long.parseLong(params.getProperty("seek.distance"));
+        int readLength = Integer.parseInt(params.getProperty("read.length"));
+        String logDir = params.getProperty("log.dir");
         if (logDir.charAt(logDir.length()-1) != '/' && logDir.charAt(logDir.length()-1) != '\\')
         {
             logDir += "/";
@@ -72,10 +72,10 @@ public class CmdSeekEva implements Command
             System.exit(1);
         }
         dir.mkdirs();
-        if (params.getProperty("--method").equalsIgnoreCase("hdfs"))
+        if (params.getProperty("method").equalsIgnoreCase("hdfs"))
         {
             //test hdfs seek cost
-            int skipFileNum = Integer.parseInt(params.getProperty("--skip-file-num"));
+            int skipFileNum = Integer.parseInt(params.getProperty("skip.file.num"));
             Configuration conf  = new Configuration();
             try
             {
@@ -86,8 +86,8 @@ public class CmdSeekEva implements Command
                 int startFileNumber = 0, endFileNumber = statuses.length;
                 if (params.size() > 7)
                 {
-                    startFileNumber = Integer.parseInt(params.getProperty("--start-num"));
-                    endFileNumber = Integer.parseInt(params.getProperty("--end-num"));
+                    startFileNumber = Integer.parseInt(params.getProperty("start.num"));
+                    endFileNumber = Integer.parseInt(params.getProperty("end.num"));
                 }
 
                 for (int i = startFileNumber; i < endFileNumber; i += skipFileNum)
@@ -108,10 +108,10 @@ public class CmdSeekEva implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "hdfs seek evaluation error", e);
             }
-        } else if (params.getProperty("--method").equalsIgnoreCase("local"))
+        } else if (params.getProperty("method").equalsIgnoreCase("local"))
         {
             //test local seek cost
-            long skipDistance = Long.parseLong(params.getProperty("--skip-distance"));
+            long skipDistance = Long.parseLong(params.getProperty("skip.distance"));
 
             try
             {
@@ -122,8 +122,8 @@ public class CmdSeekEva implements Command
                 System.out.print((seekDistance / 1024));
                 if (params.size() > 7)
                 {
-                    startOffset = Long.parseLong(params.getProperty("--start-offset"));
-                    endOffset = Long.parseLong(params.getProperty("--end-offset"));
+                    startOffset = Long.parseLong(params.getProperty("start.offset"));
+                    endOffset = Long.parseLong(params.getProperty("end.offset"));
                 }
                 while (startOffset < endOffset)
                 {
@@ -146,8 +146,8 @@ public class CmdSeekEva implements Command
         } else
         {
             {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("--method") +
-                        " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("--method")));
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +
+                        " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("method")));
                 return;
             }
         }

@@ -31,8 +31,8 @@ public class CmdGenFile implements Command
 
     /**
      *
-     * @param params --method hdfs --dir dirPath --block-size blockSize --num-block numBlock /
-     *               --method local --file-path filePath --file-size Fileize
+     * @param params method hdfs dir dirPath block.size blockSize num.block numBlock /
+     *               method local file.path filePath file.size Fileize
      */
     public void execute(Properties params)
     {
@@ -44,12 +44,12 @@ public class CmdGenFile implements Command
             return;
         }
 
-        if (params.getProperty("--method").equalsIgnoreCase("hdfs"))
+        if (params.getProperty("method").equalsIgnoreCase("hdfs"))
         {
             // generate hdfs file
-            String dirPath = params.getProperty("--dir");
-            long blockSize = Long.parseLong(params.getProperty("--block-size"));
-            long numBlock = Long.parseLong(params.getProperty("--num-block"));
+            String dirPath = params.getProperty("dir");
+            long blockSize = Long.parseLong(params.getProperty("block.size"));
+            long numBlock = Long.parseLong(params.getProperty("num.block"));
             try
             {
                 generator.generateHDFSFile(blockSize, numBlock, dirPath);
@@ -57,11 +57,11 @@ public class CmdGenFile implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate hdfs file error", e);
             }
-        } else if (params.getProperty("--method").equalsIgnoreCase("local"))
+        } else if (params.getProperty("method").equalsIgnoreCase("local"))
         {
             //generate local file
-            long FileSize = Long.parseLong(params.getProperty("--file-size"));
-            String filePath = params.getProperty("--file-path");
+            long FileSize = Long.parseLong(params.getProperty("file.size"));
+            String filePath = params.getProperty("file.path");
             try
             {
                 generator.generateLocalFile(FileSize, filePath);
@@ -71,8 +71,8 @@ public class CmdGenFile implements Command
             }
         } else
         {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("--method") +
-                    " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("--method")));
+            ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +
+                    " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("method")));
             return;
         }
     }

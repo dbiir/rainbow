@@ -38,10 +38,10 @@ public class CmdDuplicate implements Command
      * params should contain the following settings:
      * <ol>
      *   <li>algorithm.name, name of the algorithm, configured in rainbow.properties</li>
-     *   <li>schema.file.path</li>
-     *   <li>workload.file.path</li>
-     *   <li>dupped.schema.file.path</li>
-     *   <li>dupped.workload.file.path</li>
+     *   <li>schema.file</li>
+     *   <li>workload.file</li>
+     *   <li>dupped.schema.file</li>
+     *   <li>dupped.workload.file</li>
      *   <li>seek.cost.function, should be one of linear, power, simulated, if it is not given, then power is applied</li>
      *   <li>seek.cost.file, if seek.cost.function is set to simulated, this param should be given</li>
      *   <li>computation.budget</li>
@@ -51,8 +51,8 @@ public class CmdDuplicate implements Command
      * <ol>
      *   <li>init.cost, in milliseconds</li>
      *   <li>final.cost, in milliseconds</li>
-     *   <li>dupped.schema.file.path</li>
-     *   <li>dupped.workload.file.path</li>
+     *   <li>dupped.schema.file</li>
+     *   <li>dupped.workload.file</li>
      * </ol>
      * @param params
      */
@@ -60,31 +60,33 @@ public class CmdDuplicate implements Command
     public void execute(Properties params)
     {
         String algoName = params.getProperty("algorithm.name");
-        String schemaFilePath = params.getProperty("schema.file.path");
-        String workloadFilePath = params.getProperty("workload.file.path");
-        String duppedSchemaFilePath = params.getProperty("dupped.schema.file.path");
-        String duppedWorkloadFilePath = params.getProperty("dupped.workload.file.path");
+        String schemaFilePath = params.getProperty("schema.file");
+        String workloadFilePath = params.getProperty("workload.file");
+        String duppedSchemaFilePath = params.getProperty("dupped.schema.file");
+        String duppedWorkloadFilePath = params.getProperty("dupped.workload.file");
         long budget = Long.parseLong(params.getProperty("computation.budget"));
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
-        if (funcType == SeekCostFunction.Type.LINEAR)
+        switch (funcType)
         {
-            seekCostFunction = new LinearSeekCostFunction();
-        } else if (funcType == SeekCostFunction.Type.POWER)
-        {
-            seekCostFunction = new PowerSeekCostFunction();
-        } else if (funcType == SeekCostFunction.Type.SIMULATED)
-        {
-            try
-            {
-                String seekCostFilePath = params.getProperty("seek.cost.file");
-                seekCostFunction = SimulatedSeekCostBuilder.build(new File(seekCostFilePath));
-            } catch (IOException e)
-            {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR,
-                        "get seek cost file error", e);
-            }
+            case LINEAR:
+                seekCostFunction = new LinearSeekCostFunction();
+                break;
+            case POWER:
+                seekCostFunction = new PowerSeekCostFunction();
+                break;
+            case SIMULATED:
+                try
+                {
+                    String seekCostFilePath = params.getProperty("seek.cost.file");
+                    seekCostFunction = SimulatedSeekCostBuilder.build(new File(seekCostFilePath));
+                } catch (IOException e)
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR,
+                            "get seek cost file error", e);
+                }
+                break;
         }
 
         Properties results = new Properties();
@@ -109,8 +111,8 @@ public class CmdDuplicate implements Command
             WorkloadBuilder.saveAsWorkloadFile(new File(duppedWorkloadFilePath), dupAlgo.getWorkloadPattern());
             ColumnOrderBuilder.saveAsDDLSegment(new File(duppedSchemaFilePath), dupAlgo.getColumnOrder());
 
-            results.setProperty("dupped.schema.file.path", duppedSchemaFilePath);
-            results.setProperty("dupped.workload.file.path", duppedWorkloadFilePath);
+            results.setProperty("dupped.schema.file", duppedSchemaFilePath);
+            results.setProperty("dupped.workload.file", duppedWorkloadFilePath);
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);

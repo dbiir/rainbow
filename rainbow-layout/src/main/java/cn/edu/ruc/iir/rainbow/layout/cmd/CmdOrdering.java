@@ -38,9 +38,9 @@ public class CmdOrdering implements Command
      * params should contain the following settings:
      * <ol>
      *   <li>algorithm.name, name of the algorithm, configured in rainbow.properties</li>
-     *   <li>schema.file.path</li>
-     *   <li>workload.file.path</li>
-     *   <li>ordered.schema.file.path</li>
+     *   <li>schema.file</li>
+     *   <li>workload.file</li>
+     *   <li>ordered.schema.file</li>
      *   <li>seek.cost.function, should be one of linear, power, simulated, if it is not given, then power is applied</li>
      *   <li>seek.cost.file, if seek.cost.function is set to simulated, this param should be given</li>
      *   <li>computation.budget</li>
@@ -50,7 +50,7 @@ public class CmdOrdering implements Command
      * <ol>
      *   <li>init.cost, in milliseconds</li>
      *   <li>final.cost, in milliseconds</li>
-     *   <li>ordered.schema.file.path</li>
+     *   <li>ordered.schema.file</li>
      * </ol>
      * @param params
      */
@@ -58,9 +58,9 @@ public class CmdOrdering implements Command
     public void execute(Properties params)
     {
         String algoName = params.getProperty("algorithm.name");
-        String schemaFilePath = params.getProperty("schema.file.path");
-        String workloadFilePath = params.getProperty("workload.file.path");
-        String orderedFilePath = params.getProperty("ordered.schema.file.path");
+        String schemaFilePath = params.getProperty("schema.file");
+        String workloadFilePath = params.getProperty("workload.file");
+        String orderedFilePath = params.getProperty("ordered.schema.file");
         long budget = Long.parseLong(params.getProperty("computation.budget"));
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
@@ -105,7 +105,7 @@ public class CmdOrdering implements Command
             results.setProperty("final.cost", ""+algo.getCurrentWorkloadSeekCost());
             ColumnOrderBuilder.saveAsDDLSegment(new File(orderedFilePath), algo.getColumnOrder());
 
-            results.setProperty("ordered.schema.file.path", orderedFilePath);
+            results.setProperty("ordered.schema.file", orderedFilePath);
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
