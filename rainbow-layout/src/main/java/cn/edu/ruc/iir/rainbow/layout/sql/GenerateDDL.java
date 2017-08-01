@@ -14,28 +14,7 @@ public class GenerateDDL
 
 	private static final String dataDir = ConfigFactory.Instance().getProperty("data.dir");
 
-	public static void CreateOrderedParq (String tableName, String schemaFilePath, String createStatementPath) throws IOException
-	{
-		try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
-			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath))
-		{
-			String line;
-			writer.write("create external table " + tableName + "\n(\n");
-			line = reader.readLine();
-			String[] tokens = line.split("\t");
-			writer.write(tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
-			while ((line = reader.readLine()) != null)
-			{
-				tokens = line.split("\t");
-				writer.write(",\n" + tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
-			}
-			writer.write("\n)\n"
-					+ "STORED AS PARQUET\n"
-                    + "LOCATION '" + dataDir + "/" + tableName + "'");
-		}
-	}
-
-	public static void CreateOrderedOrc (String tableName, String schemaFilePath, String createStatementPath) throws IOException
+	public static void GenCreateOrc (String tableName, String schemaFilePath, String createStatementPath) throws IOException
 	{
 		try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath))
@@ -57,7 +36,7 @@ public class GenerateDDL
 		}
 	}
 	
-	public static void CreateText (String schemaFilePath, String createStatementPath) throws IOException
+	public static void GenCreateText (String schemaFilePath, String createStatementPath) throws IOException
 	{
 		try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath))
@@ -79,7 +58,7 @@ public class GenerateDDL
 		}
 	}
 
-	public static void CreateParq (String tableName, String schemaFilePath, String createStatementPath) throws IOException
+	public static void GenCreateParq (String tableName, String schemaFilePath, String createStatementPath) throws IOException
 	{
 		try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath);)

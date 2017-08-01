@@ -108,7 +108,7 @@ public class GenerateQuery
      * @throws IOException
      * @throws ColumnNotFoundException
      */
-	public static void gen(String tableName, String orderedTableName, String hostName, String schemaFilePath, String workloadFilePath,
+	public static void Gen(String tableName, String orderedTableName, String hostName, String schemaFilePath, String workloadFilePath,
     String sparkQueryPath, String hiveQueryPath) throws IOException, ColumnNotFoundException
 	{
 		List<String> mergedJobs = genMergedJobs(schemaFilePath, workloadFilePath);

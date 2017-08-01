@@ -2,7 +2,12 @@ package cn.edu.ruc.iir.rainbow.layout.cmd;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
+import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
+import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
+import cn.edu.ruc.iir.rainbow.layout.domian.FileFormat;
+import cn.edu.ruc.iir.rainbow.layout.sql.GenerateDDL;
 
+import java.io.IOException;
 import java.util.Properties;
 
 public class CmdGenerateDDL implements Command
@@ -18,8 +23,8 @@ public class CmdGenerateDDL implements Command
     /**
      * params should contain the following settings:
      * <ol>
-     *   <li>table.type, ordered, dupped, origin</li>
      *   <li>file.format, orc, parquet, text</li>
+     *   <li>table.name</li>
      *   <li>schema.file</li>
      *   <li>ddl.file</li>
      * </ol>
@@ -33,35 +38,32 @@ public class CmdGenerateDDL implements Command
     @Override
     public void execute(Properties params)
     {
-        String algoName = params.getProperty("algorithm.name");
-        String schemaFilePath = params.getProperty("schema.file.path");
-        String workloadFilePath = params.getProperty("workload.file.path");
-        String duppedSchemaFilePath = params.getProperty("dupped.schema.file.path");
-        String duppedWorkloadFilePath = params.getProperty("dupped.workload.file.path");
-
+        FileFormat format = FileFormat.valueOf(params.getProperty("file.format"));
+        String schemaFilePath = params.getProperty("schema.file");
+        String ddlFilePath = params.getProperty("ddl.file");
+        String tableName = params.getProperty("table.name");
         Properties results = new Properties();
-        //try
-        //{
-
-            results.setProperty("dupped.schema.file.path", duppedSchemaFilePath);
-            results.setProperty("dupped.workload.file.path", duppedWorkloadFilePath);
-        //}
-        /* catch (IOException e)
+        try
+        {
+            switch (format)
+            {
+                case ORC:
+                    GenerateDDL.GenCreateOrc(tableName, schemaFilePath, ddlFilePath);
+                    results.setProperty("ddl.file", ddlFilePath);
+                    break;
+                case PARQUET:
+                    GenerateDDL.GenCreateParq(tableName, schemaFilePath, ddlFilePath);
+                    results.setProperty("ddl.file", ddlFilePath);
+                    break;
+                case TEXT:
+                    GenerateDDL.GenCreateText(schemaFilePath, ddlFilePath);
+                    results.setProperty("ddl.file", ddlFilePath);
+                    break;
+            }
+        } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
-        } catch (InterruptedException e)
-        {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, "interrupted while waiting for algorithm execution", e);
-        } catch (ColumnNotFoundException e)
-        {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, "column not fount when building workload", e);
-        } catch (ClassNotFoundException e)
-        {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, "algorithm class not fount", e);
-        } catch (AlgoException e)
-        {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, "algorithm initialization error", e);
-        }*/
+        }
 
         if (this.receiver == null)
         {
