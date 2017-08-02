@@ -8,7 +8,7 @@ Project structure:
   schedules the other modules (except rainbow-benchmark module) to make them work together and provides a simple API to rainbow users.
 
 * **rainbow-benchmark**
-  provides a wide table data generater. The generated data has similar schema and data distribution with real-world data while sensitive contents in the schema and data are masked. This module can be used seprately.
+  provides a wide table data generator. The generated data has similar schema and data distribution with real-world data while sensitive contents in the schema and data are masked. This module can be used seprately.
   
 * **rainbow-common**
   contains the common interface definitions, functions and utils.
