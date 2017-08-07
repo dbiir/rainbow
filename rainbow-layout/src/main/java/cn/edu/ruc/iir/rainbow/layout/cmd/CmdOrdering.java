@@ -51,6 +51,7 @@ public class CmdOrdering implements Command
      *   <li>init.cost, in milliseconds</li>
      *   <li>final.cost, in milliseconds</li>
      *   <li>ordered.schema.file</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
@@ -85,6 +86,7 @@ public class CmdOrdering implements Command
         }
 
         Properties results = new Properties();
+        results.setProperty("success", "false");
         try
         {
             List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(schemaFilePath));
@@ -106,6 +108,7 @@ public class CmdOrdering implements Command
             ColumnOrderBuilder.saveAsDDLSegment(new File(orderedFilePath), algo.getColumnOrder());
 
             results.setProperty("ordered.schema.file", orderedFilePath);
+            results.setProperty("success", "true");
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
@@ -123,7 +126,7 @@ public class CmdOrdering implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "algorithm initialization error", e);
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }

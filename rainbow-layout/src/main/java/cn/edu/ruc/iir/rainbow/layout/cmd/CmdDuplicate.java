@@ -53,6 +53,7 @@ public class CmdDuplicate implements Command
      *   <li>final.cost, in milliseconds</li>
      *   <li>dupped.schema.file</li>
      *   <li>dupped.workload.file</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
@@ -90,6 +91,7 @@ public class CmdDuplicate implements Command
         }
 
         Properties results = new Properties();
+        results.setProperty("success", "false");
         try
         {
             List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(schemaFilePath));
@@ -113,6 +115,7 @@ public class CmdDuplicate implements Command
 
             results.setProperty("dupped.schema.file", duppedSchemaFilePath);
             results.setProperty("dupped.workload.file", duppedWorkloadFilePath);
+            results.setProperty("success", "true");
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
@@ -130,7 +133,7 @@ public class CmdDuplicate implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "algorithm initialization error", e);
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }

@@ -29,21 +29,22 @@ public class CmdInitIndex implements Command
     /**
      * params should contain the following settings:
      * <ol>
-     *   <li>dupped.schema.file.path</li>
-     *   <li>dupped.workload.file.path</li>
+     *   <li>dupped.schema.file</li>
+     *   <li>dupped.workload.file</li>
      * </ol>
      * this method will pass the following results to receiver:
      * <ol>
-     *   <li>cache.index.success, true or false</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
     @Override
     public void execute(Properties params)
     {
-        String schemaFilePath = params.getProperty("dupped.schema.file.path");
-        String workloadFilePath = params.getProperty("dupped.workload.file.path");
+        String schemaFilePath = params.getProperty("dupped.schema.file");
+        String workloadFilePath = params.getProperty("dupped.workload.file");
         Properties results = new Properties();
+        results.setProperty("success", "false");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(schemaFilePath)))
         {
@@ -60,7 +61,7 @@ public class CmdInitIndex implements Command
             Index index = new Inverted(columnOrder, PatternBuilder.build(new File(workloadFilePath)));
             IndexFactory.Instance().cacheIndex(
                     ConfigFactory.Instance().getProperty("inverted.index.name"), index);
-            results.setProperty("cache.index.success", "true");
+            results.setProperty("success", "true");
         } catch (FileNotFoundException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "error when creating dupped schem file reader", e);
@@ -72,7 +73,7 @@ public class CmdInitIndex implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "error when building workload pattern", e);// build pattern
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }

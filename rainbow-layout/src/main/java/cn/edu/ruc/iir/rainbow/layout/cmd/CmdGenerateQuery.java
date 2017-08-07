@@ -36,6 +36,7 @@ public class CmdGenerateQuery implements Command
      * <ol>
      *   <li>spark.query.file</li>
      *   <li>hive.query.file</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
@@ -51,11 +52,13 @@ public class CmdGenerateQuery implements Command
         String hiveQueryFilePath = params.getProperty("hive.query.file");
 
         Properties results = new Properties();
+        results.setProperty("success", "false");
         try
         {
             GenerateQuery.Gen(tableName, orderedTableName, hostname, schemaFilePath, workloadFilePath, sparkQueryFilePath, hiveQueryFilePath);
             results.setProperty("spark.query.file", sparkQueryFilePath);
             results.setProperty("hive.query.file", hiveQueryFilePath);
+            results.setProperty("success", "true");
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
@@ -64,7 +67,7 @@ public class CmdGenerateQuery implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "column not fount when generating queries", e);
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }

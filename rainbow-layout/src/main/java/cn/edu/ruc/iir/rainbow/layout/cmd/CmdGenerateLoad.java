@@ -31,6 +31,7 @@ public class CmdGenerateLoad implements Command
      * this method will pass the following results to receiver:
      * <ol>
      *   <li>load.file</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
@@ -42,16 +43,18 @@ public class CmdGenerateLoad implements Command
         String loadFilePath = params.getProperty("load.file");
         String tableName = params.getProperty("table.name");
         Properties results = new Properties();
+        results.setProperty("success", "false");
         try
         {
             GenerateLoad.Gen(overwrite, tableName, schemaFilePath, loadFilePath);
             results.setProperty("load.file", loadFilePath);
+            results.setProperty("success", "true");
         } catch (IOException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }

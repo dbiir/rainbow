@@ -19,12 +19,12 @@ import java.util.Properties;
 /**
  * Created by hank on 16-12-25.
  */
-public class CmdSeekEva implements Command
+public class CmdSeekEvaluation implements Command
 {
     private SeekPerformer seekPerformer = null;
     private Receiver receiver = null;
 
-    public CmdSeekEva ()
+    public CmdSeekEvaluation()
     {
         this.seekPerformer = SeekPerformer.Instance();
     }
@@ -46,8 +46,29 @@ public class CmdSeekEva implements Command
      *               skip.distance skipDistance log.dir LogDir
      *               start.offset startOffset end.offset endOffset
      */
+
+    /**
+     * params should contain the following settings:
+     * <ol>
+     *   <li>method, HDFS or LOCAL</li>
+     *   <li>data.path, the directory on HDFS to store the generated files if method=HDFS</li>
+     *   <li>file, path of the data used to perform seek evaluation, if method=LOCAL, the path should</li>
+     *   <li>block.size, the HDFS block size if method=HDFS</li>
+     *   <li>num.block,  the number of blocks if method=HDFS</li>
+     *   <li>file.size the size of the generated gile if method=LOCAL</li>
+     * </ol>
+     * this method will pass the following results to receiver:
+     * <ol>
+     *   <li>success, true or false</li>
+     *   <li>dir, if method=HDFS</li>
+     *   <li>file, if method=LOCAL</li>
+     * </ol>
+     * @param params
+     */
     public void execute(Properties params)
     {
+        Properties results = new Properties();
+        results.setProperty("success", "false");
         // test the seek cost
         if (params.getProperty("method") == null)
         {
@@ -55,7 +76,7 @@ public class CmdSeekEva implements Command
                     new NullPointerException());
             return;
         }
-        String path = params.getProperty("path");
+        String path = params.getProperty("data.path");
         int numSeeks = Integer.parseInt(params.getProperty("num.seeks"));
         long seekDistance = Long.parseLong(params.getProperty("seek.distance"));
         int readLength = Integer.parseInt(params.getProperty("read.length"));
@@ -145,11 +166,8 @@ public class CmdSeekEva implements Command
             }
         } else
         {
-            {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +
-                        " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("method")));
-                return;
-            }
+            ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +
+                    " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("method")));
         }
     }
 }

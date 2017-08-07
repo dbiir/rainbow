@@ -32,6 +32,7 @@ public class CmdGenerateDDL implements Command
      * this method will pass the following results to receiver:
      * <ol>
      *   <li>ddl.file</li>
+     *   <li>success, true or false</li>
      * </ol>
      * @param params
      */
@@ -43,6 +44,7 @@ public class CmdGenerateDDL implements Command
         String ddlFilePath = params.getProperty("ddl.file");
         String tableName = params.getProperty("table.name");
         Properties results = new Properties();
+        results.setProperty("success", "false");
         try
         {
             switch (format)
@@ -50,14 +52,17 @@ public class CmdGenerateDDL implements Command
                 case ORC:
                     GenerateDDL.GenCreateOrc(tableName, schemaFilePath, ddlFilePath);
                     results.setProperty("ddl.file", ddlFilePath);
+                    results.setProperty("success", "true");
                     break;
                 case PARQUET:
                     GenerateDDL.GenCreateParq(tableName, schemaFilePath, ddlFilePath);
                     results.setProperty("ddl.file", ddlFilePath);
+                    results.setProperty("success", "true");
                     break;
                 case TEXT:
                     GenerateDDL.GenCreateText(schemaFilePath, ddlFilePath);
                     results.setProperty("ddl.file", ddlFilePath);
+                    results.setProperty("success", "true");
                     break;
             }
         } catch (IOException e)
@@ -65,7 +70,7 @@ public class CmdGenerateDDL implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
         }
 
-        if (this.receiver == null)
+        if (this.receiver != null)
         {
             receiver.action(results);
         }
