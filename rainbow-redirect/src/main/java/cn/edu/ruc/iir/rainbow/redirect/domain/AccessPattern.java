@@ -6,6 +6,7 @@ import java.util.*;
 
 public class AccessPattern
 {
+    // it seems that this.pattern can be a Set.
     private List<String> pattern = null;
     private Map<String, String> columnToReplicaMap = null;
 
@@ -58,7 +59,9 @@ public class AccessPattern
         Set<String> replicaSet = new HashSet<>(this.pattern);
         for (String columnReplica : columnOrder)
         {
-            String column = columnReplica.substring(0, columnReplica.lastIndexOf('_'));
+            // iterate through the column order.
+            int i = columnReplica.lastIndexOf('_');
+            String column = columnReplica.substring(0, i > 0 ? i :columnReplica.length());
             if (columnSet.contains(column))
             {
                 // this column is accessed by the query.
@@ -66,6 +69,9 @@ public class AccessPattern
                         || (!this.columnToReplicaMap.containsKey(column)))
                 {
                     // this column replica is the right one for the query to access.
+                    // this happens in two cases:
+                    // 1. this column replica is accessed in this pattern;
+                    // 2. the origin column of this column replica is not accessed in this pattern.
                     result.addColumnReplica(columnReplica);
                 }
             }
@@ -75,5 +81,16 @@ public class AccessPattern
             throw new ColumnOrderException("some column replicas may be missing in the column order.");
         }
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        for (String columnReplica : this.pattern)
+        {
+            builder.append(",").append(columnReplica);
+        }
+        return builder.substring(1);
     }
 }

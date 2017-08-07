@@ -24,7 +24,8 @@ public class Inverted implements Index
     {
         this.columnOrder = new ArrayList<>(columnOrder);
         this.queryAccessPatterns = new ArrayList<>(patterns);
-        ColumnSet fullColumnSet = ColumnSet.toColumnSet(columnOrder);
+        // filters column replicas.
+        ColumnSet fullColumnSet = ColumnSet.toColumnSet(this.columnOrder);
         this.bitMapIndex = new HashMap<>(fullColumnSet.size());
 
         for (String column : fullColumnSet.toArrayList())
@@ -50,8 +51,9 @@ public class Inverted implements Index
         and.set(0, this.queryAccessPatterns.size(), true);
         for (String column : columns)
         {
-            bitMaps.add(this.bitMapIndex.get(column));
-            and.and(this.bitMapIndex.get(column));
+            BitSet bitMap = this.bitMapIndex.get(column);
+            bitMaps.add(bitMap);
+            and.and(bitMap);
         }
 
         AccessPattern bestPattern = null;
