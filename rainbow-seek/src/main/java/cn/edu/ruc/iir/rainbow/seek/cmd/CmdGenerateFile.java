@@ -39,7 +39,10 @@ public class CmdGenerateFile implements Command
      *   <li>num.block,  the number of blocks if method=HDFS</li>
      *   <li>file.size the size of the generated gile if method=LOCAL</li>
      * </ol>
-     * this method will pass the following results to receiver:
+     * For HDFS, a lot of files will be generated, with each file only containing one block.
+     * Each file generated on HDFS use an unique integer number (NO) as the file name.
+     *
+     * This method will pass the following results to receiver:
      * <ol>
      *   <li>success, true or false</li>
      *   <li>dir, if method=HDFS</li>
@@ -56,6 +59,10 @@ public class CmdGenerateFile implements Command
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "method is null. Exiting...",
                     new NullPointerException());
+            if (receiver != null)
+            {
+                receiver.action(results);
+            }
             return;
         }
 

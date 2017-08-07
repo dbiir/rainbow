@@ -36,32 +36,26 @@ public class CmdSeekEvaluation implements Command
     }
 
     /**
-     * @param params method hdfs path pathOfFiles num.seeks numSeeks
-     *               seek.distance seekDistance read.length readLength
-     *               skip.file.num skipFileNum log.dir LogDir
-     *               start.num startFileNum end.num endFileNum /
-     *
-     *               method local path pathOfFiles num.seeks numSeeks
-     *               seek.distance seekDistance read.length readLength
-     *               skip.distance skipDistance log.dir LogDir
-     *               start.offset startOffset end.offset endOffset
-     */
-
-    /**
      * params should contain the following settings:
      * <ol>
      *   <li>method, HDFS or LOCAL</li>
      *   <li>data.path, the directory on HDFS to store the generated files if method=HDFS</li>
-     *   <li>file, path of the data used to perform seek evaluation, if method=LOCAL, the path should</li>
-     *   <li>block.size, the HDFS block size if method=HDFS</li>
-     *   <li>num.block,  the number of blocks if method=HDFS</li>
-     *   <li>file.size the size of the generated gile if method=LOCAL</li>
+     *   <li>num.seeks, number of seeks to perform in each segment</li>
+     *   <li>seek.distance, the distance of each seek</li>
+     *   <li>read.length,  the length in bytes been read after each seek</li>
+     *   <li>skip.file.num, the number of files been skipped between two segments if method=HDFS</li>
+     *   <li>skip.distance, the distance in bytes been skipped between two segments if method=LOCAL</li>
+     *   <li>log.dir, the local directory used to write evaluation results.
+     *   This directory can not be exist and will be created by this method itself</li>
+     *   <li>start.num, the integer number of HDFS file the seek evaluation starts if method=HDFS</li>
+     *   <li>end.num, the integer number of HDFS file the seek evaluation ends if method=HDFS</li>
+     *   <li>start.offset, the offset in bytes the seek evaluation starts if method=LOCAL</li>
+     *   <li>end.offset, the offset in bytes the seek evaluation ends if method=LOCAL</li>
      * </ol>
      * this method will pass the following results to receiver:
      * <ol>
      *   <li>success, true or false</li>
-     *   <li>dir, if method=HDFS</li>
-     *   <li>file, if method=LOCAL</li>
+     *   <li>log.dir</li>
      * </ol>
      * @param params
      */
@@ -74,6 +68,10 @@ public class CmdSeekEvaluation implements Command
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "method is null. Exiting...",
                     new NullPointerException());
+            if (receiver != null)
+            {
+                receiver.action(results);
+            }
             return;
         }
         String path = params.getProperty("data.path");
@@ -90,7 +88,11 @@ public class CmdSeekEvaluation implements Command
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "log directory " + logDir +
                     " exists. Exiting...", new ParameterNotSupportedException(logDir));
-            System.exit(1);
+            if (receiver != null)
+            {
+                receiver.action(results);
+            }
+            return;
         }
         dir.mkdirs();
         if (params.getProperty("method").equalsIgnoreCase("hdfs"))
@@ -129,6 +131,8 @@ public class CmdSeekEvaluation implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "hdfs seek evaluation error", e);
             }
+            results.setProperty("success", "true");
+            results.setProperty("log.dir", logDir);
         } else if (params.getProperty("method").equalsIgnoreCase("local"))
         {
             //test local seek cost
@@ -164,10 +168,17 @@ public class CmdSeekEvaluation implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "local seek evaluation error", e);
             }
+            results.setProperty("success", "true");
+            results.setProperty("log.dir", logDir);
         } else
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +
                     " not supported. Exiting...", new ParameterNotSupportedException(params.getProperty("method")));
+        }
+
+        if (receiver != null)
+        {
+            receiver.action(results);
         }
     }
 }
