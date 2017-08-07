@@ -44,7 +44,7 @@ public class PatternBuilder
 
                 ColumnSet columnSet = pattern.getColumnSet();
 
-                if (existingColumnSets.contains(columnSet))
+                if (! existingColumnSets.contains(columnSet))
                 {
                     patterns.add(pattern);
                     existingColumnSets.add(columnSet);

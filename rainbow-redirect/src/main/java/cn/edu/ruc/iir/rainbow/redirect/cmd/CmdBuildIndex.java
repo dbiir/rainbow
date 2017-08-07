@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class CmdInitIndex implements Command
+public class CmdBuildIndex implements Command
 {
     private Receiver receiver = null;
 
@@ -27,6 +27,10 @@ public class CmdInitIndex implements Command
     }
 
     /**
+     * This method create the index used in column redirection
+     * and cache the index in IndexFactory. We may have different kinds of indexes in the future.
+     * But currently, the only kind of index is the inverted bitmap index described in the paper.
+     *
      * params should contain the following settings:
      * <ol>
      *   <li>dupped.schema.file</li>
@@ -56,7 +60,6 @@ public class CmdInitIndex implements Command
                 String[] tokens = line.split("\t");
                 columnOrder.add(tokens[0]);
             }
-
 
             Index index = new Inverted(columnOrder, PatternBuilder.build(new File(workloadFilePath)));
             IndexFactory.Instance().cacheIndex(
