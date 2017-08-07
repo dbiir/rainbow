@@ -54,7 +54,6 @@ public class ConfigFactory
 				}
 			}
 		}
-		
 	}
 	
 	public void addProperty (String key, String value)
