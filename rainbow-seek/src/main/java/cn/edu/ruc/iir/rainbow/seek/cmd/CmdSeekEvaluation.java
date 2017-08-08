@@ -62,7 +62,7 @@ public class CmdSeekEvaluation implements Command
      */
     public void execute(Properties params)
     {
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         ProgressListener progressListener = percentage -> {
             if (this.receiver != null)
@@ -147,7 +147,6 @@ public class CmdSeekEvaluation implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "hdfs seek evaluation error", e);
             }
             results.setProperty("success", "true");
-            results.setProperty("log.dir", logDir);
         } else if (params.getProperty("method").equalsIgnoreCase("local"))
         {
             //test local seek cost
@@ -190,7 +189,6 @@ public class CmdSeekEvaluation implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "local seek evaluation error", e);
             }
             results.setProperty("success", "true");
-            results.setProperty("log.dir", logDir);
         } else
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +

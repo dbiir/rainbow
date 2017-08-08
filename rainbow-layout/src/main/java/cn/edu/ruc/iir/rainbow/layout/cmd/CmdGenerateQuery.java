@@ -51,13 +51,11 @@ public class CmdGenerateQuery implements Command
         String sparkQueryFilePath = params.getProperty("spark.query.file");
         String hiveQueryFilePath = params.getProperty("hive.query.file");
 
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         try
         {
             GenerateQuery.Gen(tableName, orderedTableName, hostname, schemaFilePath, workloadFilePath, sparkQueryFilePath, hiveQueryFilePath);
-            results.setProperty("spark.query.file", sparkQueryFilePath);
-            results.setProperty("hive.query.file", hiveQueryFilePath);
             results.setProperty("success", "true");
         } catch (IOException e)
         {

@@ -7,28 +7,33 @@ import java.util.Properties;
 /**
  * Created by hank on 17-5-4.
  */
-public class Invoker
+abstract public class Invoker
 {
     private Command command = null;
 
-    public void setCommand(Command command, Receiver receiver) throws CommandException
+    public Invoker ()
     {
-        this.command = command;
-        if (command != null && receiver != null)
+        this.createCommand();
+    }
+
+    /**
+     * create this.command and set receiver for it
+     */
+    abstract protected void createCommand ();
+
+    final protected void setCommand(Command command) throws CommandException
+    {
+        if (command != null)
         {
-            command.setReceiver(receiver);
-        }
-        else if (command == null)
-        {
-            throw new CommandException("command is null.");
+            this.command = command;
         }
         else
         {
-            throw new CommandException("receiver is null.");
+            throw new CommandException("command is null.");
         }
     }
 
-    public void executeCommand (Properties params) throws CommandException
+    public final void executeCommand (Properties params) throws CommandException
     {
         if (this.command != null)
         {

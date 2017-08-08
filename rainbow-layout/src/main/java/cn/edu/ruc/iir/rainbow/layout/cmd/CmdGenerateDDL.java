@@ -44,7 +44,7 @@ public class CmdGenerateDDL implements Command
         String schemaFilePath = params.getProperty("schema.file");
         String ddlFilePath = params.getProperty("ddl.file");
         String tableName = params.getProperty("table.name");
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         try
         {
@@ -52,17 +52,14 @@ public class CmdGenerateDDL implements Command
             {
                 case ORC:
                     GenerateDDL.GenCreateOrc(tableName, schemaFilePath, ddlFilePath);
-                    results.setProperty("ddl.file", ddlFilePath);
                     results.setProperty("success", "true");
                     break;
                 case PARQUET:
                     GenerateDDL.GenCreateParq(tableName, schemaFilePath, ddlFilePath);
-                    results.setProperty("ddl.file", ddlFilePath);
                     results.setProperty("success", "true");
                     break;
                 case TEXT:
                     GenerateDDL.GenCreateText(schemaFilePath, ddlFilePath);
-                    results.setProperty("ddl.file", ddlFilePath);
                     results.setProperty("success", "true");
                     break;
                 default:

@@ -66,7 +66,7 @@ public class CmdWorkloadEvaluation implements Command
     @Override
     public void execute(Properties params)
     {
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         ProgressListener progressListener = percentage -> {
             if (receiver != null)
@@ -141,7 +141,6 @@ public class CmdWorkloadEvaluation implements Command
                 }
 
                 results.setProperty("success", "true");
-                results.setProperty("log.dir", log_dir);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate local error", e);
@@ -218,7 +217,6 @@ public class CmdWorkloadEvaluation implements Command
                     progressListener.setPercentage(readLength/workloadFileLength);
                 }
                 results.setProperty("success", "true");
-                results.setProperty("log.dir", log_dir);
 
             } catch (IOException e)
             {
