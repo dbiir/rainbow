@@ -56,6 +56,7 @@ public class CmdRedirect implements Command
 
         if (receiver != null)
         {
+            receiver.progress(1.0);
             receiver.action(results);
         }
     }

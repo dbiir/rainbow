@@ -2,6 +2,7 @@ package cn.edu.ruc.iir.rainbow.layout.cmd;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
+import cn.edu.ruc.iir.rainbow.common.exception.AlgoException;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
 import cn.edu.ruc.iir.rainbow.layout.domian.FileFormat;
@@ -64,6 +65,10 @@ public class CmdGenerateDDL implements Command
                     results.setProperty("ddl.file", ddlFilePath);
                     results.setProperty("success", "true");
                     break;
+                default:
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR, "unknown file format " + format,
+                            new AlgoException("file format not supported"));
+                    break;
             }
         } catch (IOException e)
         {
@@ -72,6 +77,7 @@ public class CmdGenerateDDL implements Command
 
         if (this.receiver != null)
         {
+            receiver.progress(1.0);
             receiver.action(results);
         }
     }

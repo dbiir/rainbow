@@ -78,6 +78,7 @@ public class CmdBuildIndex implements Command
 
         if (this.receiver != null)
         {
+            receiver.progress(1.0);
             receiver.action(results);
         }
     }

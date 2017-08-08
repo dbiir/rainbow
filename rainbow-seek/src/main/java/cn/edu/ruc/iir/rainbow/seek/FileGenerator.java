@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.seek;
 
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -34,16 +35,17 @@ public class FileGenerator
 
     /**
      * Generate a batch of files on HDFS
-     * @param blockSize
+     * @param blockSize in bytes
      * @param blockCount
      * @param path
      * @return
      * @throws IOException
      */
-    public List<FileStatus> generateHDFSFile (final long blockSize, final long blockCount, String path) throws IOException
+    public List<FileStatus> generateHDFSFile (final long blockSize, final long blockCount,
+                                              String path, ProgressListener progressListener) throws IOException
     {
         Configuration conf = new Configuration();
-        //conf.setLong("dfs.block.size", blockSize);
+
         conf.setBoolean("dfs.support.append", true);
         FileSystem fs = FileSystem.get(URI.create(path), conf);
         fs.mkdirs(new Path(path));
@@ -53,19 +55,21 @@ public class FileGenerator
             path += "/";
         }
 
-        // 10 MB buffer
-        byte[] buffer = new byte[16* 1024 * 1024];
+        // 1 MB buffer
+        final int bufferSize = 1 * 1024 * 1024;
+        byte[] buffer = new byte[bufferSize];
         buffer[0] = 1;
         buffer[1] = 2;
         buffer[2] = 3;
 
-        // number of buffers to write
-        long n = blockSize / 1024 / 1024 / 16;
+        // number of buffers to write for each block
+        long n = blockSize / bufferSize;
 
         for (int i = 0; i < blockCount; ++i)
         {
+            // one block per file
             Path filePath = new Path(path + i);
-            FSDataOutputStream out = fs.create(filePath, false, 64 * 1024 * 1024, (short) 1, blockSize);
+            FSDataOutputStream out = fs.create(filePath, false, bufferSize, (short) 1, n * bufferSize);
 
             for (int j = 0; j < n; ++j)
             {
@@ -74,6 +78,7 @@ public class FileGenerator
             out.flush();
             out.close();
             statuses.add(fs.getFileStatus(filePath));
+            progressListener.setPercentage(1.0 * i / blockCount);
         }
         return statuses;
     }
@@ -85,19 +90,29 @@ public class FileGenerator
      * @return
      * @throws IOException
      */
-    public File generateLocalFile (long fileSize, String path) throws IOException
+    public File generateLocalFile (long fileSize, String path, ProgressListener progressListener) throws IOException
     {
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(path), 32 * 1024 * 1024);
-        byte[] buffer = new byte[100*1024];
+        // 1 MB buffer
+        final int bufferSize = 1 * 1024 * 1024;
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(path), bufferSize);
+        byte[] buffer = new byte[bufferSize];
         buffer[0] = 1;
         buffer[1] = 2;
         buffer[2] = 3;
-        long n = fileSize/ 1024 / 100;
+        long writenLength = 0;
+        double writenPercentage = 0.0;
+        long n = fileSize / bufferSize;
         for (int i = 0; i < n; ++i)
         {
             out.write(buffer);
+            out.flush();
+            writenLength += bufferSize;
+            if (writenLength * 100 / fileSize > writenPercentage)
+            {
+                writenPercentage = 100.0 * writenLength / fileSize;
+                progressListener.setPercentage(writenPercentage / 100.0);
+            }
         }
-        out.flush();
         out.close();
         return new File(path);
     }

@@ -6,6 +6,7 @@ import cn.edu.ruc.iir.rainbow.common.exception.*;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.Algorithm;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.AlgorithmFactory;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.ExecutorContainer;
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.layout.builder.ColumnOrderBuilder;
 import cn.edu.ruc.iir.rainbow.layout.builder.SimulatedSeekCostBuilder;
 import cn.edu.ruc.iir.rainbow.layout.builder.WorkloadBuilder;
@@ -97,8 +98,14 @@ public class CmdOrdering implements Command
             results.setProperty("init.cost", ""+algo.getSchemaSeekCost());
             try
             {
+                ProgressListener progressListener = percentage -> {
+                    if (this.receiver != null)
+                    {
+                        this.receiver.progress(percentage);
+                    }
+                };
                 ExecutorContainer container = new ExecutorContainer(algo, 1);
-                container.waitForCompletion();
+                container.waitForCompletion(budget/100, progressListener);
             } catch (NotMultiThreadedException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);

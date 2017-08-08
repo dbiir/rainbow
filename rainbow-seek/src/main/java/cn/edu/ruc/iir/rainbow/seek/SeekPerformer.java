@@ -36,8 +36,8 @@ public class SeekPerformer
      * @param conf the HDFS configuration
      * @return the actual number of seeks been performed.
      */
-    public int hdfsSeekTest (long[] seekCosts, final FileStatus fileStatus, final int numSeeks,
-                             final int readLength, final long seekDistance, Configuration conf)
+    public int performHDFSSeeks (long[] seekCosts, final FileStatus fileStatus, final int numSeeks,
+                                 final int readLength, final long seekDistance, Configuration conf)
             throws IOException
     {
         if (seekCosts.length < numSeeks)
@@ -87,9 +87,9 @@ public class SeekPerformer
      * @param conf the HDFS configuration
      * @return the actual number of seeks been performed.
      */
-    public int hdfsInversedSeekTest (long[] seekCosts, final FileStatus fileStatus,
-                                            final int numSeeks, final int readLength,
-                                            final long seekDistance, Configuration conf)
+    public int performInversedHDFSSeeks (long[] seekCosts, final FileStatus fileStatus,
+                                         final int numSeeks, final int readLength,
+                                         final long seekDistance, Configuration conf)
             throws IOException
     {
         if (seekCosts.length < numSeeks)
@@ -139,7 +139,8 @@ public class SeekPerformer
      * @return
      * @throws IOException
      */
-    public int localSeekTest (long[] seekCosts, final File file, final long initPos, final int seekTimes, final int readSize, final long seekDistance) throws IOException
+    public int performLocalSeeks (long[] seekCosts, final File file, final long initPos,
+                                  final int seekTimes, final int readSize, final long seekDistance) throws IOException
     {
         if (seekCosts.length < seekTimes)
         {

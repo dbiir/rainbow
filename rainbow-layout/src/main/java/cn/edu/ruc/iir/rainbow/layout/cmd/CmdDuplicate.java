@@ -6,6 +6,7 @@ import cn.edu.ruc.iir.rainbow.common.exception.*;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.AlgorithmFactory;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.DupAlgorithm;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.ExecutorContainer;
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.layout.builder.ColumnOrderBuilder;
 import cn.edu.ruc.iir.rainbow.layout.builder.SimulatedSeekCostBuilder;
 import cn.edu.ruc.iir.rainbow.layout.builder.WorkloadBuilder;
@@ -60,6 +61,13 @@ public class CmdDuplicate implements Command
     @Override
     public void execute(Properties params)
     {
+        Properties results = new Properties();
+        results.setProperty("success", "false");
+        if (this.receiver != null)
+        {
+            this.receiver.progress(0);
+        }
+
         String algoName = params.getProperty("algorithm.name");
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
@@ -69,6 +77,7 @@ public class CmdDuplicate implements Command
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
+
         switch (funcType)
         {
             case LINEAR:
@@ -88,10 +97,16 @@ public class CmdDuplicate implements Command
                             "get seek cost file error", e);
                 }
                 break;
+            default:
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, "unknown function type " + funcType,
+                        new AlgoException("seek cost function type not supported"));
+                if (receiver != null)
+                {
+                    receiver.action(results);
+                }
+                return;
         }
 
-        Properties results = new Properties();
-        results.setProperty("success", "false");
         try
         {
             List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(schemaFilePath));
@@ -102,8 +117,16 @@ public class CmdDuplicate implements Command
             results.setProperty("init.cost", ""+dupAlgo.getSchemaSeekCost());
             try
             {
+                ProgressListener progressListener = percentage -> {
+                    if (this.receiver != null)
+                    {
+                        this.receiver.progress(percentage);
+                    }
+                };
                 ExecutorContainer container = new ExecutorContainer(dupAlgo, 1);
-                container.waitForCompletion();
+                container.waitForCompletion(budget/100, progressListener);
+
+
             } catch (NotMultiThreadedException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
