@@ -58,9 +58,10 @@ public class DataGeneratorThread extends Thread {
      */
     public void generateData(int dataSize) {
         BufferedWriter bw = null;
-        String directory = filePath + "GenThread/" + DataUtil.getCurTime() + "/";
-        String outGenPath = directory + DataUtil.getCurTime() + "_" + dataSize + ".txt";
-        String outGenMemoPath = directory + "memo.txt";
+        String fileName = DataUtil.getCurTime();
+        String directory = filePath + "data/";
+        String outGenPath = directory + fileName + ".txt";
+        String outGenMemoPath = filePath + "memo.txt";
         try {
             File f = new File(directory);
             if (!f.exists()) {
@@ -96,8 +97,8 @@ public class DataGeneratorThread extends Thread {
             }
             bw.flush();
             // size, col -> memo.txt
-            bw = new BufferedWriter(new FileWriter(outGenMemoPath));
-            String memo = "{\"dataSize\": \"" + fileSize + "\",\"colCount\":\"" + col + "\"}";
+            bw = new BufferedWriter(new FileWriter(outGenMemoPath, true));
+            String memo = "fileName," + fileName + ",colCount," + col;
             bw.write(memo + "\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
