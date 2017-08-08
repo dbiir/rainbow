@@ -42,12 +42,11 @@ public class CmdGenerateLoad implements Command
         String schemaFilePath = params.getProperty("schema.file");
         String loadFilePath = params.getProperty("load.file");
         String tableName = params.getProperty("table.name");
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         try
         {
             GenerateLoad.Gen(overwrite, tableName, schemaFilePath, loadFilePath);
-            results.setProperty("load.file", loadFilePath);
             results.setProperty("success", "true");
         } catch (IOException e)
         {

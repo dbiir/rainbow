@@ -25,7 +25,7 @@ import java.util.Properties;
 /**
  * Created by hank on 17-5-4.
  */
-public class CmdDuplicate implements Command
+public class CmdDuplication implements Command
 {
     private Receiver receiver = null;
 
@@ -61,7 +61,7 @@ public class CmdDuplicate implements Command
     @Override
     public void execute(Properties params)
     {
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         if (this.receiver != null)
         {
@@ -136,8 +136,6 @@ public class CmdDuplicate implements Command
             WorkloadBuilder.saveAsWorkloadFile(new File(duppedWorkloadFilePath), dupAlgo.getWorkloadPattern());
             ColumnOrderBuilder.saveAsDDLSegment(new File(duppedSchemaFilePath), dupAlgo.getColumnOrder());
 
-            results.setProperty("dupped.schema.file", duppedSchemaFilePath);
-            results.setProperty("dupped.workload.file", duppedWorkloadFilePath);
             results.setProperty("success", "true");
         } catch (IOException e)
         {

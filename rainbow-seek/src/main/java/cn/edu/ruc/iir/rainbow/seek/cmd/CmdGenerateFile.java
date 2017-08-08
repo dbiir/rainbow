@@ -53,7 +53,7 @@ public class CmdGenerateFile implements Command
      */
     public void execute(Properties params)
     {
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
         ProgressListener progressListener = percentage -> {
             if (this.receiver != null)

@@ -50,7 +50,7 @@ public class CmdRedirect implements Command
                 ConfigFactory.Instance().getProperty("inverted.index.name"));
         AccessPattern bestPattern = index.search(columnSet);
 
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "true");
         results.setProperty("access.pattern", bestPattern.toString());
 

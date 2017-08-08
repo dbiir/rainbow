@@ -47,7 +47,7 @@ public class CmdBuildIndex implements Command
     {
         String schemaFilePath = params.getProperty("dupped.schema.file");
         String workloadFilePath = params.getProperty("dupped.workload.file");
-        Properties results = new Properties();
+        Properties results = new Properties(params);
         results.setProperty("success", "false");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(schemaFilePath)))

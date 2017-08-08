@@ -67,6 +67,10 @@ public class CmdOrdering implements Command
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
+
+        Properties results = new Properties(params);
+        results.setProperty("success", "false");
+
         if (funcType == SeekCostFunction.Type.LINEAR)
         {
             seekCostFunction = new LinearSeekCostFunction();
@@ -83,11 +87,14 @@ public class CmdOrdering implements Command
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR,
                         "get seek cost file error", e);
+                if (receiver != null)
+                {
+                    receiver.action(results);
+                }
+                return;
             }
         }
 
-        Properties results = new Properties();
-        results.setProperty("success", "false");
         try
         {
             List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(schemaFilePath));
@@ -114,7 +121,6 @@ public class CmdOrdering implements Command
             results.setProperty("final.cost", ""+algo.getCurrentWorkloadSeekCost());
             ColumnOrderBuilder.saveAsDDLSegment(new File(orderedFilePath), algo.getColumnOrder());
 
-            results.setProperty("ordered.schema.file", orderedFilePath);
             results.setProperty("success", "true");
         } catch (IOException e)
         {
