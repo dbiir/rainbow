@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.benchmark;
 
+import cn.edu.ruc.iir.rainbow.benchmark.common.SysSettings;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,6 +38,18 @@ public class TestColumnGenerator {
     public void TestSetWorkloadShift() {
         columnGenerator.setColumnShift();
         columnGenerator.setWorkloadShift();
+    }
+
+    @Test
+    public void TestGetColumnName() {
+        SysSettings.CONFIG_DIRECTORY = "E:\\ruc_projects\\IntelliJHome\\rainbow\\rainbow-benchmark\\src\\main\\resources";
+
+        long startTime = System.currentTimeMillis();
+        String columnName[] = columnGenerator.getColumnName();
+        long endTime = System.currentTimeMillis();
+        System.out.println("Program run time : ： " + (endTime - startTime) + "ms");
+
+        System.out.println(columnName.length);
     }
 
 

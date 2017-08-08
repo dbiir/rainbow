@@ -1,7 +1,9 @@
 package cn.edu.ruc.iir.rainbow.benchmark.algorithm;
 
 import cn.edu.ruc.iir.rainbow.benchmark.ColumnGenerator;
+import cn.edu.ruc.iir.rainbow.benchmark.common.SysSettings;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
+import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -20,8 +22,7 @@ import java.util.List;
  **/
 public class DataGenerator {
 
-    private String data_origin = "_data/schema_origin.txt";
-    private String filePath = "";
+    private String filePath;
     private String columnName[];
     private List<List<Column>> columnList = new ArrayList();
     private int threadNum;
@@ -45,10 +46,6 @@ public class DataGenerator {
      * @date: 16:15 2017/7/29
      */
     public void genDataBySize(int dataSize) {
-        // init, 1718ms
-        filePath = this.getClass().getClassLoader()
-                .getResource((data_origin)).getFile();
-        filePath = filePath.replace(data_origin, "");
         initColumns();
         initColumnRate();
 
@@ -56,6 +53,7 @@ public class DataGenerator {
         DataGeneratorThread[] dataGeneratorThreads = new DataGeneratorThread[threadNum];
         int size = Math.floorDiv(dataSize, threadNum);
         try {
+            filePath = SysSettings.CONFIG_DIRECTORY + "/benchmark_data/" + DataUtil.getCurTime() + "_" + dataSize + "/";
             for (int i = 0; i < threadNum; i++) {
                 DataGeneratorThread t = new DataGeneratorThread(filePath, columnName, columnList, size);
                 dataGeneratorThreads[i] = t;
@@ -108,7 +106,7 @@ public class DataGenerator {
      * @date: 19:18 2017/7/29
      */
     private void initColumnList(String cName) {
-        String columnPath = filePath + "data_dict/" + cName + ".txt";
+        String columnPath = SysSettings.CONFIG_DIRECTORY + "/data_dict/" + cName + ".txt";
         String curLine = null;
         BufferedReader br = null;
         String columnsLine[] = null;
@@ -117,13 +115,11 @@ public class DataGenerator {
             List<Column> columnRate = new ArrayList<>();
             int index = 0;
             while ((curLine = br.readLine()) != null) {
-                Column c = new Column();
                 // 0: columnName, 1: content, 2: rate(interval)
                 columnsLine = curLine.split("\t");
                 // 0: columnName, 1: content, 2: rate(interval)
                 index += Integer.valueOf(columnsLine[2]);
-                c.setUpperBound(index);
-                c.setValue(columnsLine[1]);
+                Column c = new Column(index, columnsLine[1]);
                 columnRate.add(c);
             }
             columnList.add(columnRate);

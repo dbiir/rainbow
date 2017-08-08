@@ -1,5 +1,7 @@
 package cn.edu.ruc.iir.rainbow.benchmark;
 
+import cn.edu.ruc.iir.rainbow.benchmark.common.SysSettings;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +16,8 @@ import java.util.Map;
  **/
 public class ColumnGenerator {
 
-    public String schema_origin = "_data/schema.txt";
-    public String workload = "_data/workload.txt";
-    public String filePath = null;
+    public String schema_origin = "/data/schema.txt";
+    public String workload = "/data/workload.txt";
 
     // column mapping
     public Map<String, String> columnMap = new HashMap<String, String>();
@@ -38,14 +39,13 @@ public class ColumnGenerator {
      * @date: 16:24 2017/7/27
      */
     public void setColumnShift() {
-        filePath = this.getClass().getClassLoader()
-                .getResource((schema_origin)).getFile();
+        String filePath = SysSettings.CONFIG_DIRECTORY + schema_origin;
         String curLine = null;
         BufferedReader br = null;
         BufferedWriter bw = null;
         BufferedWriter bw1 = null;
-        String outCsvPath = filePath.replace(schema_origin, "column_mapping.csv");
-        String outSchemaPath = filePath.replace(schema_origin, "schema_new.txt");
+        String outCsvPath = SysSettings.CONFIG_DIRECTORY + "column_mapping.csv";
+        String outSchemaPath = SysSettings.CONFIG_DIRECTORY + "schema_new.txt";
         int i = 1;
         String newColumnName = null;
         String mapLine[] = null;
@@ -84,12 +84,11 @@ public class ColumnGenerator {
      * @date: 16:28 2017/7/27
      */
     public void setWorkloadShift() {
-        filePath = this.getClass().getClassLoader()
-                .getResource((workload)).getFile();
+        String filePath = SysSettings.CONFIG_DIRECTORY + workload;
         String curLine = null;
         BufferedReader br = null;
         BufferedWriter bw = null;
-        String outWorkloadPath = filePath.replace(workload, "workload_new.txt");
+        String outWorkloadPath = SysSettings.CONFIG_DIRECTORY + "workload_new.txt";
         String splitLine[] = null;
         String columnsLine[] = null;
         String columnName = null;
@@ -130,22 +129,22 @@ public class ColumnGenerator {
 
 
     public String[] getColumnName() {
-        filePath = this.getClass().getClassLoader()
-                .getResource((schema_origin)).getFile();
+        String filePath = SysSettings.CONFIG_DIRECTORY + schema_origin;
         String curLine;
         BufferedReader br = null;
         String columnName[] = new String[0];
         String splitLine[];
-        String columnLine = "";
+        StringBuilder columnLine = new StringBuilder();
         try {
             br = new BufferedReader(new FileReader(filePath));
             while ((curLine = br.readLine()) != null) {
                 splitLine = curLine.split("\t");
-                columnLine += splitLine[0] + ",";
+                columnLine.append(splitLine[0] + ",");
             }
-            columnLine = columnLine.substring(0, columnLine.length() - 1);
-            columnName = columnLine.split(",");
+            columnLine.deleteCharAt(columnLine.length() - 1);
+            columnName = columnLine.toString().split(",");
         } catch (FileNotFoundException e) {
+            System.out.println("error: " + filePath);
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
