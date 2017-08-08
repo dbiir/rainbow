@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.layout.algorithm;
 
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.exception.NotMultiThreadedException;
 import cn.edu.ruc.iir.rainbow.common.util.LogFactory;
 
@@ -37,19 +38,39 @@ public class ExecutorContainer
         }
     }
 
-    public void waitForCompletion() throws InterruptedException
+    /**
+     * Set completed percentage of the progressListener after each interval.
+     * @param interval in seconds
+     * @param progressListener
+     * @throws InterruptedException
+     */
+    public void waitForCompletion(long interval, ProgressListener progressListener) throws InterruptedException
     {
         this.executor.shutdown();
         long computationBudget = this.algo.getComputationBudget();
-        if (computationBudget < 0)
+        if (computationBudget <= 0)
         {
-            LogFactory.Instance().getLog().debug("Computation budget {" + computationBudget + "} is less than zero, force set to zero.");
-            computationBudget = 0;
+            LogFactory.Instance().getLog().debug("Computation budget {" + computationBudget + "} <= 0, force set to 1.");
+            computationBudget = 1;
         }
-        while (this.executor.awaitTermination(computationBudget+1, TimeUnit.SECONDS) == false)
+
+        if (interval <= 0)
         {
-            LogFactory.Instance().getLog().debug("Computation budget {" + computationBudget +
-                    "} is not enough. We are not giving up. Another {" + computationBudget + "} is given.");
+            interval = 1;
+        }
+
+        double executedTime = 0;
+
+        while (this.executor.awaitTermination(interval, TimeUnit.SECONDS) == false)
+        {
+            executedTime += interval;
+            if (executedTime > computationBudget)
+            {
+                LogFactory.Instance().getLog().debug("Computation budget {" + computationBudget +
+                        "} is not enough. We are not giving up. Another {" + interval + "} is given.");
+                executedTime = computationBudget;
+            }
+            progressListener.setPercentage(executedTime/computationBudget);
         }
         this.executor.shutdownNow();
         this.algo.cleanup();

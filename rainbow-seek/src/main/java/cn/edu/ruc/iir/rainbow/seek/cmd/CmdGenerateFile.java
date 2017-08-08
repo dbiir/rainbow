@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.seek.cmd;
 
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
@@ -54,6 +55,14 @@ public class CmdGenerateFile implements Command
     {
         Properties results = new Properties();
         results.setProperty("success", "false");
+        ProgressListener progressListener = percentage -> {
+            if (this.receiver != null)
+            {
+                this.receiver.progress(percentage);
+            }
+        };
+        progressListener.setPercentage(0.0);
+
         //generate the test file
         if (params.getProperty("method") == null)
         {
@@ -74,7 +83,7 @@ public class CmdGenerateFile implements Command
             long numBlock = Long.parseLong(params.getProperty("num.block"));
             try
             {
-                generator.generateHDFSFile(blockSize, numBlock, dirPath);
+                generator.generateHDFSFile(blockSize, numBlock, dirPath, progressListener);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate hdfs file error", e);
@@ -88,7 +97,7 @@ public class CmdGenerateFile implements Command
             String filePath = params.getProperty("file");
             try
             {
-                generator.generateLocalFile(FileSize, filePath);
+                generator.generateLocalFile(FileSize, filePath, progressListener);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate local file error", e);

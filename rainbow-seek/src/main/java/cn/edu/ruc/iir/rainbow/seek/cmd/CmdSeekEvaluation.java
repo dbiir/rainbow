@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.seek.cmd;
 
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
@@ -40,7 +41,7 @@ public class CmdSeekEvaluation implements Command
      * <ol>
      *   <li>method, HDFS or LOCAL</li>
      *   <li>data.path, the directory on HDFS to store the generated files if method=HDFS</li>
-     *   <li>num.seeks, number of seeks to perform in each segment</li>
+     *   <li>num.seeks, number of seeks to be performed in each segment</li>
      *   <li>seek.distance, the distance of each seek</li>
      *   <li>read.length,  the length in bytes been read after each seek</li>
      *   <li>skip.file.num, the number of files been skipped between two segments if method=HDFS</li>
@@ -63,6 +64,14 @@ public class CmdSeekEvaluation implements Command
     {
         Properties results = new Properties();
         results.setProperty("success", "false");
+        ProgressListener progressListener = percentage -> {
+            if (this.receiver != null)
+            {
+                this.receiver.progress(percentage);
+            }
+        };
+        progressListener.setPercentage(0.0);
+
         // test the seek cost
         if (params.getProperty("method") == null)
         {
@@ -107,21 +116,27 @@ public class CmdSeekEvaluation implements Command
                 writer.write("fileNumber\tseekDistance\treadSize\tfileSeekTime(us)\n");
                 System.out.print((seekDistance / 1024));
                 int startFileNumber = 0, endFileNumber = statuses.length;
-                if (params.size() > 7)
+                if (params.getProperty("start.num") != null &&
+                        params.getProperty("end.num") != null)
                 {
                     startFileNumber = Integer.parseInt(params.getProperty("start.num"));
                     endFileNumber = Integer.parseInt(params.getProperty("end.num"));
                 }
 
+                int totalFileNumber = (endFileNumber - startFileNumber) / skipFileNum;
+                int processedFileNumber = 0;
                 for (int i = startFileNumber; i < endFileNumber; i += skipFileNum)
                 {
-                    //get the hdfs file status
+                    // get the hdfs file status
                     FileStatus status = statuses[i];
                     long[] seekCosts = new long[numSeeks];
-                    int realNumSeeks = seekPerformer.hdfsSeekTest(seekCosts, status, numSeeks, readLength, seekDistance, conf);
+                    int realNumSeeks = seekPerformer.performHDFSSeeks(
+                            seekCosts, status, numSeeks, readLength, seekDistance, conf);
                     double fileMidCost = seekPerformer.logSeekCost(seekCosts, realNumSeeks, logDir + "details-of-file-" + i);
                     writer.write(i + "\t" + seekDistance + "\t" + readLength + "\t" + fileMidCost + "\n");
                     System.out.print("\t" + fileMidCost);
+                    processedFileNumber ++;
+                    progressListener.setPercentage(1.0 * processedFileNumber / totalFileNumber);
                 }
                 writer.flush();
                 writer.close();
@@ -145,20 +160,26 @@ public class CmdSeekEvaluation implements Command
                 BufferedWriter writer = new BufferedWriter(new FileWriter(logDir + "aggregate"));
                 writer.write("initPos\tseekDistance\treadSize\tsegSeekTime(us)\n");
                 System.out.print((seekDistance / 1024));
-                if (params.size() > 7)
+                if (params.getProperty("start.offset") != null &&
+                        params.getProperty("end.offset") != null)
                 {
                     startOffset = Long.parseLong(params.getProperty("start.offset"));
                     endOffset = Long.parseLong(params.getProperty("end.offset"));
                 }
+                long totalSegmentNumber = (endOffset - startOffset) / skipDistance;
+                long processedSegmentNumber = 0;
                 while (startOffset < endOffset)
                 {
                     long[] seekCosts = new long[numSeeks];
-                    int realNumSeeks = seekPerformer.localSeekTest(seekCosts, file, startOffset, numSeeks, readLength, seekDistance);
+                    int realNumSeeks = seekPerformer.performLocalSeeks(
+                            seekCosts, file, startOffset, numSeeks, readLength, seekDistance);
                     double segMidCost = seekPerformer.logSeekCost(seekCosts, realNumSeeks, logDir + "details-of-seg-" + startOffset);
                     writer.write(startOffset + "\t" + seekDistance + "\t" + readLength + "\t" + segMidCost + "\n");
 
                     System.out.print("\t" + segMidCost);
                     startOffset += skipDistance;
+                    processedSegmentNumber++;
+                    progressListener.setPercentage(1.0 * processedSegmentNumber / totalSegmentNumber);
                 }
                 writer.flush();
                 writer.close();

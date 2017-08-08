@@ -1,6 +1,7 @@
 package cn.edu.ruc.iir.rainbow.eva.cmd;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
@@ -26,7 +27,7 @@ import java.util.Properties;
 /**
  * Created by hank on 17-5-4.
  */
-public class CmdEvaluate implements Command
+public class CmdWorkloadEvaluation implements Command
 {
     private Log log = LogFactory.Instance().getLog();
 
@@ -67,17 +68,30 @@ public class CmdEvaluate implements Command
     {
         Properties results = new Properties();
         results.setProperty("success", "false");
+        ProgressListener progressListener = percentage -> {
+            if (receiver != null)
+            {
+                receiver.progress(percentage);
+            }
+        };
+        progressListener.setPercentage(0.0);
+
+
+        String orderedPath = params.getProperty("ordered.table.dir");
+        String unorderedPath = params.getProperty("table.dir");
+        String workloadFilePath = params.getProperty("workload.file");
+        String log_dir = params.getProperty("log.dir");
+        boolean dropCache = Boolean.parseBoolean(params.getProperty("drop.cache"));
+        String dropCachesSh = params.getProperty("drop.caches.sh");
+        double workloadFileLength = (new File(workloadFilePath)).length();
+        double readLength = 0;
 
         if (params.getProperty("method").equalsIgnoreCase("local"))
         {
-            String orderedPath = params.getProperty("ordered.table.dir");
-            String unorderedPath = params.getProperty("table.dir");
-            String columnFilePath = params.getProperty("workload.file");
-            String log_dir = params.getProperty("log.dir");
-            boolean dropCache = Boolean.parseBoolean(params.getProperty("drop.cache"));
-            String dropCachesSh = params.getProperty("drop.caches.sh");
+
+
             Configuration conf = new Configuration();
-            try (BufferedReader reader = new BufferedReader(new FileReader(columnFilePath));
+            try (BufferedReader reader = new BufferedReader(new FileReader(workloadFilePath));
                  BufferedWriter timeWriter = new BufferedWriter(new FileWriter(log_dir + "local_time"));
                  BufferedWriter columnWriter = new BufferedWriter(new FileWriter(log_dir + "columns")))
             {
@@ -87,11 +101,12 @@ public class CmdEvaluate implements Command
                 ParquetMetadata[] orderedMetadatas = LocalEvaluator.getMetadatas(orderedStatuses, conf);
                 ParquetMetadata[] unorderedMetadatas = LocalEvaluator.getMetadatas(unorderedStatuses, conf);
 
-                String columns = null;
+                String line = null;
                 int i = 0;
-                while ((columns = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null)
                 {
-                    columns = columns.split("\t")[2];
+                    readLength += line.length();
+                    String columns = line.split("\t")[2];
                     // evaluate
                     // clear the caches and buffers
                     if (dropCache)
@@ -122,6 +137,7 @@ public class CmdEvaluate implements Command
                     columnWriter.write("\n\n");
                     columnWriter.flush();
                     ++i;
+                    progressListener.setPercentage(readLength/workloadFileLength);
                 }
 
                 results.setProperty("success", "true");
@@ -134,13 +150,7 @@ public class CmdEvaluate implements Command
         else if (params.getProperty("method").equalsIgnoreCase("spark"))
         {
             String masterHostName = params.getProperty("master");
-            String orderedPath = params.getProperty("ordered.table.dir");
-            String unorderedPath = params.getProperty("table.dir");
-            String columnFilePath = params.getProperty("workload.file");
-            String log_dir = params.getProperty("log.dir");
-            String dropCachesSh = params.getProperty("drop.caches.sh");
-            boolean dropCache = Boolean.parseBoolean(params.getProperty("drop.cache"));
-            try (BufferedReader reader = new BufferedReader(new FileReader(columnFilePath));
+            try (BufferedReader reader = new BufferedReader(new FileReader(workloadFilePath));
                  BufferedWriter timeWriter = new BufferedWriter(new FileWriter(log_dir + "spark_time")))
             {
                 // get the column sizes
@@ -156,11 +166,12 @@ public class CmdEvaluate implements Command
                 }
 
                 // begin evaluate
-                String columns;
+                String line;
                 int i = 0;
-                while ((columns = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null)
                 {
-                    columns = columns.split("\t")[2];
+                    readLength += line.length();
+                    String columns = line.split("\t")[2];
                     // get the smallest column as the order by column
                     String orderByColumn = null;
                     double size = Double.MAX_VALUE;
@@ -203,8 +214,8 @@ public class CmdEvaluate implements Command
                     // log the results
                     timeWriter.write(i + "\t" + orderedMetrics.getDuration() + "\t" + unorderedMetrics.getDuration() + "\n");
                     timeWriter.flush();
-
                     ++i;
+                    progressListener.setPercentage(readLength/workloadFileLength);
                 }
                 results.setProperty("success", "true");
                 results.setProperty("log.dir", log_dir);
