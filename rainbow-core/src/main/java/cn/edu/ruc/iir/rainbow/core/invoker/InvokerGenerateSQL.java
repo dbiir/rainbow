@@ -8,13 +8,13 @@ import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
 import cn.edu.ruc.iir.rainbow.core.receiver.ReceiverGenerateDDL;
 import cn.edu.ruc.iir.rainbow.layout.cmd.CmdGenerateDDL;
 
-public class InvokerGenerateDDL extends Invoker
+public class InvokerGenerateSQL extends Invoker
 {
     /**
      * create this.command and set receiver for it
      */
     @Override
-    protected void createCommand()
+    protected void createCommands()
     {
         // combine command to proper receiver
         Command command = new CmdGenerateDDL();
@@ -22,7 +22,7 @@ public class InvokerGenerateDDL extends Invoker
 
         try
         {
-            this.setCommand(command);
+            this.addCommand(command);
         } catch (CommandException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,

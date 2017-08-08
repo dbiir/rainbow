@@ -34,7 +34,9 @@ public class TestAutoPart
         Algorithm algo = AlgorithmFactory.Instance().getAlgorithm("autopart", 5, initColumnOrder, workload, seekCostFunction);
         double initSeekCost = algo.getSchemaSeekCost();
         ExecutorContainer container = new ExecutorContainer(algo, 1);
-        container.waitForCompletion();
+        container.waitForCompletion(1, percentage -> {
+            System.out.println(percentage);
+        });
 
         double finalSeekCost = algo.getCurrentWorkloadSeekCost();
         ColumnOrderBuilder.saveAsDDLSegment(new File(TestAutoPart.class.getResource("/").getFile() + "autopart_ordered_schema.txt"), algo.getColumnOrder());

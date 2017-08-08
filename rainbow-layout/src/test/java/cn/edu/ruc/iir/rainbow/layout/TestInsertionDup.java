@@ -33,7 +33,9 @@ public class TestInsertionDup
         try
         {
             ExecutorContainer container = new ExecutorContainer(dup, 1);
-            container.waitForCompletion();
+            container.waitForCompletion(1, percentage -> {
+                System.out.println(percentage);
+            });
         } catch (NotMultiThreadedException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);

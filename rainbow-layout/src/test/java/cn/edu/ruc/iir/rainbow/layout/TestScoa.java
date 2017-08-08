@@ -35,7 +35,9 @@ public class TestScoa
         try
         {
             ExecutorContainer container = new ExecutorContainer(fastScoa, 1);
-            container.waitForCompletion();
+            container.waitForCompletion(1, percentage -> {
+                System.out.println(percentage);
+            });
         } catch (NotMultiThreadedException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);

@@ -38,7 +38,7 @@ public class CmdGenerateLoad implements Command
     @Override
     public void execute(Properties params)
     {
-        boolean overwrite = Boolean.parseBoolean(params.getProperty("overwrite"));
+        boolean overwrite = Boolean.parseBoolean(params.getProperty("overwrite", "false"));
         String schemaFilePath = params.getProperty("schema.file");
         String loadFilePath = params.getProperty("load.file");
         String tableName = params.getProperty("table.name");

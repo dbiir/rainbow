@@ -1,8 +1,8 @@
 package cn.edu.ruc.iir.rainbow.common.exception;
 
-public class AlgoException extends Exception
+public class InvokerException extends Exception
 {
-	public AlgoException (String message)
+	public InvokerException(String message)
 	{
 		super (message);
 	}

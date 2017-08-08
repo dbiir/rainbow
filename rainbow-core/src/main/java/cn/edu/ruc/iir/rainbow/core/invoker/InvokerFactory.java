@@ -17,8 +17,8 @@ public class InvokerFactory
     {
         switch (invokerName)
         {
-            case GENERATE_DDL:
-                return new InvokerGenerateDDL();
+            case GENERATE_SQL:
+                return new InvokerGenerateSQL();
             // TODO: add more case branch to deal with other INVOKERs...
             default:
                 return null;
