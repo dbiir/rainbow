@@ -12,7 +12,8 @@ import java.util.Map;
  * @author: Tao
  * @date: Create in 2017-07-28 7:11
  **/
-public class DataUtil {
+public class DataUtil
+{
 
     /**
      * @ClassName: DataUtil
@@ -21,12 +22,15 @@ public class DataUtil {
      * @param:
      * @date: 7:15 2017/7/28
      */
-    public static boolean isContainsStr(String str1, String str2) {
+    public static boolean isContainsStr(String str1, String str2)
+    {
         boolean flag = false;
         str1 = str1.substring(0, str1.length() - 1);
         String[] str = str1.split(",");
-        for (String s : str) {
-            if (s.equals(str2)) {
+        for (String s : str)
+        {
+            if (s.equals(str2))
+            {
                 flag = true;
                 break;
             }
@@ -34,7 +38,8 @@ public class DataUtil {
         return flag;
     }
 
-    public static String getCurTime() {
+    public static String getCurTime()
+    {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//set the style
         return df.format(new Date());
     }

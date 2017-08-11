@@ -17,7 +17,8 @@ import java.util.Random;
  * @author: Tao
  * @date: Create in 2017-07-30 15:59
  **/
-public class DataGeneratorThread extends Thread {
+public class DataGeneratorThread extends Thread
+{
 
     // parameters needed to be created
     private String filePath;
@@ -28,10 +29,12 @@ public class DataGeneratorThread extends Thread {
 
     private Long fileS = 0L;
 
-    public DataGeneratorThread() {
+    public DataGeneratorThread()
+    {
     }
 
-    public DataGeneratorThread(String filePath, String[] columnName, List<List<Column>> columnList, int dataSize) {
+    public DataGeneratorThread(String filePath, String[] columnName, List<List<Column>> columnList, int dataSize)
+    {
         this.filePath = filePath;
         this.columnName = columnName;
         this.columnList = columnList;
@@ -40,11 +43,14 @@ public class DataGeneratorThread extends Thread {
     }
 
     @Override
-    public void run() {
-        try {
-            // programe runtime
+    public void run()
+    {
+        try
+        {
+            // program runtime
             generateData(dataSize);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -53,28 +59,33 @@ public class DataGeneratorThread extends Thread {
      * @ClassName: DataGeneratorThread
      * @Title:
      * @Description: To generate datas by dataSize, contains the generator(biSearch)
-     * @param: dataSize -> *.GB
+     * @param: dataSize -> *.MB
      * @date: 10:34 2017/7/30
      */
-    public void generateData(int dataSize) {
+    public void generateData(int dataSize)
+    {
         BufferedWriter bw = null;
         String fileName = DataUtil.getCurTime();
         String directory = filePath + "data/";
         String outGenPath = directory + fileName + ".txt";
         String outGenMemoPath = filePath + "memo.txt";
-        try {
+        try
+        {
             File f = new File(directory);
-            if (!f.exists()) {
+            if (!f.exists())
+            {
                 f.mkdirs();
             }
             bw = new BufferedWriter(new FileWriter(outGenPath), SysSettings.BUFFER_SIZE);
             int col = 0;
             String fileSize;
             int randNum;
-            while (true) {
+            while (true)
+            {
                 StringBuilder writeLine = new StringBuilder();
                 String value;
-                for (int i = 0; i < columnName.length; i++) {
+                for (int i = 0; i < columnName.length; i++)
+                {
                     List<Column> columnRate = columnList.get(i);
                     randNum = random.nextInt(SysSettings.DATA_MAX) + 1;
                     // binary search -> content
@@ -91,24 +102,30 @@ public class DataGeneratorThread extends Thread {
                 // set "", start next line to write
                 DecimalFormat df = new DecimalFormat("#.00");
                 fileSize = df.format((double) fileS / SysSettings.MB);
-                if (Double.valueOf(fileSize) >= dataSize) {
+                if (Double.valueOf(fileSize) >= dataSize)
+                {
                     break;
                 }
             }
             bw.flush();
             // size, col -> memo.txt
             bw = new BufferedWriter(new FileWriter(outGenMemoPath, true));
-            String memo = "fileName," + fileName + ",colCount," + col;
+            String memo = "file name: " + fileName + ", number of columns: " + col;
             bw.write(memo + "\n");
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e)
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
+        } finally
+        {
             if (bw != null)
-                try {
+                try
+                {
                     bw.close();
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     e.printStackTrace();
                 }
         }
@@ -121,34 +138,44 @@ public class DataGeneratorThread extends Thread {
      * @param: randNum: the input random number, columnRate: the list of domain(Column)
      * @date: 8:37 2017/7/30
      */
-    protected String getValueByBinarySearch(int randNum, List<Column> columnRate) {
+    protected String getValueByBinarySearch(int randNum, List<Column> columnRate)
+    {
         String columnValue;
         int lo = 0;
         int hi = columnRate.size() - 1;
         int mid;
         int top;
         Column col, col1;
-        while (lo <= hi) {
+        while (lo <= hi)
+        {
             mid = (lo + hi) / 2;
             col = columnRate.get(mid);
             top = col.getUpperBound();
-            if (mid > 0) {
+            if (mid > 0)
+            {
                 col1 = columnRate.get(mid - 1);
-                if (top >= randNum && randNum > col1.getUpperBound()) {
+                if (top >= randNum && randNum > col1.getUpperBound())
+                {
                     columnValue = columnRate.get(mid).getValue();
                     return columnValue;
-                } else if (top < randNum) {
+                } else if (top < randNum)
+                {
                     lo = mid + 1;
-                } else {
+                } else
+                {
                     hi = mid - 1;
                 }
-            } else {
-                if (top >= randNum && randNum > 0) {
+            } else
+            {
+                if (top >= randNum && randNum > 0)
+                {
                     columnValue = columnRate.get(mid).getValue();
                     return columnValue;
-                } else if (top < randNum) {
+                } else if (top < randNum)
+                {
                     lo = mid + 1;
-                } else {
+                } else
+                {
                     hi = mid - 1;
                 }
             }
