@@ -1,20 +1,14 @@
 # rainbow-benchmark
 
-Module structure:
-* **algorithm**
-  contains first functions by biSearch and threads.
-
-* **common**
-  provides a common parameters for sys to use.
+Package structure:
+* **cli**
+  begin the main function to generate data.
 
 * **domain**
   info about the Column.
 
-* **gen**
-  contains second functions by biSearch and threads.
-
-* **server**
-  begin the main function to generate data.
+* **generator**
+  contains functions by biSearch and threads.
 
 * **utils**
   contains some simple functions for use.

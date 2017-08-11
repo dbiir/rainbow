@@ -1,0 +1,139 @@
+package cn.edu.ruc.iir.rainbow.benchmark.generator;
+
+import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
+import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
+import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version V1.0
+ * @Package: cn.edu.ruc.iir.rainbow.benchmark.generator
+ * @ClassName: DataGeneratorV2
+ * @Description: To generate datas for benchmark with variable, refer to dict_data.txt & schema_new.txt
+ * @author: Tao
+ * @date: Create in 2017-07-29 15:54
+ **/
+public class DataGenerator {
+
+    private String filePath;
+    private String columnName[];
+    private List<List<Column>> columnList = new ArrayList();
+    private int threadNum;
+
+    private static DataGenerator instance = new DataGenerator();
+
+    private DataGenerator() {
+    }
+
+    public static DataGenerator getInstance(int threadNum) {
+        instance.threadNum = threadNum;
+        return instance;
+    }
+
+
+    /**
+     * @ClassName: DataGeneratorV2
+     * @Title:
+     * @Description: To generate datas by dataSize
+     * @param: dataSize -> n GB (200MB, 4W row)
+     * @date: 16:15 2017/7/29
+     */
+    public void genDataBySize(int dataSize) {
+        initColumns();
+        initColumnRate();
+
+        long startTime = System.currentTimeMillis();
+        DataGeneratorThread[] dataGeneratorThreads = new DataGeneratorThread[threadNum];
+        int size = Math.floorDiv(dataSize, threadNum);
+        try {
+            filePath = SysSettings.CONFIG_DIRECTORY + "/benchmark_data/" + DataUtil.getCurTime() + "_" + dataSize + "/";
+            for (int i = 0; i < threadNum; i++) {
+                DataGeneratorThread t = new DataGeneratorThread(filePath, columnName, columnList, size);
+                dataGeneratorThreads[i] = t;
+                t.run();
+            }
+            for (DataGeneratorThread t : dataGeneratorThreads) {
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("gen thread run time : ： " + (endTime - startTime) / 1000 + "s");
+    }
+
+    /**
+     * @ClassName: DataGeneratorV2
+     * @Title:
+     * @Description: To get the columns
+     * @param:
+     * @date: 19:02 2017/7/29
+     */
+    private void initColumns() {
+        ColumnGenerator columnGenerator = ColumnGenerator.Instance();
+        columnName = columnGenerator.getColumnName();
+    }
+
+    /**
+     * @ClassName: DataGeneratorV2
+     * @Title:
+     * @Description: To get the rate of column in each *.txt
+     * @param:
+     * @date: 17:30 2017/7/29
+     */
+    private void initColumnRate() {
+        for (String cName : columnName) {
+            initColumnList(cName);
+        }
+    }
+
+    /**
+     * @ClassName: DataGeneratorV2
+     * @Title:
+     * @Description: To fill columnMap with *.txt
+     * @param:
+     * @date: 19:18 2017/7/29
+     */
+    private void initColumnList(String cName) {
+        String columnPath = SysSettings.CONFIG_DIRECTORY + "/data_dict/" + cName + ".txt";
+        String curLine = null;
+        BufferedReader br = null;
+        String columnsLine[] = null;
+        try {
+            br = new BufferedReader(new FileReader(columnPath));
+            List<Column> columnRate = new ArrayList<>();
+            int index = 0;
+            while ((curLine = br.readLine()) != null) {
+                // 0: columnName, 1: content, 2: rate(interval)
+                columnsLine = curLine.split("\t");
+                // 0: columnName, 1: content, 2: rate(interval)
+                index += Integer.valueOf(columnsLine[2]);
+                Column c = new Column(index, columnsLine[1]);
+                columnRate.add(c);
+            }
+            columnList.add(columnRate);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null)
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+}
