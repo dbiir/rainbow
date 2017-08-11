@@ -8,32 +8,38 @@ package cn.edu.ruc.iir.rainbow.benchmark.domain;
  * @author: Tao
  * @date: Create in 2017-07-29 21:15
  **/
-public class Column {
-
+public class Column
+{
     private int upperBound;
     private String value;
 
-    public Column() {
+    public Column()
+    {
     }
 
-    public Column(int upperBound, String value) {
+    public Column(int upperBound, String value)
+    {
         this.upperBound = upperBound;
         this.value = value;
     }
 
-    public int getUpperBound() {
+    public int getUpperBound()
+    {
         return upperBound;
     }
 
-    public void setUpperBound(int upperBound) {
+    public void setUpperBound(int upperBound)
+    {
         this.upperBound = upperBound;
     }
 
-    public String getValue() {
+    public String getValue()
+    {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(String value)
+    {
         this.value = value;
     }
 }

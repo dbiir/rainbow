@@ -13,8 +13,8 @@ import java.util.Random;
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.benchmark
- * @ClassName: TestDataGeneratorV2
- * @Description: To test the functions of the DataGeneratorV2.java
+ * @ClassName: TestDataGenerator
+ * @Description: To test the functions of the DataGenerator.java
  * @author: Tao
  * @date: Create in 2017-07-29 19:25
  **/
