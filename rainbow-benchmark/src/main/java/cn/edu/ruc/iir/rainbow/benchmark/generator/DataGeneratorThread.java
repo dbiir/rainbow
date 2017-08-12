@@ -108,6 +108,7 @@ public class DataGeneratorThread extends Thread
                 }
             }
             bw.flush();
+            bw.close();
             // size, col -> memo.txt
             bw = new BufferedWriter(new FileWriter(outGenMemoPath, true));
             String memo = "file name: " + fileName + ", number of columns: " + col;
