@@ -63,7 +63,7 @@ public class DataGenerator
             {
                 DataGeneratorThread t = new DataGeneratorThread(filePath, columnName, columnList, size);
                 dataGeneratorThreads[i] = t;
-                t.run();
+                t.start();
             }
             for (DataGeneratorThread t : dataGeneratorThreads)
             {

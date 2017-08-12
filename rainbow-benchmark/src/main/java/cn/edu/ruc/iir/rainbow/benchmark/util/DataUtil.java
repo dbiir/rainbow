@@ -2,6 +2,7 @@ package cn.edu.ruc.iir.rainbow.benchmark.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @version V1.0
@@ -13,6 +14,7 @@ import java.util.Date;
  **/
 public class DataUtil
 {
+    private static AtomicInteger count = new AtomicInteger(0);
 
     /**
      * @ClassName: DataUtil
@@ -37,10 +39,10 @@ public class DataUtil
         return flag;
     }
 
-    public static synchronized String getCurTime()
+    public static String getCurTime()
     {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//set the style
-        return df.format(new Date());
+        return df.format(new Date()) + count.getAndIncrement();
     }
 
 }
