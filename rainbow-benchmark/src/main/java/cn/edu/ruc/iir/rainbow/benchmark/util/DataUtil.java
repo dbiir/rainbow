@@ -2,7 +2,6 @@ package cn.edu.ruc.iir.rainbow.benchmark.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @version V1.0
@@ -38,7 +37,7 @@ public class DataUtil
         return flag;
     }
 
-    public static String getCurTime()
+    public static synchronized String getCurTime()
     {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//set the style
         return df.format(new Date());
