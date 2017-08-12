@@ -42,7 +42,7 @@ public class DataUtil
     public static String getCurTime()
     {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//set the style
-        return df.format(new Date()) + "_" + count.getAndIncrement();
+        return df.format(new Date()) + count.getAndIncrement();
     }
 
 }
