@@ -19,7 +19,6 @@ public class InvokerGenerateSQL extends Invoker
         // combine command to proper receiver
         Command command = new CmdGenerateDDL();
         command.setReceiver(new ReceiverGenerateDDL());
-
         try
         {
             this.addCommand(command);
