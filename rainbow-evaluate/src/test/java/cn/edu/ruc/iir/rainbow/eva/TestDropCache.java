@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.eva;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 

@@ -1,6 +1,7 @@
 package cn.edu.ruc.iir.rainbow.redirect.domain;
 
 import cn.edu.ruc.iir.rainbow.common.exception.ColumnOrderException;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 
 import java.util.*;
 
@@ -9,6 +10,8 @@ public class AccessPattern
     // it seems that this.pattern can be a Set.
     private List<String> pattern = null;
     private Map<String, String> columnToReplicaMap = null;
+
+    private static final String DUP_MARK = ConfigFactory.Instance().getProperty("dup.mark");
 
     public AccessPattern ()
     {
@@ -28,8 +31,11 @@ public class AccessPattern
     public void addColumnReplica (String columnReplica)
     {
         this.pattern.add(columnReplica);
-        int i = columnReplica.lastIndexOf('_');
-        String column = columnReplica.substring(0, i > 0 ? i :columnReplica.length());
+        String column = columnReplica;
+        if (columnReplica.contains(DUP_MARK))
+        {
+            column = columnReplica.split(DUP_MARK)[0];
+        }
         this.columnToReplicaMap.put(column, columnReplica);
     }
 
@@ -60,8 +66,11 @@ public class AccessPattern
         for (String columnReplica : columnOrder)
         {
             // iterate through the column order.
-            int i = columnReplica.lastIndexOf('_');
-            String column = columnReplica.substring(0, i > 0 ? i :columnReplica.length());
+            String column = columnReplica;
+            if (columnReplica.contains(DUP_MARK))
+            {
+                column = columnReplica.split(DUP_MARK)[0];
+            }
             if (columnSet.contains(column))
             {
                 // this column is accessed by the query.

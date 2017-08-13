@@ -2,7 +2,7 @@ package cn.edu.ruc.iir.rainbow.common;
 
 import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;

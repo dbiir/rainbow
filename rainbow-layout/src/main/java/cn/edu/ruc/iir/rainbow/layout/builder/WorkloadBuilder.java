@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.layout.builder;
 
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 import cn.edu.ruc.iir.rainbow.layout.domian.Query;
 import cn.edu.ruc.iir.rainbow.common.exception.ColumnNotFoundException;
@@ -74,21 +75,26 @@ public class WorkloadBuilder
     {
         BufferedWriter queryWriter = new BufferedWriter(new FileWriter(workloadFile));
 
+        final String DUP_MARK = ConfigFactory.Instance().getProperty("dup.mark");
+
         for (Query query : workloadPattern.getQuerySet())
         {
             queryWriter.write(query.getSid() + "\t");
+            queryWriter.write(query.getWeight() + "\t");
             Set<Column> pattern = workloadPattern.getColumnSet(query);
             boolean first = true;
             for (Column column : pattern)
             {
                 if (first)
                 {
-                    queryWriter.write(column.isDuplicated() ? column.getName() + "_" + column.getDupId() :column.getName());
+                    queryWriter.write(column.isDuplicated() ?
+                            column.getName() + DUP_MARK + column.getDupId() :column.getName());
                     first = false;
                 }
                 else
                 {
-                    queryWriter.write("," + (column.isDuplicated() ? column.getName() + "_" + column.getDupId() :column.getName()));
+                    queryWriter.write("," + (column.isDuplicated() ?
+                            column.getName() + DUP_MARK + column.getDupId() :column.getName()));
 
                 }
             }

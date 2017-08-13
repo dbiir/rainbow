@@ -30,7 +30,7 @@ public class GenerateQuery
 			for (Column column : columnOrder)
 			{
 				columnIdToNameMap.put(column.getId(), column.getName());
-				columnMap.put(column.getName().toLowerCase(), column);
+				columnMap.put(column.getName(), column);
 			}
 
 			String line = null;
@@ -42,7 +42,7 @@ public class GenerateQuery
 				Query query = new Query(qid, tokens[0], Double.parseDouble(tokens[1]));
 				for (String columnName : columnNames)
 				{
-					Column column = columnMap.get(columnName.toLowerCase());
+					Column column = columnMap.get(columnName);
 					if (column == null)
 					{
 						throw new ColumnNotFoundException("column " + columnName + " from query " +
@@ -121,7 +121,7 @@ public class GenerateQuery
 			for (String line : mergedJobs)
 			{
 				String tokens[] = line.split("\t");
-				String columns = tokens[1].toLowerCase();
+				String columns = tokens[1];
 				sparkWriter.write("% query " + i++ + "\n");
 				sparkWriter.write("val sqlContext = new org.apache.spark.sql.SQLContext(sc)\n");
 				sparkWriter.write("import sqlContext.createSchemaRDD\n");

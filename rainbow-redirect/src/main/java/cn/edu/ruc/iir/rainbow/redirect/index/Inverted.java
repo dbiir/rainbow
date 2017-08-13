@@ -66,7 +66,7 @@ public class Inverted implements Index
                 int i = 0;
                 while ((i = bitMap.nextSetBit(i)) >= 0)
                 {
-                    counts[i]++;
+                    counts[i++]++;
                 }
             }
             int maxCount = -1;
@@ -103,6 +103,7 @@ public class Inverted implements Index
                     bestPattern = this.queryAccessPatterns.get(i);
                     minPatternSize = bestPattern.size();
                 }
+                i ++;
             }
         }
 
