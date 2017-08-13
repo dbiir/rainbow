@@ -12,7 +12,7 @@ import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 import cn.edu.ruc.iir.rainbow.layout.domian.Query;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.PowerSeekCostFunction;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.SeekCostFunction;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class TestAutoPart
         });
 
         double finalSeekCost = algo.getCurrentWorkloadSeekCost();
-        ColumnOrderBuilder.saveAsDDLSegment(new File(TestAutoPart.class.getResource("/").getFile() + "autopart_ordered_schema.txt"), algo.getColumnOrder());
+        ColumnOrderBuilder.saveAsSchemaFile(new File(TestAutoPart.class.getResource("/").getFile() + "autopart_ordered_schema.txt"), algo.getColumnOrder());
         System.out.println(initSeekCost + ", " + finalSeekCost);
         System.exit(0);
     }

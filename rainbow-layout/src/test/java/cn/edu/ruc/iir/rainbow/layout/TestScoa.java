@@ -10,7 +10,7 @@ import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 import cn.edu.ruc.iir.rainbow.layout.domian.Query;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.PowerSeekCostFunction;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.SeekCostFunction;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class TestScoa
         }
 
         System.out.println("Final cost: " + fastScoa.getCurrentWorkloadSeekCost());
-        ColumnOrderBuilder.saveAsDDLSegment(new File(TestScoa.class.getResource("/").getFile() + "scoa_ordered_schema.txt"), fastScoa.getColumnOrder());
+        ColumnOrderBuilder.saveAsSchemaFile(new File(TestScoa.class.getResource("/").getFile() + "scoa_ordered_schema.txt"), fastScoa.getColumnOrder());
         System.out.println("ordered schema file: " + TestScoa.class.getResource("/").getFile() + "scoa_ordered_schema.txt");
     }
 }

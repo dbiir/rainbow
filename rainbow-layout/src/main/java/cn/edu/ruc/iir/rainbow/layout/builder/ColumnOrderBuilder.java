@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.layout.builder;
 
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 
 import java.io.*;
@@ -33,28 +34,18 @@ public class ColumnOrderBuilder
         return columnOrder;
     }
 
-    public static void saveToFile (File columnOrderFile, List<Column> columnOrder) throws IOException
+    public static void saveAsSchemaFile (File columnOrderFile, List<Column> columnOrder) throws IOException
     {
         BufferedWriter writer = new BufferedWriter(new FileWriter(columnOrderFile));
 
-        for (Column column : columnOrder)
-        {
-            writer.write(column.getName() + "\t" + column.getType() + "\t" + column.getSize() + "\n");
-        }
-
-        writer.close();
-    }
-
-    public static void saveAsDDLSegment (File columnOrderFile, List<Column> columnOrder) throws IOException
-    {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(columnOrderFile));
+        final String DUP_MARK = ConfigFactory.Instance().getProperty("dup.mark");
 
         for (Column column : columnOrder)
         {
             String columnName = column.getName();
             if (column.isDuplicated())
             {
-                columnName += "_" + column.getDupId();
+                columnName += DUP_MARK + column.getDupId();
             }
             writer.write(columnName + "\t" + column.getType() + "\t" + column.getSize() + "\n");
         }

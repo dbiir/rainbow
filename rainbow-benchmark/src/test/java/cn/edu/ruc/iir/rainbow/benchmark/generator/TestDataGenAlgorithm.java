@@ -2,7 +2,7 @@ package cn.edu.ruc.iir.rainbow.benchmark.generator;
 
 
 import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.text.DecimalFormat;

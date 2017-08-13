@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.layout;
 
+import cn.edu.ruc.iir.rainbow.common.exception.*;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.AlgorithmFactory;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.DupAlgorithm;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.ExecutorContainer;
@@ -9,8 +10,7 @@ import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 import cn.edu.ruc.iir.rainbow.layout.domian.Query;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.PowerSeekCostFunction;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.SeekCostFunction;
-import cn.edu.ruc.iir.rainbow.common.exception.*;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +42,6 @@ public class TestInsertionDup
         }
 
         WorkloadBuilder.saveAsWorkloadFile(new File(TestInsertionDup.class.getResource("/").getFile() + "dupped_workload.txt"), dup.getWorkloadPattern());
-        ColumnOrderBuilder.saveAsDDLSegment(new File(TestInsertionDup.class.getResource("/").getFile() + "dupped_schema.txt"), dup.getColumnOrder());
+        ColumnOrderBuilder.saveAsSchemaFile(new File(TestInsertionDup.class.getResource("/").getFile() + "dupped_schema.txt"), dup.getColumnOrder());
     }
 }

@@ -119,7 +119,7 @@ public class CmdOrdering implements Command
             }
 
             results.setProperty("final.cost", ""+algo.getCurrentWorkloadSeekCost());
-            ColumnOrderBuilder.saveAsDDLSegment(new File(orderedFilePath), algo.getColumnOrder());
+            ColumnOrderBuilder.saveAsSchemaFile(new File(orderedFilePath), algo.getColumnOrder());
 
             results.setProperty("success", "true");
         } catch (IOException e)

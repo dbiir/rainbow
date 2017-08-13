@@ -4,7 +4,7 @@ import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetFileMetadata;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.OutputFactory;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import parquet.hadoop.metadata.BlockMetaData;
 
 import java.io.BufferedWriter;

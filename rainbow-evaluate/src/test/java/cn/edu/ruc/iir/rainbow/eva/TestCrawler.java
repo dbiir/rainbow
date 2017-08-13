@@ -3,7 +3,7 @@ package cn.edu.ruc.iir.rainbow.eva;
 import cn.edu.ruc.iir.rainbow.common.exception.MetricsException;
 import cn.edu.ruc.iir.rainbow.eva.metrics.Crawler;
 import cn.edu.ruc.iir.rainbow.eva.metrics.StageMetrics;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.List;
 

@@ -134,7 +134,7 @@ public class CmdDuplication implements Command
             results.setProperty("init.cost", ""+dupAlgo.getSchemaSeekCost());
             results.setProperty("final.cost", ""+dupAlgo.getCurrentWorkloadSeekCost());
             WorkloadBuilder.saveAsWorkloadFile(new File(duppedWorkloadFilePath), dupAlgo.getWorkloadPattern());
-            ColumnOrderBuilder.saveAsDDLSegment(new File(duppedSchemaFilePath), dupAlgo.getColumnOrder());
+            ColumnOrderBuilder.saveAsSchemaFile(new File(duppedSchemaFilePath), dupAlgo.getColumnOrder());
 
             results.setProperty("success", "true");
         } catch (IOException e)

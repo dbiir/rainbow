@@ -1,5 +1,7 @@
 package cn.edu.ruc.iir.rainbow.redirect.domain;
 
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.Set;
 
 public class ColumnSet
 {
+    private static final String DUP_MARK = ConfigFactory.Instance().getProperty("dup.mark");
+
     private Set<String> columns = null;
 
     public ColumnSet ()
@@ -44,9 +48,11 @@ public class ColumnSet
         ColumnSet columnSet  = new ColumnSet();
         for (String columnReplica : columnOrder)
         {
-            int i = columnReplica.lastIndexOf('_');
-            String column = columnReplica.substring(0, i > 0 ? i :columnReplica.length());
-            columnSet.addColumn(column);
+            String column = columnReplica;
+            if (columnReplica.contains(DUP_MARK))
+            {
+                column = columnReplica.split(DUP_MARK)[0];
+            }columnSet.addColumn(column);
         }
         return columnSet;
     }
