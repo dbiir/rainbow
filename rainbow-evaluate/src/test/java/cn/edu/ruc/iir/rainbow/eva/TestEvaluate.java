@@ -1,7 +1,7 @@
 package cn.edu.ruc.iir.rainbow.eva;
 
 import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
-import cn.edu.ruc.iir.rainbow.common.metadata.MetaDataStat;
+import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.eva.domain.Column;
 import cn.edu.ruc.iir.rainbow.eva.metrics.LocalMetrics;
 import cn.edu.ruc.iir.rainbow.eva.metrics.StageMetrics;
@@ -102,7 +102,7 @@ public class TestEvaluate
             try
             {
                 // get the column sizes
-                MetaDataStat stat = new MetaDataStat(masterHostName, 9000, orderedPath.split("9000")[1]);
+                ParquetMetadataStat stat = new ParquetMetadataStat(masterHostName, 9000, orderedPath.split("9000")[1]);
                 System.out.println(masterHostName);
                 int n = stat.getFieldNames().size();
                 List<String> names = stat.getFieldNames();

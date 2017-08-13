@@ -114,7 +114,6 @@ public class CmdDuplication implements Command
             DupAlgorithm dupAlgo = (DupAlgorithm) AlgorithmFactory.Instance().getAlgorithm(algoName,
                     budget, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
 
-            results.setProperty("init.cost", ""+dupAlgo.getSchemaSeekCost());
             try
             {
                 ProgressListener progressListener = percentage -> {
@@ -132,6 +131,7 @@ public class CmdDuplication implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
             }
 
+            results.setProperty("init.cost", ""+dupAlgo.getSchemaSeekCost());
             results.setProperty("final.cost", ""+dupAlgo.getCurrentWorkloadSeekCost());
             WorkloadBuilder.saveAsWorkloadFile(new File(duppedWorkloadFilePath), dupAlgo.getWorkloadPattern());
             ColumnOrderBuilder.saveAsDDLSegment(new File(duppedSchemaFilePath), dupAlgo.getColumnOrder());
