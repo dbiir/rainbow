@@ -25,7 +25,7 @@ public class TestInsertionDup
     @Test
     public void testInsertionDup() throws IOException, ColumnNotFoundException, AlgoException, ClassNotFoundException, InterruptedException
     {
-        List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(TestInsertionDup.class.getResource("/ordered_schema.txt").getFile()));
+        List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(TestInsertionDup.class.getResource("/schema.txt").getFile()));
         List<Query> workload = WorkloadBuilder.build(new File(TestInsertionDup.class.getResource("/workload.txt").getFile()), initColumnOrder);
         SeekCostFunction seekCostFunction = new PowerSeekCostFunction();//SimulatedSeekCostBuilder.build(new File("cord-generator/resources/seek_cost.txt"));
 

@@ -1,8 +1,8 @@
-package cn.edu.ruc.iir.rainbow.layout;
+package cn.edu.ruc.iir.rainbow.common;
 
 import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
-import cn.edu.ruc.iir.rainbow.common.metadata.MetaData;
-import cn.edu.ruc.iir.rainbow.common.metadata.MetaDataStat;
+import cn.edu.ruc.iir.rainbow.common.metadata.ParquetFileMetadata;
+import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.OutputFactory;
 import org.junit.jupiter.api.Test;
 import parquet.hadoop.metadata.BlockMetaData;
@@ -15,13 +15,13 @@ import java.util.Map;
 /**
  * Created by hank on 2015/1/31.
  */
-public class TestMetaDataStat
+public class TestParquetMetadataStat
 {
     @Test
     public void testGetStat () throws IOException, MetaDataException
     {
-        //MetaDataStat stat = new MetaDataStat("10.172.96.77", 9000, "/tmp/hive-root/hive_2015-02-04_10-57-36_131_1404874572956637570-1/_tmp.-ext-10002");
-        MetaDataStat stat = new MetaDataStat("222.29.197.231", 9000, "/parq_43");
+        //ParquetMetadataStat stat = new ParquetMetadataStat("10.172.96.77", 9000, "/tmp/hive-root/hive_2015-02-04_10-57-36_131_1404874572956637570-1/_tmp.-ext-10002");
+        ParquetMetadataStat stat = new ParquetMetadataStat("222.29.197.231", 9000, "/parq_43");
         double[] columnSize = stat.getAvgColumnChunkSize();
         List<String> names = stat.getFieldNames();
         int i = 0;
@@ -39,7 +39,7 @@ public class TestMetaDataStat
             System.out.println(bm.getCompressedSize() + ", " + bm.getTotalByteSize() + ", " + bm.getRowCount());
         }
 
-        List<MetaData> metaDatas = stat.getFileMetaData();
+        List<ParquetFileMetadata> metaDatas = stat.getFileMetaData();
         System.out.println(metaDatas.get(0).getFileMetaData().getCreatedBy());
         Map<String, String> keyValueMetaData = metaDatas.get(0).getFileMetaData().getKeyValueMetaData();
         for (String key : keyValueMetaData.keySet())

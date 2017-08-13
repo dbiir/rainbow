@@ -17,14 +17,19 @@ import java.util.List;
 /**
  * Created by hank on 2015/1/31.
  */
-public class MetaDataStat
+public class ParquetMetadataStat implements MetadataStat
 {
-    private List<MetaData> fileMetaDataList = new ArrayList<MetaData>();
+    private List<ParquetFileMetadata> fileMetaDataList = new ArrayList<ParquetFileMetadata>();
     private List<Type> fields = null;
     private int columnCount = 0;
     private long rowCount = 0;
     private List<BlockMetaData> blockMetaDataList = null;
 
+    /**
+     * get the number of rows
+     * @return
+     */
+    @Override
     public long getRowCount ()
     {
         if (this.rowCount <= 0)
@@ -47,7 +52,7 @@ public class MetaDataStat
      * @throws IOException
      * @throws MetaDataException
      */
-    public MetaDataStat(String nameNode, int hdfsPort, String dirPath) throws IOException, MetaDataException
+    public ParquetMetadataStat(String nameNode, int hdfsPort, String dirPath) throws IOException, MetaDataException
     {
         Configuration conf = new Configuration();
         FileSystem fileSystem = FileSystem.get(URI.create("hdfs://" + nameNode + ":" + hdfsPort), conf);
@@ -60,7 +65,7 @@ public class MetaDataStat
                 if (! status.isDir())
                 {
                     //System.out.println(status.getPath().toString());
-                    this.fileMetaDataList.add(new MetaData(conf, status.getPath()));
+                    this.fileMetaDataList.add(new ParquetFileMetadata(conf, status.getPath()));
                 }
             }
         }
@@ -81,7 +86,7 @@ public class MetaDataStat
         if (this.blockMetaDataList == null || this.blockMetaDataList.size() == 0)
         {
             this.blockMetaDataList = new ArrayList<BlockMetaData>();
-            for (MetaData meta : this.fileMetaDataList)
+            for (ParquetFileMetadata meta : this.fileMetaDataList)
             {
                 this.blockMetaDataList.addAll(meta.getBlocks());
             }
@@ -89,7 +94,7 @@ public class MetaDataStat
         return this.blockMetaDataList;
     }
 
-    public List<MetaData> getFileMetaData ()
+    public List<ParquetFileMetadata> getFileMetaData ()
     {
         return this.fileMetaDataList;
     }
@@ -98,6 +103,7 @@ public class MetaDataStat
      * get the average column chunk size of all the row groups
      * @return
      */
+    @Override
     public double[] getAvgColumnChunkSize ()
     {
         double[] sum = new double[this.columnCount];
@@ -131,6 +137,7 @@ public class MetaDataStat
      * @param avgSize
      * @return
      */
+    @Override
     public double[] getColumnChunkSizeStdDev (double[] avgSize)
     {
         double[] dev = new double[this.columnCount];
@@ -163,6 +170,7 @@ public class MetaDataStat
      * get the field (column) names.
      * @return
      */
+    @Override
     public List<String> getFieldNames ()
     {
         List<String> names = new ArrayList<String>();
@@ -177,12 +185,17 @@ public class MetaDataStat
      * get the number of blocks (row groups).
      * @return
      */
+    @Override
     public int getBlockCount ()
     {
         return this.getBlocks().size();
     }
 
-
+    /**
+     * get the number of files.
+     * @return
+     */
+    @Override
     public int getFileCount ()
     {
         return this.fileMetaDataList.size();
@@ -192,6 +205,7 @@ public class MetaDataStat
      * get the average compressed size of the rows in the parquet files.
      * @return
      */
+    @Override
     public double getRowSize ()
     {
         double size = 0;
@@ -206,6 +220,7 @@ public class MetaDataStat
      * get the total compressed size of all the parquet files.
      * @return
      */
+    @Override
     public double getTotalCompressedSize ()
     {
         double size = 0;

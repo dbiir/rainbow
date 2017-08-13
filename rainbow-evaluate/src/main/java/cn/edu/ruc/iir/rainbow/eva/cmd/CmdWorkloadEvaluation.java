@@ -6,7 +6,7 @@ import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
 import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
-import cn.edu.ruc.iir.rainbow.common.metadata.MetaDataStat;
+import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.LogFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalEvaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkEvaluator;
@@ -153,7 +153,7 @@ public class CmdWorkloadEvaluation implements Command
                  BufferedWriter timeWriter = new BufferedWriter(new FileWriter(log_dir + "spark_time")))
             {
                 // get the column sizes
-                MetaDataStat stat = new MetaDataStat(masterHostName, 9000, orderedPath.split("9000")[1]);
+                ParquetMetadataStat stat = new ParquetMetadataStat(masterHostName, 9000, orderedPath.split("9000")[1]);
                 System.out.println(masterHostName);
                 int n = stat.getFieldNames().size();
                 List<String> names = stat.getFieldNames();

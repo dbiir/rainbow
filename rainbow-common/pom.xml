@@ -40,6 +40,13 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- orc -->
+        <dependency>
+            <groupId>org.apache.orc</groupId>
+            <artifactId>orc-core</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <!-- parquet -->
         <dependency>
             <groupId>com.twitter</groupId>
