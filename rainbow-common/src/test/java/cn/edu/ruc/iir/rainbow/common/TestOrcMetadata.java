@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestOrcReader
+public class TestOrcMetadata
 {
     @Test
     public void test () throws IOException, Descriptors.DescriptorValidationException

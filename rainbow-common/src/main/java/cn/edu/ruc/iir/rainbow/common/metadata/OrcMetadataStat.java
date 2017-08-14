@@ -37,9 +37,7 @@ public class OrcMetadataStat implements MetadataStat
     // index is the index in columnIds
     private Map<Integer, Integer> rootColumnIdToIndexMap = new HashMap<>();
 
-    // childIds are the ids of the all types in the sub-tree of a root column
-    private Map<Integer, Set<Integer>> rootColumnIdToChildIdsMap = new HashMap<>();
-
+    // childId is the ids of the all types in the sub-tree of a root column
     private Map<Integer, Integer> childIdToRootColumnIdMap = new HashMap<>();
 
     public OrcMetadataStat (String nameNode, int hdfsPort, String dirPath) throws IOException, MetadataException
@@ -84,28 +82,22 @@ public class OrcMetadataStat implements MetadataStat
             if (i > 0)
             {
                 int childNum = rootColumnIds.get(i) - rootColumnIds.get(i-1) - 1;
-                Set<Integer> childIds = new HashSet<>();
                 int columnId = rootColumnIds.get(i-1);
                 for (int j = childNum; j > 0; --j)
                 {
                     int childId = rootColumnIds.get(i) - j;
-                    childIds.add(childId);
                     this.childIdToRootColumnIdMap.put(childId, columnId);
                 }
-                this.rootColumnIdToChildIdsMap.put(columnId, childIds);
             }
         }
         int childNum = this.fileReaders.get(0).getFileTail().getFooter().getTypesCount() -
                 rootColumnIds.get(rootColumnIds.size()-1) - 1;
-        Set<Integer> childIds = new HashSet<>();
         int columnId = rootColumnIds.get(rootColumnIds.size()-1);
         for (int j = 1; j <= childNum; ++j)
         {
             int childId = rootColumnIds.get(rootColumnIds.size()-1) + j;
-            childIds.add(childId);
             this.childIdToRootColumnIdMap.put(childId, columnId);
         }
-        this.rootColumnIdToChildIdsMap.put(columnId, childIds);
     }
 
     /**
@@ -214,9 +206,10 @@ public class OrcMetadataStat implements MetadataStat
      * @return
      */
     @Override
-    public double[] getColumnChunkSizeStdDev(double[] avgSize)
+    public double[] getColumnChunkSizeStdDev(double[] avgSize) throws MetadataException
     {
-        return new double[0];
+        // TODO: to be supported later
+        throw new MetadataException("not supported");
     }
 
     /**
