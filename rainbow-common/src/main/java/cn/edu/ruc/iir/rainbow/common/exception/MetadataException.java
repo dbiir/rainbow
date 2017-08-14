@@ -3,7 +3,7 @@ package cn.edu.ruc.iir.rainbow.common.exception;
 /**
  * Created by hank on 2015/1/31.
  */
-public class MetaDataException extends Exception
+public class MetadataException extends Exception
 {
     @Override
     public String getMessage()
@@ -11,7 +11,7 @@ public class MetaDataException extends Exception
         return super.getMessage();
     }
 
-    public MetaDataException(String message)
+    public MetadataException(String message)
     {
         super(message);
     }

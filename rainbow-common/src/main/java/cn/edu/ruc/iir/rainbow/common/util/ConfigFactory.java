@@ -14,7 +14,10 @@ public class ConfigFactory
 		prop = new Properties();
 		InputStream in = this.getClass().getResourceAsStream("/rainbow.properties");
 		try {
-			prop.load(in);
+			if (in != null)
+			{
+				prop.load(in);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

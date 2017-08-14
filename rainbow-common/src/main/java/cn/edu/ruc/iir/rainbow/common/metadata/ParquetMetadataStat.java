@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.common.metadata;
 
-import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
+import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -23,6 +23,10 @@ public class ParquetMetadataStat implements MetadataStat
     private List<Type> fields = null;
     private int columnCount = 0;
     private long rowCount = 0;
+
+    /**
+     * this block is parquet row group
+     */
     private List<BlockMetaData> blockMetaDataList = null;
 
     /**
@@ -50,9 +54,9 @@ public class ParquetMetadataStat implements MetadataStat
      * @param hdfsPort the port of hdfs namenode, usually 9000 or 8020
      * @param dirPath the path of the directory which contains the parquet files, begin with /, for gen /msra/column/order/parquet/
      * @throws IOException
-     * @throws MetaDataException
+     * @throws MetadataException
      */
-    public ParquetMetadataStat(String nameNode, int hdfsPort, String dirPath) throws IOException, MetaDataException
+    public ParquetMetadataStat(String nameNode, int hdfsPort, String dirPath) throws IOException, MetadataException
     {
         Configuration conf = new Configuration();
         FileSystem fileSystem = FileSystem.get(URI.create("hdfs://" + nameNode + ":" + hdfsPort), conf);
@@ -62,6 +66,7 @@ public class ParquetMetadataStat implements MetadataStat
             FileStatus[] fileStatuses = fileSystem.listStatus(hdfsDirPath);
             for (FileStatus status : fileStatuses)
             {
+                // compatibility for HDFS 1.x
                 if (! status.isDir())
                 {
                     //System.out.println(status.getPath().toString());
@@ -71,7 +76,7 @@ public class ParquetMetadataStat implements MetadataStat
         }
         if (this.fileMetaDataList.size() == 0)
         {
-            throw new MetaDataException("fileMetaDataList is empty, path is not a dir.");
+            throw new MetadataException("fileMetaDataList is empty, path is not a dir.");
         }
         this.fields = this.fileMetaDataList.get(0).getFileMetaData().getSchema().getFields();
         this.columnCount = this.fileMetaDataList.get(0).getFileMetaData().getSchema().getFieldCount();
@@ -123,7 +128,7 @@ public class ParquetMetadataStat implements MetadataStat
             }
         }
 
-        long blockCount = this.getBlockCount();
+        long blockCount = this.getRowGroupCount();
         for (int i = 0; i < this.columnCount; ++i)
         {
             sum[i] /= blockCount;
@@ -157,7 +162,7 @@ public class ParquetMetadataStat implements MetadataStat
             }
         }
 
-        long blockCount = this.getBlockCount();
+        long blockCount = this.getRowGroupCount();
         for (int i = 0; i < this.columnCount; ++i)
         {
             dev[i] = Math.sqrt(dev[i] / blockCount);
@@ -182,11 +187,10 @@ public class ParquetMetadataStat implements MetadataStat
     }
 
     /**
-     * get the number of blocks (row groups).
+     * get the number of row groups (parquet blocks).
      * @return
      */
-    @Override
-    public int getBlockCount ()
+    public int getRowGroupCount ()
     {
         return this.getBlocks().size();
     }
@@ -213,34 +217,20 @@ public class ParquetMetadataStat implements MetadataStat
         {
             size += columnSize;
         }
-        return size*this.getBlockCount()/this.getRowCount();
+        return size*this.getRowGroupCount()/this.getRowCount();
     }
 
     /**
-     * get the total compressed size of all the parquet files.
+     * get the total compressed size of the parquet files.
      * @return
      */
     @Override
-    public double getTotalCompressedSize ()
+    public long getTotalSize ()
     {
-        double size = 0;
+        long size = 0;
         for (BlockMetaData meta : this.getBlocks())
         {
             size += meta.getCompressedSize();
-        }
-        return size;
-    }
-
-    /**
-     * get the total uncompressed size of the parquet files.
-     * @return
-     */
-    public double getTotalSize ()
-    {
-        double size = 0;
-        for (BlockMetaData meta : this.getBlocks())
-        {
-            size += meta.getTotalByteSize();
         }
         return size;
     }

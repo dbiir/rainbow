@@ -1,13 +1,11 @@
 package cn.edu.ruc.iir.rainbow.common;
 
-import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
+import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetFileMetadata;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
-import cn.edu.ruc.iir.rainbow.common.util.OutputFactory;
 import org.junit.Test;
 import parquet.hadoop.metadata.BlockMetaData;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +16,10 @@ import java.util.Map;
 public class TestParquetMetadataStat
 {
     @Test
-    public void testGetStat () throws IOException, MetaDataException
+    public void testGetStat () throws IOException, MetadataException
     {
         //ParquetMetadataStat stat = new ParquetMetadataStat("10.172.96.77", 9000, "/tmp/hive-root/hive_2015-02-04_10-57-36_131_1404874572956637570-1/_tmp.-ext-10002");
-        ParquetMetadataStat stat = new ParquetMetadataStat("222.29.197.231", 9000, "/parq_43");
+        ParquetMetadataStat stat = new ParquetMetadataStat("192.168.124.15", 9000, "/msra/parquet_test");
         double[] columnSize = stat.getAvgColumnChunkSize();
         List<String> names = stat.getFieldNames();
         int i = 0;
@@ -32,7 +30,7 @@ public class TestParquetMetadataStat
             total += size;
             i++;
         }
-        System.out.println(total/1024/1024 + "\t" + stat.getBlockCount() + "\t" + stat.getFileCount());
+        System.out.println(total/1024/1024 + "\t" + stat.getRowGroupCount() + "\t" + stat.getFileCount());
 
         for (BlockMetaData bm : stat.getBlocks())
         {
@@ -47,11 +45,9 @@ public class TestParquetMetadataStat
             System.out.println(key + "=" + keyValueMetaData.get(key));
         }
 
-        BufferedWriter writer = OutputFactory.Instance().getWriter("cord-generator/resources/column_size.txt");
         for (int j = 0; j < names.size(); ++j)
         {
-            writer.write(names.get(j) + "\t" + columnSize[j] + "\n");
+            System.out.println(names.get(j) + "\t" + columnSize[j] + "\n");
         }
-        writer.close();
     }
 }

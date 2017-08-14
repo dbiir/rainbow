@@ -30,32 +30,26 @@ public interface MetadataStat
     public List<String> getFieldNames ();
 
     /**
-     * get the number of blocks (row groups).
-     * @return
-     */
-    public int getBlockCount ();
-
-    /**
      * get the number of files.
      * @return
      */
     public int getFileCount ();
 
     /**
-     * get the average compressed size of the rows in the parquet files.
+     * get the number of row groups.
+     * @return
+     */
+    public int getRowGroupCount ();
+
+    /**
+     * get the average compressed size of the rows in the files.
      * @return
      */
     public double getRowSize ();
 
     /**
-     * get the total compressed size of all the parquet files.
+     * get the total compressed size of the files.
      * @return
      */
-    public double getTotalCompressedSize ();
-
-    /**
-     * get the total uncompressed size of the parquet files.
-     * @return
-     */
-    public double getTotalSize ();
+    public long getTotalSize ();
 }
