@@ -1,5 +1,7 @@
 package cn.edu.ruc.iir.rainbow.common.metadata;
 
+import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
+
 import java.util.List;
 
 public interface MetadataStat
@@ -21,7 +23,7 @@ public interface MetadataStat
      * @param avgSize
      * @return
      */
-    public double[] getColumnChunkSizeStdDev (double[] avgSize);
+    public double[] getColumnChunkSizeStdDev (double[] avgSize) throws MetadataException;
 
     /**
      * get the field (column) names.

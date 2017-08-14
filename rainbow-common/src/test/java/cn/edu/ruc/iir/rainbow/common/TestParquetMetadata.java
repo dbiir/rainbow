@@ -10,7 +10,7 @@ import java.util.List;
 /**
  *
  */
-public class TestMetadata
+public class TestParquetMetadata
 {
     @Test
     void testGetMetadata () throws IOException, MetadataException

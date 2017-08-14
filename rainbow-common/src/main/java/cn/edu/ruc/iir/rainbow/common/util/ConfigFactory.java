@@ -39,7 +39,7 @@ public class ConfigFactory
 		FileInputStream in = null;
 		try
 		{
-			new FileInputStream(propFilePath);
+			in = new FileInputStream(propFilePath);
 			this.prop.load(in);
 		} catch (IOException e)
 		{
