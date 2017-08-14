@@ -5,7 +5,7 @@ import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
-import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
+import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.LogFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalEvaluator;
@@ -221,7 +221,7 @@ public class CmdWorkloadEvaluation implements Command
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate local i/o error", e);
-            } catch (MetaDataException e)
+            } catch (MetadataException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate local metadata error", e);
             }

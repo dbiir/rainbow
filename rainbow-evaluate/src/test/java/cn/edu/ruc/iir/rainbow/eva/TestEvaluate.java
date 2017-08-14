@@ -1,6 +1,6 @@
 package cn.edu.ruc.iir.rainbow.eva;
 
-import cn.edu.ruc.iir.rainbow.common.exception.MetaDataException;
+import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.eva.domain.Column;
 import cn.edu.ruc.iir.rainbow.eva.metrics.LocalMetrics;
@@ -174,7 +174,7 @@ public class TestEvaluate
             } catch (IOException e)
             {
                 e.printStackTrace();
-            } catch (MetaDataException e)
+            } catch (MetadataException e)
             {
                 e.printStackTrace();
             }
