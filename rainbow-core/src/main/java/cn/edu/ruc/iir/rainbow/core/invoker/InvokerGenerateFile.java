@@ -5,32 +5,27 @@ import cn.edu.ruc.iir.rainbow.common.cmd.Invoker;
 import cn.edu.ruc.iir.rainbow.common.exception.CommandException;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
-import cn.edu.ruc.iir.rainbow.core.receiver.ReceiverOrdering;
-import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
+import cn.edu.ruc.iir.rainbow.core.receiver.ReceiverGenerateFile;
+import cn.edu.ruc.iir.rainbow.seek.cmd.CmdGenerateFile;
 
-/**
- * @version V1.0
- * @Package: cn.edu.ruc.iir.rainbow.core.invoker
- * @ClassName: InvokerOrdering
- * @Description: ordering invoker
- * @author: Tao
- * @date: Create in 2017-08-13 10:56
- **/
-public class InvokerOrdering extends Invoker
+public class InvokerGenerateFile extends Invoker
 {
-
+    /**
+     * create this.command and set receiver for it
+     */
     @Override
     protected void createCommands()
     {
-        Command command = new CmdOrdering();
-        command.setReceiver(new ReceiverOrdering());
+        // combine command to proper receiver
+        Command command = new CmdGenerateFile();
+        command.setReceiver(new ReceiverGenerateFile());
         try
         {
             this.addCommand(command);
         } catch (CommandException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,
-                    "error when creating ORDERING command", e);
+                    "error when creating GENERATE_File command.", e);
         }
     }
 }

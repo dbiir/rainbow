@@ -15,21 +15,40 @@ public class InvokerFactory
     {
     }
 
-    public Invoker getInvoker(INVOKER invokerName)
+    public Invoker getInvoker(INVOKER invoker)
     {
-        switch (invokerName)
+        switch (invoker)
         {
-            case GENERATE_SQL:
-                return new InvokerGenerateSQL();
-            // TODO: add more case branch to deal with other INVOKERs...
+            case GET_COLUMN_SIZE:
+                return new InvokerGetColumnSize();
+            case GENERATE_FILE:
+                return new InvokerGenerateFile();
+            case SEEK_EVALUATION:
+                return new InvokerSeekEvaluation();
             case ORDERING:
                 return new InvokerOrdering();
             case DUPLICATION:
                 return new InvokerDuplication();
-            case QUERY:
-                return new InvokerQuery();
+            case GENERATE_DDL:
+                return new InvokerGenerateDDL();
+            case GENERATE_LOAD:
+                return new InvokerGenerateLoad();
+            case GENERATE_Query:
+                return new InvokerGenerateQuery();
+            case BUILD_INDEX:
+                return new InvokerBuildIndex();
+            case REDIRECT:
+                return new InvokerRedirect();
+            case WORKLOAD_EVALUATION:
+                return new InvokerWorkloadEvaluation();
             default:
                 return null;
         }
+    }
+
+    public Invoker getInvoker(String invokerName)
+    {
+        INVOKER invoker = INVOKER.valueOf(invokerName);
+        return getInvoker(invoker);
     }
 }

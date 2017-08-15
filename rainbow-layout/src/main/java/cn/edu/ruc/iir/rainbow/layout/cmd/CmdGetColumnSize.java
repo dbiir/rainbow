@@ -18,7 +18,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Properties;
 
-public class CmdAddColumnSize implements Command
+public class CmdGetColumnSize implements Command
 {
     private Receiver receiver = null;
 
@@ -97,7 +97,8 @@ public class CmdAddColumnSize implements Command
             int i = 0;
             while ((line = reader.readLine()) != null)
             {
-                writer.write(line + "\t" + avgSizes[i++]);
+                writer.write(line.split("\t")[0] + "\t" +
+                        line.split("\t")[1] + "\t" + avgSizes[i++]);
             }
             results.setProperty("success", "true");
         } catch (IOException e)

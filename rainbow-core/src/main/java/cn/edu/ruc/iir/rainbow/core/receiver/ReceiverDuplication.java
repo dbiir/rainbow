@@ -18,12 +18,12 @@ public class ReceiverDuplication implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("Duplication: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.println(("DUPLICATION: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("finish.");
+        System.out.println("Finish.");
     }
 }

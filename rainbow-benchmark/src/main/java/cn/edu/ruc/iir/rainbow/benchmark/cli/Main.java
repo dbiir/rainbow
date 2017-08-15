@@ -23,11 +23,11 @@ public class Main
         ArgumentParser parser = ArgumentParsers.newArgumentParser("ruc.iir.rainbow.benchmark")
                 .defaultHelp(true)
                 .description("Generate benchmark data by giving data-size, thread-num and directory options.");
-        parser.addArgument("-s", "--data_size")
+        parser.addArgument("-s", "--data_size").required(true)
                 .help("specify the size of data generated in MB");
-        parser.addArgument("-t", "--thread_num").setDefault("4")
+        parser.addArgument("-t", "--thread_num").setDefault("4").required(true)
                 .help("specify the number of threads used for data generation");
-        parser.addArgument("-d", "--directory")
+        parser.addArgument("-d", "--directory").required(true)
                 .help("specify the directory of data template");
         Namespace ns = null;
         try

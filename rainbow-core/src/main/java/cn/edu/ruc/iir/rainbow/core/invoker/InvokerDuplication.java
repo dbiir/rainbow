@@ -30,7 +30,7 @@ public class InvokerDuplication extends Invoker
         } catch (CommandException e)
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,
-                    "error when creating duplication command", e);
+                    "error when creating DUPLICATION command", e);
         }
     }
 }
