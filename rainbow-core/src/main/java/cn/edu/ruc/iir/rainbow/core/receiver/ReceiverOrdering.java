@@ -12,14 +12,17 @@ import java.util.Properties;
  * @author: Tao
  * @date: Create in 2017-08-13 11:09
  **/
-public class ReceiverOrdering implements Receiver {
+public class ReceiverOrdering implements Receiver
+{
     @Override
-    public void progress(double percentage) {
+    public void progress(double percentage)
+    {
         System.out.println(("Ordering: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
-    public void action(Properties results) {
+    public void action(Properties results)
+    {
         System.out.println("finish.");
     }
 }

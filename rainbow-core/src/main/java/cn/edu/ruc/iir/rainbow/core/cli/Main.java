@@ -25,7 +25,8 @@ import java.util.Scanner;
  * @author: Tao
  * @date: Create in 2017-08-14 23:26
  **/
-public class Main {
+public class Main
+{
 
     static Scanner sc = new Scanner(System.in);
 
@@ -43,7 +44,8 @@ public class Main {
      *
      * @param args
      */
-    public static void main(String args[]) {
+    public static void main(String args[])
+    {
         ArgumentParser parser = ArgumentParsers.newArgumentParser("ruc.iir.rainbow.core")
                 .defaultHelp(true)
                 .description("Give invoker with parameter options.");
@@ -55,9 +57,11 @@ public class Main {
         parser.addArgument("-d", "--params_directory")
                 .help("specify the directory of parameters");
         Namespace ns = null;
-        try {
+        try
+        {
             ns = parser.parseArgs(args);
-        } catch (ArgumentParserException e) {
+        } catch (ArgumentParserException e)
+        {
             parser.handleError(e);
             System.out.println("rainbow> Rainbow Core (https://github.com/dbiir/rainbow/tree/master/rainbow-core).");
             System.exit(1);
@@ -65,19 +69,24 @@ public class Main {
 
         String inputStr = "";
         String curCommand = "";
-        try {
+        try
+        {
             String sys_settings = ns.getString("sys_settings");
-            if (sys_settings != null) {
+            if (sys_settings != null)
+            {
                 ConfigFactory configFactory = ConfigFactory.Instance();
                 configFactory.LoadProperties(sys_settings);
                 System.out.println("rainbow> sys_settings loaded, please input -t & -d.");
-                while (!inputStr.equals("exit;")) {
+                while (!inputStr.equals("exit;"))
+                {
                     System.out.print("rainbow> ");
                     inputStr = sc.nextLine();
-                    if (!inputStr.endsWith(";")) {
+                    if (!inputStr.endsWith(";"))
+                    {
                         inputStr += ";";
                     }
-                    if (inputStr.equals("exit;")) {
+                    if (inputStr.equals("exit;"))
+                    {
                         break;
                     }
                     int left = inputStr.indexOf("-");
@@ -87,42 +96,54 @@ public class Main {
                     // run the invoker
                     excuteCommandByInvoker(ns);
                 }
-            } else {
+            } else
+            {
                 System.out.println("rainbow> Please input the '-s sys_settings'.");
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    private static void excuteCommandByInvoker(Namespace ns) {
+    private static void excuteCommandByInvoker(Namespace ns)
+    {
         String invoker_type = ns.getString("invoker_type");
         String params_directory = ns.getString("params_directory");
         Properties prop = new Properties();
         InputStream in = null;
-        try {
+        try
+        {
             in = new FileInputStream(params_directory);
             prop.load(in);
             Invoker invoker = getInvoker(invoker_type.toUpperCase());
-            if (invoker == null) {
+            if (invoker == null)
+            {
                 System.out.print("invoker not exit, input command again.");
-            } else {
-                try {
+            } else
+            {
+                try
+                {
                     invoker.executeCommands(prop);
-                } catch (InvokerException e) {
+                } catch (InvokerException e)
+                {
                     e.printStackTrace();
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e)
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
 
     }
 
-    private static Invoker getInvoker(String invokerName) {
-        switch (invokerName) {
+    private static Invoker getInvoker(String invokerName)
+    {
+        switch (invokerName)
+        {
             case "GENERATE_SQL":
                 return new InvokerGenerateSQL();
             case "ORDERING":
@@ -136,12 +157,15 @@ public class Main {
         }
     }
 
-    private static Namespace getCommandParamsByArgs(String curCommand, ArgumentParser parser) {
+    private static Namespace getCommandParamsByArgs(String curCommand, ArgumentParser parser)
+    {
         String[] args = curCommand.split(" ");
         Namespace ns = null;
-        try {
+        try
+        {
             ns = parser.parseArgs(args);
-        } catch (ArgumentParserException e) {
+        } catch (ArgumentParserException e)
+        {
             e.printStackTrace();
         }
         return ns;

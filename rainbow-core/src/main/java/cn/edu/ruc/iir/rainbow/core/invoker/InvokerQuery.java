@@ -16,14 +16,18 @@ import cn.edu.ruc.iir.rainbow.layout.cmd.CmdGenerateQuery;
  * @author: Tao
  * @date: Create in 2017-08-13 18:17
  **/
-public class InvokerQuery extends Invoker {
+public class InvokerQuery extends Invoker
+{
     @Override
-    protected void createCommands() {
+    protected void createCommands()
+    {
         Command command = new CmdGenerateQuery();
         command.setReceiver(new ReceiverQuery());
-        try {
+        try
+        {
             this.addCommand(command);
-        } catch (CommandException e) {
+        } catch (CommandException e)
+        {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,
                     "error when creating query command", e);
         }

@@ -47,7 +47,7 @@ public class Main
             String directory = ns.getString("directory");
             if (directory.endsWith("/"))
             {
-                directory = directory.substring(0, directory.length()-1);
+                directory = directory.substring(0, directory.length() - 1);
             }
             if (dataSize > 0 && threadNum > 0 && directory != null)
             {

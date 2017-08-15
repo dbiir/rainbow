@@ -198,7 +198,7 @@ public class HttpFactory
     }
 
     /**
-     * 从一个URL中下载网页的html源代码
+     * get the content of html source code from given url
      *
      * @param url
      * @return

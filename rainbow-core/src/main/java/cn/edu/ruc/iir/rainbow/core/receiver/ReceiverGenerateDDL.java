@@ -17,7 +17,7 @@ public class ReceiverGenerateDDL implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GenerateDDL: " + Math.floor(percentage*10000)/100) + "% finished");
+        System.out.println(("GenerateDDL: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
