@@ -16,15 +16,19 @@ import cn.edu.ruc.iir.rainbow.layout.cmd.CmdDuplication;
  * @author: Tao
  * @date: Create in 2017-08-13 10:57
  **/
-public class InvokerDuplication extends Invoker {
+public class InvokerDuplication extends Invoker
+{
 
     @Override
-    protected void createCommands() {
+    protected void createCommands()
+    {
         Command command = new CmdDuplication();
         command.setReceiver(new ReceiverDuplication());
-        try {
+        try
+        {
             this.addCommand(command);
-        } catch (CommandException e) {
+        } catch (CommandException e)
+        {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,
                     "error when creating duplication command", e);
         }

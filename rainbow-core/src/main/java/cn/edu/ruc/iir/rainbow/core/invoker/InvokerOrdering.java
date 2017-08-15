@@ -16,15 +16,19 @@ import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
  * @author: Tao
  * @date: Create in 2017-08-13 10:56
  **/
-public class InvokerOrdering extends Invoker {
+public class InvokerOrdering extends Invoker
+{
 
     @Override
-    protected void createCommands() {
+    protected void createCommands()
+    {
         Command command = new CmdOrdering();
         command.setReceiver(new ReceiverOrdering());
-        try {
+        try
+        {
             this.addCommand(command);
-        } catch (CommandException e) {
+        } catch (CommandException e)
+        {
             ExceptionHandler.Instance().log(ExceptionType.ERROR,
                     "error when creating ordering command", e);
         }

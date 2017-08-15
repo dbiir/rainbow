@@ -15,7 +15,7 @@ public class ReceiverGenerateLoad implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GenerateLoad: " + Math.floor(percentage*10000)/100) + "% finished");
+        System.out.println(("GenerateLoad: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
