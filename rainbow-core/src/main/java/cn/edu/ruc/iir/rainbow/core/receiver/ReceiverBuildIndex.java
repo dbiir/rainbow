@@ -4,7 +4,7 @@ import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 
 import java.util.Properties;
 
-public class ReceiverGenerateLoad implements Receiver
+public class ReceiverBuildIndex implements Receiver
 {
     /**
      * percentage is in range of (0, 1).
@@ -15,7 +15,7 @@ public class ReceiverGenerateLoad implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GENERATE_LOAD: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.println(("BUILD_INDEX: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override

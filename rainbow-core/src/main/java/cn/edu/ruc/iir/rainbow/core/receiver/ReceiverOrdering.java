@@ -17,12 +17,12 @@ public class ReceiverOrdering implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("Ordering: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.println(("ORDERING: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("finish.");
+        System.out.println("Finish.");
     }
 }

@@ -7,22 +7,22 @@ import java.util.Properties;
 /**
  * @version V1.0
  * @Package: cn.edu.ruc.iir.rainbow.core.receiver
- * @ClassName: ReceiverQuery
+ * @ClassName: ReceiverGenerateQuery
  * @Description: receiver query
  * @author: Tao
  * @date: Create in 2017-08-13 18:16
  **/
-public class ReceiverQuery implements Receiver
+public class ReceiverGenerateQuery implements Receiver
 {
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("Query: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.println(("GENERATE_QUERY: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("finish.");
+        System.out.println("Finish.");
     }
 }

@@ -38,7 +38,7 @@ public class CmdGenerateFile implements Command
      *   <li>file, the local file path to store the generated data if method=LOCAL</li>
      *   <li>block.size, the HDFS block size if method=HDFS</li>
      *   <li>num.block,  the number of blocks if method=HDFS</li>
-     *   <li>file.size the size of the generated gile if method=LOCAL</li>
+     *   <li>file.size the size of the generated file if method=LOCAL</li>
      * </ol>
      * For HDFS, a lot of files will be generated, with each file only containing one block.
      * Each file generated on HDFS use an unique integer number (NO) as the file name.
