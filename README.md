@@ -1,6 +1,5 @@
 # Rainbow
 
-## What is Rainbow?
 Rainbow is a tool that help improve the I/O performance of wide tables stored as columnar formats on HDFS.
 
 ### HDFS Column Store
