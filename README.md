@@ -42,7 +42,7 @@ SQL statements. The generated CREATE TABLE and LOAD DATA statements can be used 
 
 Rainbow does not need to be installed. It does not change anything except your CREATE TABLE statements.
 
-Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/tree/master/rainbow-core) to used it.
+Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/tree/master/rainbow-core) to use it.
 
 ## Project Structure
 * **rainbow-core**
@@ -64,4 +64,4 @@ Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/tree/master/
   redirects (rewrites) the accessed columns for a query when it is running on a duplication layout.
 
 * **rainbow-seek**
-  evaluates seek cost of a storage system (HDFS for local file system) and generate the seek cost function.
+  evaluates seek cost of a storage system (HDFS or local file system) and generates the seek cost function.
