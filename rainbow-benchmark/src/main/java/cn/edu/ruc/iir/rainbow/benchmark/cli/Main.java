@@ -20,7 +20,7 @@ public class Main
 
     public static void main(String args[])
     {
-        ArgumentParser parser = ArgumentParsers.newArgumentParser("ruc.iir.rainbow.benchmark")
+        ArgumentParser parser = ArgumentParsers.newArgumentParser("Rainbow Benchmark")
                 .defaultHelp(true)
                 .description("Generate benchmark data by giving data-size, thread-num and directory options.");
         parser.addArgument("-s", "--data_size").required(true)

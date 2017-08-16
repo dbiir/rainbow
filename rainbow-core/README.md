@@ -12,7 +12,7 @@ statements to apply the data layouts in SQL-on-HDFS environment.
 - Install Hadoop (1.2.1 and 2.7.3 tested), Hive (1.2.x tested), Spark (1.2.x and 1.3.x tested) / Presto (0.179 tested).
 HDFS datanode should use HDD as storage media.
 
-- Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/tree/master/rainbow-benchamrk)
+- Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/tree/master/rainbow-benchmark)
   and follow the steps to generate benchmark data and put data in on HDFS.
   Here, we put data in the HDFS directory /rainbow/text/.
   Also find schema.txt and workload.txt in the benchmark.
@@ -121,9 +121,37 @@ java -jar target/rainbow-core-xxx-full.jar -d ./src/main/resources/params
 You can use a different configuration file by -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 
+A template of rainbow configuration can be found in ./src/main/resources/rainbow.properties.
+Set data.dir like:
+```
+data.dir=/rainbow
+```
+The directory on HDFS to store the wide tables. The generated benchmark data
+should be stored in data.dir/text/.
+
 Now we are going to do data layout optimization experiment step by step.
 
 ### Transform Format
+
+We use Hive to perform data format transformation.
+
+In Hive, to transform data format from text to other formats like Parquet,
+you need a set of SQL statements.
+
+Create a sub directory named sql:
+```bash
+$ mkdir ./sql
+```
+
+In rainbow cli, use the following commands to generate the SQL statements:
+```
+rainbow> GENERATE_DDL -f TEXT -s ./benchmark_data/schema.txt -d ./sql/text_ddl.sql
+rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema.txt -t parq -d ./sql/parq_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq -s ./benchmark_data/schema.txt -l ./sql/parq_load.sql
+```
+
+In Hive, execute text_ddl.sql, parq_ddl.sql and then parq_load.sql
+to create a table in Parquet format and load data into the table.
 
 ### Build Cost Model
 
