@@ -204,6 +204,30 @@ public class Main
                         params.setProperty("table.name", namespace1.getString("table_name"));
                     }
 
+                    if (command.equals("GET_COLUMN_SIZE"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("GET_COLUMN_SIZE")
+                                .defaultHelp(true);
+                        parser1.addArgument("-f", "--format").required(true)
+                                .help("specify the file format, can be PARUQET or ORC");
+                        parser1.addArgument("-s", "--schema_file").required(true)
+                                .help("specify the path of schema file");
+                        parser1.addArgument("-p", "--hdfs_table_path").required(true)
+                                .help("specify the path of load file");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        params.setProperty("file.format", namespace1.getString("format"));
+                        params.setProperty("schema.file", namespace1.getString("schema_file"));
+                        params.setProperty("hdfs.table.path", namespace1.getString("hdfs_table_path"));
+                    }
+
                     System.out.println("Executing command: " + command);
                     //invoker.executeCommands(params);
                 } catch (IllegalArgumentException e)

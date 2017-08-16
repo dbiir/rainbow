@@ -138,9 +138,11 @@ We use Hive to perform data format transformation.
 In Hive, to transform data format from text to other formats like Parquet,
 you need a set of SQL statements.
 
-Create a sub directory named sql:
+Create a sub directories:
 ```bash
 $ mkdir ./sql
+$ mkdir ./benchmark_data
+$ mv ../rainbow-benchmark/benmark_data/*.txt ./benchmark_data/
 ```
 
 In rainbow cli, use the following commands to generate the SQL statements:
@@ -154,6 +156,32 @@ In Hive, execute text_ddl.sql, parq_ddl.sql and then parq_load.sql
 to create a table in Parquet format and load data into the table.
 
 ### Build Cost Model
+
+Before layout optimization, we have to:
+- Calculate the average size of each column chunks.
+- Evaluate seek cost of HDFS, but this is optional. We use POWER
+seek cost function in this doc instead of SIMULATED seek cost function, so that we
+do not need to evaluate the real seek cost of HDFS.
+
+POWER seek cost function is generally good enough for layout optimization.
+You can get the usage information about seek cost evaluation by:
+```
+rainbow> SEEK_EVALUATION -h
+```
+
+If you want to use SIMULATED seek cost function,
+you have to perform seek evaluation of different seek distance and save
+to result in a .txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
+The first like is seek distance interval (in bytes), and each following line contains
+the seek distance (in bytes) and the seek cost (in milliseconds).
+
+To calculate the average size of each column chunks:
+```
+rainbow> GET_COLUMN_SIZE -f PARQUET -s ./benchmark_data/schema.txt -p hdfs://localhost:9000/rainbow/parq/
+```
+
+Then you get a schema.txt.new file under ./benchmark_data/.
+This file will be used instead of schema.txt in the following steps.
 
 ### Column Ordering
 

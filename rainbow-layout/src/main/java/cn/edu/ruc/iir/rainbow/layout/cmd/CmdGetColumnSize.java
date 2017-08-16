@@ -31,8 +31,6 @@ public class CmdGetColumnSize implements Command
     /**
      * params should contain the following settings:
      * <ol>
-     *   <li>origin.schema.file,
-     *   the original schema file which only contains column name and type</li>
      *   <li>schema.file,
      *   the path of the output file which will contain the column size</li>
      *   <li>file.format, orc or parquet</li>
@@ -53,8 +51,7 @@ public class CmdGetColumnSize implements Command
     {
         FileFormat format = FileFormat.valueOf(params.getProperty("file.format"));
         String schemaFilePath = params.getProperty("schema.file");
-        String originSchemaFilePath = params.getProperty("origin.schema.file");
-        String hdfsDataPath = params.getProperty("hdfs.data.path");
+        String hdfsDataPath = params.getProperty("hdfs.table.path");
         Properties results = new Properties(params);
         results.setProperty("success", "false");
 
@@ -88,8 +85,8 @@ public class CmdGetColumnSize implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "metadata error when getting metadata", e);
         }
 
-        try (BufferedReader reader = InputFactory.Instance().getReader(originSchemaFilePath);
-             BufferedWriter writer = OutputFactory.Instance().getWriter(schemaFilePath))
+        try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
+             BufferedWriter writer = OutputFactory.Instance().getWriter(schemaFilePath + ".new"))
         {
             String line = null;
             double[] avgSizes = null;
