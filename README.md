@@ -1,19 +1,19 @@
 # Rainbow
 
-Rainbow is a tool that help improve the I/O performance of wide tables stored as columnar formats on HDFS.
+Rainbow is a tool that helps improve the I/O performance of wide tables stored in columnar formats on HDFS.
 
 ### HDFS Column Store
 Nowadays, very large amount of structured data is stored as wide two-dimension tables in columnar file formats on HDFS.
 Popular columnar file formats include RC File, ORC, Parquet and Carbondata. They are widely supported in data analytical
 systems over HDFS, such as Hive, Spark, Presto and Impala.
 
-These file formats partitions the data into row groups and layout the data inside
+These file formats partition the data into row groups and layout the data inside
 a row group in columnar manner. A row group is stored in an HDFS block. This is an efficient
 way due to that it introduces most advantages of column store into Hadoop ecosystem
 without affecting parallelism, scalability and fault-tolerance.
 
 ### Wide Tables
-With these file formats, tables on HDFS are becoming very wide, from a few hundred to a tens of thousands.
+With these file formats, tables on HDFS are becoming very wide, from a few hundred column to tens of thousands.
 Wide Table has some good features:
 - **Reduce Join Cost:** distributed joins are very expensive.
 - **Easy Schema Modification:** new workloads and new schema requirements come out everyday. Adding new fields to a table is much easier than redesigning the schema following normal forms.
