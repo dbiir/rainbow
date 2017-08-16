@@ -7,21 +7,85 @@ statements to apply the data layouts in SQL-on-HDFS environment.
 
 ## Prepare
 
-- Enter the directory of rainbow-benchmark module which contains this README.md.
+- Get at least one physical machine with a HDD drive and at least 8GB memory.
 
-- Find 'data_template.tar.gz' in dataset subdirectory and uncompress it to somewhere, like './benchmark_data/'.
+- Install Hadoop (1.2.1 and 2.7.3 tested), Hive (1.2.x tested), Spark (1.2.x and 1.3.x tested) / Presto (0.179 tested).
+HDFS datanode should use HDD as storage media.
 
-data_template.tar.gz contains a ready-to-use template which can be used to generate a 1000-column wide table dataset.
-You can modify schema.txt and the column templates in it to generate a different dataset.
-workload.txt contains the query templates. If you modified schema.txt and column templates,
-ensure the column names in workload.txt are valid.
+- Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/tree/master/rainbow-benchamrk)
+  and follow the steps to generate benchmark data and put data in on HDFS.
+  Here, we put data in the HDFS directory /rainbow/text/.
+  Also find schema.txt and workload.txt in the benchmark.
+
+## Cluster Configurations
+In Hive, it is recommended to set these three settings to
+control the block and row group size of Parquet:
+```
+dfs.block.size=268435456;
+parquet.block.size=1073741824;
+mapred.max.split.size=268435456;
+```
+
+These settings can be set by any of these three ways [here](https://cwiki.apache.org/confluence/display/Hive/AdminManual+Configuration).
+
+If you use ORC instead of Parquet,
+set orc.stripe.size instead of parquet.block.size.
+More [Settings for ORC](https://orc.apache.org/docs/hive-config.html).
+
+>
+Tips:\
+In [Parquet](http://parquet.apache.org/documentation/latest/),
+1GB row groups, 1GB HDFS block size and 1 HDFS block per HDFS file
+is recommended. But actually,
+row group size is set by parquet.block.size, and this is the size of **IN MEMORY**
+row group. If you also want to ensure that there is only one row group in a block,
+it is a good idea to set parquet.block.size larger than mapred.max.split.size and
+dfs.block.size. ITs default value may be really small, like 128MB.
+>
+In [ORC](https://orc.apache.org/docs/hive-config.html),
+orc.stripe.size is something similar. Default ORC stripe size in Hive is
+really small, like 64MB. Set it larger will boost query performance, and
+will consume more memory at the same time.
+>
+
+In Hadoop's mapred-site.xml, add the following configurations:
+```xml
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value>-Xmx4096m</value>
+  </property>
+  <property>
+    <name>mapreduce.map.memory.mb</name>
+    <value>4096</value>
+  </property>
+```
+
+In Hadoop's hadoop-env.sh, add the following setting:
+```sh
+export HADOOP_HEAPSIZE=4096
+```
+
+In Presto's config.properties, set query.max-memory-per-node to no less than 4GB:
+```sh
+query.max-memory-per-node=4GB
+```
+
+In Spark's spark-defaults.conf, set spark.driver.memory to no less than 4GB:
+```sh
+spark.driver.memory    4g
+```
+
+In Spark's spark-env.sh, set SPARK_WORKER_MEMORY to no less than 4GB
+```sh
+export SPARK_WORKER_MEMORY=4g
+```
 
 ## Build
 
-In the directory of rainbow-core module, run:
+Enter the directory of rainbow-core module which contains this README.md, run:
 ```bash
 $ mvn clean
-$ mvn package
+$ mvn package -DskipTests
 ```
 
 Then you get a 'rainbow-core-xxx-full.jar' in the target subdirectory.
@@ -51,40 +115,21 @@ just set the parameters in these files following the comments.
 
 For example, we can start rainbow like this:
 ```bash
-java -jar target/rainbow-core-xxx-full.jar -f ./src/main/resources/rainbow.properties -d ./src/main/resources/params
+java -jar target/rainbow-core-xxx-full.jar -d ./src/main/resources/params
 ```
 
+You can use a different configuration file by -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 
 Now we are going to do data layout optimization experiment step by step.
 
-### Generating Benchmark Data
+### Transform Format
 
-Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/tree/master/rainbow-benchamrk)
-and follow the steps to generate benchmark data and put data on HDFS.
+### Build Cost Model
 
-### Hadoop and Hive Configurations
-In Hive beeline, set the following settings before loading data:
-```
-set dfs.block.size=268435456;
-set parquet.block.size=339131300;
-set mapred.max.split.size=268435456;
-```
+### Column Ordering
 
-In Hadoop's mapred-site.xml, add the following configurations:
-```xml
-  <property>
-    <name>mapred.child.java.opts</name>
-    <value>-Xmx4096m</value>
-  </property>
-  <property>
-    <name>mapreduce.map.memory.mb</name>
-    <value>4096</value>
-  </property>
-```
+### Column Duplication
 
-In Hadoop's hadoop-env.sh, add the following setting:
-```sh
-export HADOOP_HEAPSIZE=4096
-```
+### Evaluation
 
