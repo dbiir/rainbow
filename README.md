@@ -13,7 +13,7 @@ way due to that it introduces most advantages of column store into Hadoop ecosys
 without affecting parallelism, scalability and fault-tolerance.
 
 ### Wide Tables
-With these file formats, tables on HDFS are becoming very wide, from a few hundred column to tens of thousands.
+With these file formats, tables on HDFS are becoming very wide, from a few hundred columns to tens of thousands.
 Wide Table has some good features:
 - **Reduce Join Cost:** distributed joins are very expensive.
 - **Easy Schema Modification:** new workloads and new schema requirements come out everyday. Adding new fields to a table is much easier than redesigning the schema following normal forms.
@@ -25,7 +25,7 @@ performance are far from optimal.
 In an experimental example, given a 400GB, 1187-column table store as Parquet in a single node HDFS. The read bandwidth of HDFS is 100MB/s. A query took 907 seconds to read 8 columns (0.3% data, i.e. 1.2GB)
 from the table. While ideally, it may take only 12 seconds.
 
-Such a huge gap between ideal and reality is cost by disk seeks. The columns read by a query may be not continuous on disk so that seek cost become the major part of I/O cost.
+Such a huge gap between ideal and reality is caused by disk seeks. The columns read by a query may not be continuous on disk so that seek cost becomes the major part of I/O cost.
 
 We wrote a **[paper](http://dl.acm.org/citation.cfm?id=3035930)** on narrowing the gap and we have **Rainbow** to implement the solutions in
 the paper.
