@@ -7,7 +7,7 @@ Nowadays, very large amount of structured data is stored as wide two-dimension t
 Popular columnar file formats include RC File, ORC, Parquet and Carbondata. They are widely supported in data analytical
 systems over HDFS, such as Hive, Spark, Presto and Impala.
 
-These file formats partition the data into row groups and layout the data inside
+These file formats partition the data into row groups and place data inside
 a row group in columnar manner. A row group is stored in an HDFS block. This is an efficient
 way due to that it introduces most advantages of column store into Hadoop ecosystem
 without affecting parallelism, scalability and fault-tolerance.
@@ -17,7 +17,7 @@ With these file formats, tables on HDFS are becoming very wide, from a few hundr
 Wide Table has some good features:
 - **Reduce Join Cost:** distributed joins are very expensive.
 - **Easy Schema Modification:** new workloads and new schema requirements come out everyday. Adding new fields to a table is much easier than redesigning the schema following normal forms.
-- **Application Friendly:** new features can be added to the data as a set of new fields without interrupting and modifying running applications.
+- **Application Friendly:** new features can be added to the data as a set of new fields without interrupting or modifying running applications.
 
 Although everything looks good with wide tables stored as columnar formats on HDFS, the I/O efficiency and query
 performance are far from optimal.
