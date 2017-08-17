@@ -106,24 +106,6 @@ public class Main
                     Properties params = new Properties();
                     params.load(new FileInputStream(paramsDirPath + command + ".properties"));
 
-                    if (command.equals("REDIRECT"))
-                    {
-                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("REDIRECT")
-                                .defaultHelp(true);
-                        parser1.addArgument("-s", "--column_set").required(true)
-                                .help("specify the set of columns to redirect, separated by comma");
-                        Namespace namespace1;
-                        try
-                        {
-                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
-                        } catch (ArgumentParserException e)
-                        {
-                            parser1.handleError(e);
-                            continue;
-                        }
-                        params.setProperty("column.set", namespace1.getString("column_set"));
-                    }
-
                     if (command.equals("SEEK_EVALUATION"))
                     {
                         ArgumentParser parser1 = ArgumentParsers.newArgumentParser("SEEK_EVALUATION")
@@ -268,7 +250,7 @@ public class Main
                             params.setProperty("seek.cost.function", namespace1.getString("seek_cost_function"));
                         }
 
-                        if (! params.getProperty("seek.cost.function").equals("SIMULATED"))
+                        if ( params.getProperty("seek.cost.function").equals("SIMULATED"))
                         {
                             if (namespace1.getString("seek_cost_file") == null)
                             {
@@ -283,6 +265,106 @@ public class Main
                             params.setProperty("computation.budget", namespace1.getString("budget"));
                         }
                     }
+
+                    if (command.equals("DUPLICATION"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("DUPLICATION")
+                                .defaultHelp(true);
+                        parser1.addArgument("-a", "--algorithm")
+                                .help("specify the ordering algorithm, can be INSERTION or GRAVITY, default is INSERTION");
+                        parser1.addArgument("-s", "--schema_file").required(true)
+                                .help("specify the path of schema file");
+                        parser1.addArgument("-ds", "--dupped_schema_file").required(true)
+                                .help("specify the path of duplicated schema file, this is the duplication result");
+                        parser1.addArgument("-w", "--workload_file").required(true)
+                                .help("specify the path of workload file");
+                        parser1.addArgument("-dw", "--dupped_workload_file").required(true)
+                                .help("specify the path of duplicated workload file, this is the duplication result");
+                        parser1.addArgument("-f", "--seek_cost_function")
+                                .help("specify the seek cost function, can be POWER, LINEAR or SIMULATED, default is POWER");
+                        parser1.addArgument("-p", "--seek_cost_file")
+                                .help("specify the path of seek cost file");
+                        parser1.addArgument("-b", "--budget")
+                                .help("specify the computation budget in seconds, default is 3000s");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        if (namespace1.getString("algorithm") != null)
+                        {
+                            params.setProperty("algorithm.name", namespace1.getString("algorithm"));
+                        }
+                        params.setProperty("schema.file", namespace1.getString("schema_file"));
+                        params.setProperty("dupped.schema.file", namespace1.getString("dupped_schema_file"));
+                        params.setProperty("workload.file", namespace1.getString("workload_file"));
+                        params.setProperty("dupped.workload.file", namespace1.getString("dupped_workload_file"));
+                        if (namespace1.getString("seek_cost_function") != null)
+                        {
+                            params.setProperty("seek.cost.function", namespace1.getString("seek_cost_function"));
+                        }
+
+                        if ( params.getProperty("seek.cost.function").equals("SIMULATED"))
+                        {
+                            if (namespace1.getString("seek_cost_file") == null)
+                            {
+                                System.out.println("seek cost file is not given");
+                                continue;
+                            }
+                            params.setProperty("seek.cost.file", namespace1.getString("seek_cost_file"));
+                        }
+
+                        if (namespace1.getString("budget") != null)
+                        {
+                            params.setProperty("computation.budget", namespace1.getString("budget"));
+                        }
+                    }
+
+                    if (command.equals("BUILD_INDEX"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("BUILD_INDEX")
+                                .defaultHelp(true);
+                        parser1.addArgument("-ds", "--dupped_schema_file").required(true)
+                                .help("specify the path of duplicated schema file, this is the duplication result");
+                        parser1.addArgument("-dw", "--dupped_workload_file").required(true)
+                                .help("specify the path of duplicated workload file, this is the duplication result");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        params.setProperty("dupped.schema.file", namespace1.getString("dupped_schema_file"));
+                        params.setProperty("workload.file", namespace1.getString("workload_file"));
+                    }
+
+                    if (command.equals("REDIRECT"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("REDIRECT")
+                                .defaultHelp(true);
+                        parser1.addArgument("-s", "--column_set").required(true)
+                                .help("specify the set of columns to redirect, separated by comma");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        params.setProperty("column.set", namespace1.getString("column_set"));
+                    }
+
 
                     System.out.println("Executing command: " + command);
                     //invoker.executeCommands(params);

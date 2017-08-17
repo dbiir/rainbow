@@ -109,7 +109,10 @@ optional arguments:
 Rainbow Core (https://github.com/dbiir/rainbow/tree/master/rainbow-core).
 ```
 
-Argument -d is required. You can find template of the parameter files
+Argument -d is required. It is the directory which contains
+parameter files of rainbow commands. A parameter file contains the
+default parameters of a command.
+You can find template of the parameter files
 in ./src/main/resources/params. **DO NOT** change to file names,
 just set the parameters in these files following the comments.
 
@@ -118,22 +121,22 @@ For example, we can start rainbow like this:
 java -jar target/rainbow-core-xxx-full.jar -d ./src/main/resources/params
 ```
 
-You can use a different configuration file by -f argument.
+You can use a specific configuration file by specifying -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 
 A template of rainbow configuration can be found in ./src/main/resources/rainbow.properties.
-Set data.dir like:
+Set data.dir in rainbow.properties:
 ```
 data.dir=/rainbow
 ```
-The directory on HDFS to store the wide tables. The generated benchmark data
-should be stored in data.dir/text/.
+It is the directory on HDFS to store the wide tables. The generated benchmark data
+should be stored in {data.dir}/text/.
 
 Now we are going to do data layout optimization experiment step by step.
 
-### Transform Format
+### Data Transform
 
-We use Hive to perform data format transformation.
+We use Hive to perform data transformation.
 
 In Hive, to transform data format from text to other formats like Parquet,
 you need a set of SQL statements.
@@ -155,25 +158,34 @@ rainbow> GENERATE_LOAD -r true -t parq -s ./benchmark_data/schema.txt -l ./sql/p
 In Hive, execute text_ddl.sql, parq_ddl.sql and then parq_load.sql
 to create a table in Parquet format and load data into the table.
 
-### Build Cost Model
+### Build Seek Cost Model
 
-Before layout optimization, we have to:
-- Calculate the average size of each column chunks.
-- Evaluate seek cost of HDFS, but this is optional. We use POWER
-seek cost function in this doc instead of SIMULATED seek cost function, so that we
+Before layout optimization, we need a cost model to calculate the seek cost of a query.
+To build this seek cost model, we have to know:
+- the average chunk size of each column, and
+- the seek cost function of HDFS.
+
+Seek cost is a function of seek distance. In rainbow, there are three type of seek cost function:
+- **LINEAR:** seek_cost = k * seek_distance.
+- **POWER:** seek_cost = k * sqrt(seek_distance).
+- **SIMULATED:** perform real seek operations in HDFS and fit the seek cost function.
+
+POWER is the default seek cost function in Rainbow. It works well in most conditions.
+In this document, we use POWER seek cost function so that we
 do not need to evaluate the real seek cost of HDFS.
 
-POWER seek cost function is generally good enough for layout optimization.
-For full usage information:
-```
-rainbow> SEEK_EVALUATION -h
-```
-
-If you want to use SIMULATED seek cost function,
+SIMULATED seek cost function is more accurate than POWER. To use this seek cost function,
 you have to perform seek evaluation of different seek distance and save
 the result in a seek_cost.txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
 The first like is seek distance interval (in bytes), and each following line contains
-the seek distance (in bytes) and the seek cost (in milliseconds).
+the seek distance (in bytes) and the average seek cost (in milliseconds).
+
+You can use **SEEK_EVALUATION** command to evaluate the average seek cost of a
+specific seek distance.
+```
+rainbow> SEEK_EVALUATION -h
+```
+You can change the configuration of this command in SEEK_EVALUATION.properties under /src/main/resources/params.
 
 To calculate the average size of each column chunks:
 ```
@@ -196,17 +208,72 @@ and the default computation budget **200**. For full usage information of ORDERI
 rainbow> ORDERING -h
 ```
 
-The ordering result is stored in ./benchmark_data/schema_ordered.txt.
+The ordered schema is stored in ./benchmark_data/schema_ordered.txt.
 
 Generate the CREATE TABLE and LOAD DATA statements for ordered table:
 ```
 rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema_ordered.txt -t parq_ordered -d ./sql/parq_ordered_ddl.sql
-rainbow> GENERATE_LOAD -r true -t parq -s ./benchmark_data/schema_ordered.txt -l ./sql/parq_ordered_load.sql
+rainbow> GENERATE_LOAD -r true -t parq_ordered -s ./benchmark_data/schema_ordered.txt -l ./sql/parq_ordered_load.sql
 ```
 
-In Hive, execute parq_ordered_ddl.sql and parq_ordered_load.sql to create a ordered table in Parquet format and load data into the table.
+In Hive, execute parq_ordered_ddl.sql and parq_ordered_load.sql to create table parq_ordered and load data into the table.
 
 ### Column Duplication
+
+The columns have been ordered to reduce seek cost. But there are some frequently accessed columns.
+Seek cost can be further reduced by duplicating these columns.
+
+We can duplicate frequently accessed columns by DUPLICATION command:
+```
+rainbow> DUPLICATION -s ./benchmark_data/schema_ordered.txt -ds ./benchmark_data/schema_dupped.txt -w ./benchmark_data/workload.txt -dw ./benchmark_data/workload_dupped.txt
+```
+
+Here we used the default column duplication algorithm **INSERTION**, the default seek cost function **POWER**,
+and the default computation budget **3000**. For full usage information of DUPLICATION:
+```
+rainbow> DUPLICATION -h
+```
+
+The duplicated schema is stored in ./benchmark_data/schema_dupped.txt.
+The query workload with duplicated columns is stored in ./benchmark_data/workload_dupped.txt.
+
+Generate the CREATE TABLE and LOAD DATA statements for ordered table:
+```
+rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema_dupped.txt -t parq_dupped -d ./sql/parq_dupped_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq_dupped -s ./benchmark_data/schema_dupped.txt -l ./sql/parq_dupped_load.sql
+```
+
+In Hive, execute parq_dupped_ddl.sql and parq_dupped_load.sql to create table parq_dupped
+and load data into the table.
+
+### Column Redirection
+
+After column duplication, a column may have a set of replicas. For example,
+Column_6 may have two replicas, say Column_6_1 and Column_6_2, and Column_8 may have
+three replicas Column_8_1, Column_8_2 and Column_8_3.
+
+Query has to be redirected to proper column replicas. For example, query
+```sql
+SELECT Column_6, Column_8 FROM parq WHERE Column_6 = 3;
+```
+may be redirected as:
+```sql
+SELECT Column_6_1, Column_8_3 FROM parq WHERE Column_6_1 = 3;
+```
+
+To redirect columns for queries. We have to firstly build an
+inverted bitmap index (see section 5.3 in the [paper](http://dl.acm.org/citation.cfm?id=3035930)):
+```
+rainbow> BUILD_INDEX -ds ./benchmark_data/schema_dupped.txt -dw ./benchmark_data/workload_dupped.txt
+```
+
+After that, we can redirect accessed column set for a query like:
+```
+rainbow> REDIRECT -s Column_6,Column_8
+```
+
+Note that Column_6 and Column_8 are existing columns in the original schema.txt file.
+With the redirected column access pattern, queries can be easily rewritten to access the duplicated table.
 
 ### Evaluation
 

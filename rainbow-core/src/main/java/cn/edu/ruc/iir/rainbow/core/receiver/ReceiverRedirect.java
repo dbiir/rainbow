@@ -21,6 +21,7 @@ public class ReceiverRedirect implements Receiver
     @Override
     public void action(Properties results)
     {
+        System.out.println("Redirected access pattern: " + results.getProperty("access.pattern"));
         System.out.println("Finish.");
     }
 }
