@@ -68,12 +68,12 @@ public class CmdDuplication implements Command
             this.receiver.progress(0);
         }
 
-        String algoName = params.getProperty("algorithm.name");
+        String algoName = params.getProperty("algorithm.name", "insertion").toLowerCase();
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
         String duppedSchemaFilePath = params.getProperty("dupped.schema.file");
         String duppedWorkloadFilePath = params.getProperty("dupped.workload.file");
-        long budget = Long.parseLong(params.getProperty("computation.budget"));
+        long budget = Long.parseLong(params.getProperty("computation.budget", "3000"));
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
