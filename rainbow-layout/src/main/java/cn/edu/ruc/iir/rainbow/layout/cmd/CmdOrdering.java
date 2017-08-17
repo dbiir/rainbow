@@ -59,11 +59,11 @@ public class CmdOrdering implements Command
     @Override
     public void execute(Properties params)
     {
-        String algoName = params.getProperty("algorithm.name");
+        String algoName = params.getProperty("algorithm.name", "scoa").toLowerCase();
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
         String orderedFilePath = params.getProperty("ordered.schema.file");
-        long budget = Long.parseLong(params.getProperty("computation.budget"));
+        long budget = Long.parseLong(params.getProperty("computation.budget", "200"));
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;

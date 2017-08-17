@@ -228,6 +228,62 @@ public class Main
                         params.setProperty("hdfs.table.path", namespace1.getString("hdfs_table_path"));
                     }
 
+                    if (command.equals("ORDERING"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("ORDERING")
+                                .defaultHelp(true);
+                        parser1.addArgument("-a", "--algorithm")
+                                .help("specify the ordering algorithm, can be SCOA or AUTOPART, default is SCOA");
+                        parser1.addArgument("-s", "--schema_file").required(true)
+                                .help("specify the path of schema file");
+                        parser1.addArgument("-o", "--ordered_schema_file").required(true)
+                                .help("specify the path of ordered schema file, this is the ordering result");
+                        parser1.addArgument("-w", "--workload_file").required(true)
+                                .help("specify the path of workload file");
+                        parser1.addArgument("-f", "--seek_cost_function")
+                                .help("specify the seek cost function, can be POWER, LINEAR or SIMULATED, default is POWER");
+                        parser1.addArgument("-p", "--seek_cost_file")
+                                .help("specify the path of seek cost file");
+                        parser1.addArgument("-b", "--budget")
+                                .help("specify the computation budget in seconds, default is 200s");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        if (namespace1.getString("algorithm") != null)
+                        {
+                            params.setProperty("algorithm.name", namespace1.getString("algorithm"));
+                        }
+                        params.setProperty("schema.file", namespace1.getString("schema_file"));
+                        params.setProperty("ordered.schema.file", namespace1.getString("ordered_schema_file"));
+                        params.setProperty("workload.file", namespace1.getString("workload_file"));
+                        if (namespace1.getString("seek_cost_function") != null)
+                        {
+                            params.setProperty("seek.cost.function", namespace1.getString("seek_cost_function"));
+                        }
+
+                        if (! params.getProperty("seek.cost.function").equals("SIMULATED"))
+                        {
+                            if (namespace1.getString("seek_cost_file") == null)
+                            {
+                                System.out.println("seek cost file is not given");
+                                continue;
+                            }
+                            params.setProperty("seek.cost.file", namespace1.getString("seek_cost_file"));
+                        }
+
+                        if (namespace1.getString("budget") != null)
+                        {
+                            params.setProperty("computation.budget", namespace1.getString("budget"));
+                        }
+                    }
+
                     System.out.println("Executing command: " + command);
                     //invoker.executeCommands(params);
                 } catch (IllegalArgumentException e)

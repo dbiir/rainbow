@@ -164,14 +164,14 @@ seek cost function in this doc instead of SIMULATED seek cost function, so that 
 do not need to evaluate the real seek cost of HDFS.
 
 POWER seek cost function is generally good enough for layout optimization.
-You can get the usage information about seek cost evaluation by:
+For full usage information:
 ```
 rainbow> SEEK_EVALUATION -h
 ```
 
 If you want to use SIMULATED seek cost function,
 you have to perform seek evaluation of different seek distance and save
-to result in a .txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
+the result in a seek_cost.txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
 The first like is seek distance interval (in bytes), and each following line contains
 the seek distance (in bytes) and the seek cost (in milliseconds).
 
@@ -184,6 +184,27 @@ Then you get a schema.txt.new file under ./benchmark_data/.
 This file will be used instead of schema.txt in the following steps.
 
 ### Column Ordering
+
+We can optimize the column order by ORDERING command:
+```
+rainbow> ORDERING -s ./benchmark_data/schema.txt.new -o ./benchmark_data/schema_ordered.txt -w ./benchmark_data/workload.txt
+```
+
+Here we used the default column ordering algorithm **SCOA**, the default seek cost function **POWER**,
+and the default computation budget **200**. For full usage information of ORDERING:
+```
+rainbow> ORDERING -h
+```
+
+The ordering result is stored in ./benchmark_data/schema_ordered.txt.
+
+Generate the CREATE TABLE and LOAD DATA statements for ordered table:
+```
+rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema_ordered.txt -t parq_ordered -d ./sql/parq_ordered_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq -s ./benchmark_data/schema_ordered.txt -l ./sql/parq_ordered_load.sql
+```
+
+In Hive, execute parq_ordered_ddl.sql and parq_ordered_load.sql to create a ordered table in Parquet format and load data into the table.
 
 ### Column Duplication
 
