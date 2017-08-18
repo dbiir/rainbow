@@ -33,7 +33,7 @@ public class InvokerFactory
                 return new InvokerGenerateDDL();
             case GENERATE_LOAD:
                 return new InvokerGenerateLoad();
-            case GENERATE_Query:
+            case GENERATE_QUERY:
                 return new InvokerGenerateQuery();
             case BUILD_INDEX:
                 return new InvokerBuildIndex();

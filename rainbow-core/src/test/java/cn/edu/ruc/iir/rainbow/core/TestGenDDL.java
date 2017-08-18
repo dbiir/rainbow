@@ -11,14 +11,12 @@ import java.util.Properties;
 public class TestGenDDL {
     @Test
     public void test() {
-        Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_SQL);
+        Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_DDL);
         Properties params = new Properties();
         params.setProperty("file.format", "PARQUET");
         params.setProperty("table.name", "parquet_test");
-        params.setProperty("overwrite", "true");
         params.setProperty("schema.file", "G:\\DBIIR\\rainbow\\rainbow-benchmark\\dataset\\schema.txt");
         params.setProperty("ddl.file", "G:\\DBIIR\\rainbow\\rainbow-core\\src\\test\\java\\dataset\\parquet_ddl.sql");
-        params.setProperty("load.file", "G:\\DBIIR\\rainbow\\rainbow-core\\src\\test\\java\\dataset\\parquet_load.sql");
         try {
             invoker.executeCommands(params);
 

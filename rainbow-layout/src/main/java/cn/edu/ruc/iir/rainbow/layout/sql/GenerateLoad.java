@@ -47,7 +47,7 @@ public class GenerateLoad
                 }
                 writer.write(",\n" + columnName);
             }
-            writer.write("\nfrom " + ConfigFactory.Instance().getProperty("text.table.name") + "\n");
+            writer.write("\nFROM " + ConfigFactory.Instance().getProperty("text.table.name") + "\n");
         }
     }
 }

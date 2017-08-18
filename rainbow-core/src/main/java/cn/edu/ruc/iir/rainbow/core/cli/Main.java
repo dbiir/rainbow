@@ -8,8 +8,6 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -30,8 +28,8 @@ public class Main
                 .description("Rainbow: Data Layout Optimization framework for very wide tables on HDFS.");
         parser.addArgument("-f", "--config")
                 .help("specify the path of configuration file");
-        parser.addArgument("-d", "--params_dir").required(true)
-                .help("specify the directory of parameter files");
+        //parser.addArgument("-d", "--params_dir").required(true)
+        //       .help("specify the directory of parameter files");
         Namespace namespace = null;
         try
         {
@@ -58,6 +56,7 @@ public class Main
                 System.out.println("Using default system settings.");
             }
 
+            /*
             String paramsDirPath = namespace.getString("params_dir");
             if (! paramsDirPath.endsWith("/"))
             {
@@ -70,6 +69,7 @@ public class Main
                 System.exit(1);
             }
             System.out.println("Using parameters in " + paramsDirPath + ".");
+            */
 
             while (true)
             {
@@ -86,15 +86,25 @@ public class Main
                     inputStr = inputStr.substring(0, inputStr.length()-1);
                 }
 
-                if (inputStr.equalsIgnoreCase("exit"))
+                if (inputStr.equalsIgnoreCase("exit") || inputStr.equalsIgnoreCase("quit") ||
+                        inputStr.equalsIgnoreCase("-q"))
                 {
                     System.out.println("Bye.");
                     break;
                 }
 
-                if (inputStr.equalsIgnoreCase("help"))
+                if (inputStr.equalsIgnoreCase("help") || inputStr.equalsIgnoreCase("-h"))
                 {
-                    System.out.println("Get supported commands from https://github.com/dbiir/rainbow/tree/master/rainbow-core");
+                    System.out.println("Supported commands:\n" +
+                            "GENERATE_DDL\n" +
+                            "GENERATE_LOAD\n" +
+                            "ORDERING\n" +
+                            "DUPLICATION\n" +
+                            "BUILD_INDEX\n" +
+                            "REDIRECT\n" +
+                            "GENERATE_QUERY\n");
+                    System.out.println("{command} -h to show the usage of a command.\nexit / quit / -q to exit.\n");
+                    System.out.println("Examples on using these commands: https://github.com/dbiir/rainbow/tree/master/rainbow-core");
                     continue;
                 }
 
@@ -104,25 +114,7 @@ public class Main
                 {
                     Invoker invoker = InvokerFactory.Instance().getInvoker(command);
                     Properties params = new Properties();
-                    params.load(new FileInputStream(paramsDirPath + command + ".properties"));
-
-                    if (command.equals("SEEK_EVALUATION"))
-                    {
-                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("SEEK_EVALUATION")
-                                .defaultHelp(true);
-                        parser1.addArgument("-d", "--distance").required(true)
-                                .help("specify the distance of bytes to seek");
-                        Namespace namespace1;
-                        try
-                        {
-                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
-                        } catch (ArgumentParserException e)
-                        {
-                            parser1.handleError(e);
-                            continue;
-                        }
-                        params.setProperty("seek.distance", namespace1.getString("distance"));
-                    }
+                    //params.load(new FileInputStream(paramsDirPath + command + ".properties"));
 
                     if (command.equals("GENERATE_DDL"))
                     {
@@ -351,6 +343,8 @@ public class Main
                     {
                         ArgumentParser parser1 = ArgumentParsers.newArgumentParser("REDIRECT")
                                 .defaultHelp(true);
+                        parser1.addArgument("-q", "--query_id")
+                                .help("specify the identifier of the query to be redirected");
                         parser1.addArgument("-s", "--column_set").required(true)
                                 .help("specify the set of columns to redirect, separated by comma");
                         Namespace namespace1;
@@ -363,8 +357,44 @@ public class Main
                             continue;
                         }
                         params.setProperty("column.set", namespace1.getString("column_set"));
+                        if (namespace1.getString("query_id") != null)
+                        {
+                            params.setProperty("query.id",  namespace1.getString("query_id"));
+                        }
                     }
 
+                    if (command.equals("GENERATE_QUERY"))
+                    {
+                        ArgumentParser parser1 = ArgumentParsers.newArgumentParser("GENERATE_QUERY")
+                                .defaultHelp(true);
+                        parser1.addArgument("-t", "--table_name").required(true)
+                                .help("specify name of the table used in query");
+                        parser1.addArgument("-s", "--schema_file").required(true)
+                                .help("specify the path of schema file");
+                        parser1.addArgument("-w", "--workload_file").required(true)
+                                .help("specify the path of workload file");
+                        parser1.addArgument("-n", "--namenode").required(true)
+                                .help("specify name of the table to be loaded");
+                        parser1.addArgument("-sq", "--spark_query_file").required(true)
+                                .help("specify the path of spark query file, which contains the generated query for spark cli");
+                        parser1.addArgument("-hq", "--hive_query_file").required(true)
+                                .help("specify the path of Hive query file, which contains the generated HiveQL");
+                        Namespace namespace1;
+                        try
+                        {
+                            namespace1 = parser1.parseArgs(inputStr.substring(command.length()).trim().split("\\s+"));
+                        } catch (ArgumentParserException e)
+                        {
+                            parser1.handleError(e);
+                            continue;
+                        }
+                        params.setProperty("namenode", namespace1.getString("namenode"));
+                        params.setProperty("schema.file", namespace1.getString("schema_file"));
+                        params.setProperty("workload.file", namespace1.getString("workload_file"));
+                        params.setProperty("table.name", namespace1.getString("table_name"));
+                        params.setProperty("spark.query.file", namespace1.getString("spark_query_file"));
+                        params.setProperty("hive.query.file", namespace1.getString("hive_query_file"));
+                    }
 
                     System.out.println("Executing command: " + command);
                     //invoker.executeCommands(params);
