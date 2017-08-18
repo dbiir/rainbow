@@ -19,8 +19,6 @@ public class InputFactory
 		return instance;
 	}
 	
-	//private Map<String, BufferedReader> readers = new HashMap<String, BufferedReader>();
-	
 	public BufferedReader getReader (String path) throws FileNotFoundException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(path));

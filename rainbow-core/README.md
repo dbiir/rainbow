@@ -96,35 +96,17 @@ Now you are ready to run rainbow.
 To get usage instructions:
 ```bash
 $ java -jar target/rainbow-core-xxx-full.jar -h
-usage: ruc.iir.rainbow.core [-h] [-f CONFIG] -d PARAMS_DIR
-
-Rainbow: Data Layout Optimization framework for very wide tables on HDFS.
-
-optional arguments:
-  -h, --help             show this help message and exit
-  -f CONFIG, --config CONFIG
-                         specify the path of configuration file
-  -d PARAMS_DIR, --params_dir PARAMS_DIR
-                         specify the directory of parameter files
-Rainbow Core (https://github.com/dbiir/rainbow/tree/master/rainbow-core).
 ```
 
-Argument -d is required. It is the directory which contains
-parameter files of rainbow commands. A parameter file contains the
-default parameters of a command.
-You can find template of the parameter files
-in ./src/main/resources/params. **DO NOT** change to file names,
-just set the parameters in these files following the comments.
-
-For example, we can start rainbow like this:
+We can simply start rainbow without any argument:
 ```bash
-java -jar target/rainbow-core-xxx-full.jar -d ./src/main/resources/params
+java -jar target/rainbow-core-xxx-full.jar
 ```
 
 You can use a specific configuration file by specifying -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 
-A template of rainbow configuration can be found in ./src/main/resources/rainbow.properties.
+A template of rainbow configuration is [here](https://github.com/dbiir/rainbow/blob/master/rainbow-common/src/main/resources/rainbow.properties).
 Set data.dir in rainbow.properties:
 ```
 data.dir=/rainbow
@@ -144,15 +126,15 @@ you need a set of SQL statements.
 Create a sub directories:
 ```bash
 $ mkdir ./sql
-$ mkdir ./benchmark_data
-$ mv ../rainbow-benchmark/benmark_data/*.txt ./benchmark_data/
+$ mkdir ./bench
+$ cp ../rainbow-benchmark/benchmark_data/*.txt ./bench/
 ```
 
 In rainbow cli, use the following commands to generate the SQL statements:
 ```
-rainbow> GENERATE_DDL -f TEXT -s ./benchmark_data/schema.txt -d ./sql/text_ddl.sql
-rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema.txt -t parq -d ./sql/parq_ddl.sql
-rainbow> GENERATE_LOAD -r true -t parq -s ./benchmark_data/schema.txt -l ./sql/parq_load.sql
+rainbow> GENERATE_DDL -f TEXT -s ./bench/schema.txt -d ./sql/text_ddl.sql
+rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema.txt -t parq -d ./sql/parq_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq -s ./bench/schema.txt -l ./sql/parq_load.sql
 ```
 
 In Hive, execute text_ddl.sql, parq_ddl.sql and then parq_load.sql
@@ -175,31 +157,25 @@ In this document, we use POWER seek cost function so that we
 do not need to evaluate the real seek cost of HDFS.
 
 SIMULATED seek cost function is more accurate than POWER. To use this seek cost function,
-you have to perform seek evaluation of different seek distance and save
+you have to perform seek evaluation of different seek distances and save
 the result in a seek_cost.txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
-The first like is seek distance interval (in bytes), and each following line contains
+The first line is seek distance interval (in bytes), each line under the first line contains
 the seek distance (in bytes) and the average seek cost (in milliseconds).
-
-You can use **SEEK_EVALUATION** command to evaluate the average seek cost of a
-specific seek distance.
-```
-rainbow> SEEK_EVALUATION -h
-```
-You can change the configuration of this command in SEEK_EVALUATION.properties under /src/main/resources/params.
+See [Seek Cost Evaluation](https://github.com/dbiir/rainbow/tree/master/rainbow-seek) for how to evaluate seek cost and get seek_cost.txt.
 
 To calculate the average size of each column chunks:
 ```
-rainbow> GET_COLUMN_SIZE -f PARQUET -s ./benchmark_data/schema.txt -p hdfs://localhost:9000/rainbow/parq/
+rainbow> GET_COLUMN_SIZE -f PARQUET -s ./bench/schema.txt -p hdfs://localhost:9000/rainbow/parq/
 ```
 
-Then you get a schema.txt.new file under ./benchmark_data/.
+Then you get a schema.txt.new file under ./bench/.
 This file will be used instead of schema.txt in the following steps.
 
 ### Column Ordering
 
 We can optimize the column order by ORDERING command:
 ```
-rainbow> ORDERING -s ./benchmark_data/schema.txt.new -o ./benchmark_data/schema_ordered.txt -w ./benchmark_data/workload.txt
+rainbow> ORDERING -s ./bench/schema.txt.new -o ./bench/schema_ordered.txt -w ./bench/workload.txt
 ```
 
 Here we used the default column ordering algorithm **SCOA**, the default seek cost function **POWER**,
@@ -208,12 +184,12 @@ and the default computation budget **200**. For full usage information of ORDERI
 rainbow> ORDERING -h
 ```
 
-The ordered schema is stored in ./benchmark_data/schema_ordered.txt.
+The ordered schema is stored in ./bench/schema_ordered.txt.
 
 Generate the CREATE TABLE and LOAD DATA statements for ordered table:
 ```
-rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema_ordered.txt -t parq_ordered -d ./sql/parq_ordered_ddl.sql
-rainbow> GENERATE_LOAD -r true -t parq_ordered -s ./benchmark_data/schema_ordered.txt -l ./sql/parq_ordered_load.sql
+rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema_ordered.txt -t parq_ordered -d ./sql/parq_ordered_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq_ordered -s ./bench/schema_ordered.txt -l ./sql/parq_ordered_load.sql
 ```
 
 In Hive, execute parq_ordered_ddl.sql and parq_ordered_load.sql to create table parq_ordered and load data into the table.
@@ -225,7 +201,7 @@ Seek cost can be further reduced by duplicating these columns.
 
 We can duplicate frequently accessed columns by DUPLICATION command:
 ```
-rainbow> DUPLICATION -s ./benchmark_data/schema_ordered.txt -ds ./benchmark_data/schema_dupped.txt -w ./benchmark_data/workload.txt -dw ./benchmark_data/workload_dupped.txt
+rainbow> DUPLICATION -s ./bench/schema_ordered.txt -ds ./bench/schema_dupped.txt -w ./bench/workload.txt -dw ./bench/workload_dupped.txt
 ```
 
 Here we used the default column duplication algorithm **INSERTION**, the default seek cost function **POWER**,
@@ -234,13 +210,13 @@ and the default computation budget **3000**. For full usage information of DUPLI
 rainbow> DUPLICATION -h
 ```
 
-The duplicated schema is stored in ./benchmark_data/schema_dupped.txt.
-The query workload with duplicated columns is stored in ./benchmark_data/workload_dupped.txt.
+The duplicated schema is stored in ./bench/schema_dupped.txt.
+The query workload with duplicated columns is stored in ./bench/workload_dupped.txt.
 
 Generate the CREATE TABLE and LOAD DATA statements for ordered table:
 ```
-rainbow> GENERATE_DDL -f PARQUET -s ./benchmark_data/schema_dupped.txt -t parq_dupped -d ./sql/parq_dupped_ddl.sql
-rainbow> GENERATE_LOAD -r true -t parq_dupped -s ./benchmark_data/schema_dupped.txt -l ./sql/parq_dupped_load.sql
+rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema_dupped.txt -t parq_dupped -d ./sql/parq_dupped_ddl.sql
+rainbow> GENERATE_LOAD -r true -t parq_dupped -s ./bench/schema_dupped.txt -l ./sql/parq_dupped_load.sql
 ```
 
 In Hive, execute parq_dupped_ddl.sql and parq_dupped_load.sql to create table parq_dupped
@@ -264,16 +240,42 @@ SELECT Column_6_1, Column_8_3 FROM parq WHERE Column_6_1 = 3;
 To redirect columns for queries. We have to firstly build an
 inverted bitmap index (see section 5.3 in the [paper](http://dl.acm.org/citation.cfm?id=3035930)):
 ```
-rainbow> BUILD_INDEX -ds ./benchmark_data/schema_dupped.txt -dw ./benchmark_data/workload_dupped.txt
+rainbow> BUILD_INDEX -ds ./bench/schema_dupped.txt -dw ./bench/workload_dupped.txt
 ```
 
 After that, we can redirect accessed column set for a query like:
 ```
-rainbow> REDIRECT -s Column_6,Column_8
+rainbow> REDIRECT -q Q1 -s Column_6,Column_8
 ```
 
+-q is optional. It is used to specify the query id, which is used to identify a query.
 Note that Column_6 and Column_8 are existing columns in the original schema.txt file.
 With the redirected column access pattern, queries can be easily rewritten to access the duplicated table.
 
 ### Evaluation
 
+Finally, we are going to evaluate the query performance on the three different data layouts:
+- original, has the same schema with our generated benchmark data, stored in table parq;
+- ordered, with columns reordered, store in table parq_ordered;
+- duplicated, with columns reordered and duplicated, stored in table parq_dupped.
+
+We have to generate queries for the three data layouts:
+```
+rainbow> GENERATE_QUERY -t parq -n localhost -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_origin.sql -hq ./sql/hive_origin.sql
+rainbow> GENERATE_QUERY -t parq_ordered -n localhost -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_ordered.sql -hq ./sql/hive_ordered.sql
+rainbow> GENERATE_QUERY -t parq_dupped -n localhost -s ./bench/schema_dupped.txt -w ./bench/workload_dupped.txt -sq ./sql/spark_dupped.sql -hq ./sql/hive_dupped.sql
+```
+
+Now we have a set of spark_\*.sql and a set of hive_\*.sql.
+
+spark_\*.sql files contain the script to be used in spark cli (not spark-sql cli).
+Currently, we only support Parquet and Spark-1.2.x / 1.3.x.
+
+hive_\*.sql files contain the queries written in HiveQL.
+Actually, they are also standard SQL. So that they can be used in most of the systems such as
+spark-sql cli, Presto, Hive and Impala.
+
+It is recommended to use HiveQL in spark-sql cli or Presto. By evaluation queries, you should see
+that queries on the ordered and dupped table runs much faster.
+
+To evaluate the queries automatically on Spark and log the query elapsing time, see [Workload Evaluation](https://github.com/dbiir/rainbow/tree/master/rainbow-evaluate).

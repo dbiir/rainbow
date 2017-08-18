@@ -20,14 +20,14 @@ public class GenerateDDL
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath))
 		{
 			String line;
-			writer.write("create external table " + tableName + "\n(\n");
+			writer.write("CREATE EXTERNAL TABLE " + tableName + "\n(\n");
 			line = reader.readLine();
 			String[] tokens = line.split("\t");
-			writer.write(tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+			writer.write(tokens[0] + ' ' + tokens[1]);
 			while ((line = reader.readLine()) != null)
 			{
 				tokens = line.split("\t");
-				writer.write(",\n" + tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+				writer.write(",\n" + tokens[0] + ' ' + tokens[1]);
 			}
 			writer.write("\n)\n"
 					+ "STORED AS ORC\n"
@@ -42,14 +42,14 @@ public class GenerateDDL
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath))
 		{
 			String line;
-			writer.write("create external table text\n(\n");
+			writer.write("CREATE EXTERNAL TABLE " + ConfigFactory.Instance().getProperty("text.table.name") + "\n(\n");
 			line = reader.readLine();
 			String[] tokens = line.split("\t");
-			writer.write(tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+			writer.write(tokens[0] + ' ' + tokens[1]);
 			while ((line = reader.readLine()) != null)
 			{
 				tokens = line.split("\t");
-				writer.write(",\n" + tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+				writer.write(",\n" + tokens[0] + ' ' + tokens[1]);
 			}
 			writer.write("\n)\n"
 					+ "ROW FORMAT DELIMITED\n"
@@ -64,14 +64,14 @@ public class GenerateDDL
 			 BufferedWriter writer = OutputFactory.Instance().getWriter(createStatementPath);)
 		{
 			String line;
-			writer.write("create external table " + tableName + "\n(\n");
+			writer.write("CREATE EXTERNAL TABLE " + tableName + "\n(\n");
 			line = reader.readLine();
 			String[] tokens = line.split("\t");
-			writer.write(tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+			writer.write(tokens[0] + ' ' + tokens[1]);
 			while ((line = reader.readLine()) != null)
 			{
 				tokens = line.split("\t");
-				writer.write(",\n" + tokens[0].toLowerCase() + ' ' + tokens[1].toLowerCase());
+				writer.write(",\n" + tokens[0] + ' ' + tokens[1]);
 			}
 			writer.write("\n)\n"
 					+ "STORED AS PARQUET\n"

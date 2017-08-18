@@ -3,6 +3,7 @@ package cn.edu.ruc.iir.rainbow.layout.sql;
 import cn.edu.ruc.iir.rainbow.common.exception.ColumnNotFoundException;
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.common.util.InputFactory;
+import cn.edu.ruc.iir.rainbow.common.util.OutputFactory;
 import cn.edu.ruc.iir.rainbow.layout.builder.ColumnOrderBuilder;
 import cn.edu.ruc.iir.rainbow.layout.domian.Column;
 import cn.edu.ruc.iir.rainbow.layout.domian.Query;
@@ -22,7 +23,6 @@ public class GenerateQuery
 		List<String> mergedJobs = new ArrayList<>();
 		try (BufferedReader originWorkloadReader = InputFactory.Instance().getReader(workloadFilePath))
 		{
-
 			List<Query> workload = new ArrayList<>();
 			Map<String, Column> columnMap = new HashMap<String, Column>();
 			List<Column> columnOrder = ColumnOrderBuilder.build(new File(schemaFilePath));
@@ -94,13 +94,27 @@ public class GenerateQuery
 		return mergedJobs;
 	}
 
+	private static Map<String, Double> getColumnToSizeMap (String schemaFilePath) throws IOException
+	{
+		Map<String, Double> columnToSizeMap = new HashMap<>();
+		try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath))
+		{
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				String[] splits = line.split("\t");
+				columnToSizeMap.put(splits[0], Double.parseDouble(splits[2]));
+			}
+		}
+		return columnToSizeMap;
+	}
+
     private static final String dataDir = ConfigFactory.Instance().getProperty("data.dir");
 
     /**
      * Currently only Parquet data format is supported in generated Spark queries.
      * @param tableName
-     * @param orderedTableName
-     * @param hostName
+     * @param namenode
      * @param schemaFilePath
      * @param workloadFilePath
      * @param sparkQueryPath
@@ -108,13 +122,14 @@ public class GenerateQuery
      * @throws IOException
      * @throws ColumnNotFoundException
      */
-	public static void Gen(String tableName, String orderedTableName, String hostName, String schemaFilePath, String workloadFilePath,
+	public static void Gen(String tableName, String namenode, String schemaFilePath, String workloadFilePath,
     String sparkQueryPath, String hiveQueryPath) throws IOException, ColumnNotFoundException
 	{
 		List<String> mergedJobs = genMergedJobs(schemaFilePath, workloadFilePath);
+		Map<String, Double> columnToSizeMap = getColumnToSizeMap(schemaFilePath);
 
-		try (BufferedWriter sparkWriter = new BufferedWriter(new FileWriter(sparkQueryPath));
-			 BufferedWriter hiveWriter = new BufferedWriter(new FileWriter(hiveQueryPath)))
+		try (BufferedWriter sparkWriter = OutputFactory.Instance().getWriter(sparkQueryPath);
+			 BufferedWriter hiveWriter = OutputFactory.Instance().getWriter(hiveQueryPath))
 		{
 			int i = 0;
 
@@ -122,27 +137,46 @@ public class GenerateQuery
 			{
 				String tokens[] = line.split("\t");
 				String columns = tokens[1];
-				sparkWriter.write("% query " + i++ + "\n");
+
+				// get the smallest column as the order by column
+				String orderByColumn = null;
+				double size = Double.MAX_VALUE;
+
+				for (String name : columns.split(","))
+				{
+					if (name.equalsIgnoreCase("market"))
+					{
+						orderByColumn = name;
+						break;
+					}
+				}
+
+				if (orderByColumn == null)
+				{
+					for (String name : columns.split(","))
+					{
+						if (columnToSizeMap.get(name) < size)
+						{
+							size = columnToSizeMap.get(name);
+							orderByColumn = name;
+						}
+					}
+				}
+				
+				sparkWriter.write("% query " + i + "\n");
 				sparkWriter.write("val sqlContext = new org.apache.spark.sql.SQLContext(sc)\n");
 				sparkWriter.write("import sqlContext.createSchemaRDD\n");
-				sparkWriter.write("val parquetFile = sqlContext.parquetFile(\"hdfs://" + hostName + ":9000" + dataDir + "/" + orderedTableName + "\")\n");
-				sparkWriter.write("parquetFile.registerTempTable(\"ordered_parq\")\n");
-				sparkWriter.write("val res = sqlContext.sql(\"select " + columns + " from ordered_parq limit 3000\")\n");
-				sparkWriter.write("res.count()\n");
-				sparkWriter.newLine();
-				sparkWriter.write("val sqlContext = new org.apache.spark.sql.SQLContext(sc)\n");
-				sparkWriter.write("import sqlContext.createSchemaRDD\n");
-				sparkWriter.write("val parquetFile = sqlContext.parquetFile(\"hdfs://" + hostName + ":9000" + dataDir + "/" + tableName + "\")\n");
+				sparkWriter.write("val parquetFile = sqlContext.parquetFile(\"hdfs://" + namenode + ":9000" + dataDir + "/" + tableName + "\")\n");
 				sparkWriter.write("parquetFile.registerTempTable(\"parq\")\n");
-				sparkWriter.write("val res = sqlContext.sql(\"select " + columns + " from parq limit 3000\")\n");
+				sparkWriter.write("val res = sqlContext.sql(\"SELECT " + columns + " FROM parq ORDER BY " + orderByColumn + " LIMIT 3000\")\n");
 				sparkWriter.write("res.count()\n");
 				sparkWriter.newLine();
 				sparkWriter.newLine();
-				hiveWriter.write("select " + columns + " from " + orderedTableName + " limit 10;\n");
+				hiveWriter.write("% query " + i + "\n");
+				hiveWriter.write("SELECT " + columns + " FROM " + tableName + " ORDER BY " + orderByColumn + " LIMIT 3000;\n");
 				hiveWriter.newLine();
-				hiveWriter.write("select " + columns + " from " + tableName + " limit 10;\n");
 				hiveWriter.newLine();
-				hiveWriter.newLine();
+				i++;
 			}
 		}
 	}

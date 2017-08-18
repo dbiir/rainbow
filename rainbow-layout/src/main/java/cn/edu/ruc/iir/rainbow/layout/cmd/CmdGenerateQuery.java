@@ -24,8 +24,7 @@ public class CmdGenerateQuery implements Command
      * params should contain the following settings:
      * <ol>
      *   <li>table.name</li>
-     *   <li>ordered.table.name</li>
-     *   <li>hostname</li>
+     *   <li>namenode</li>
      *   <li>schema.file</li>
      *   <li>workload.file</li>
      *   <li>spark.query.file</li>
@@ -44,8 +43,7 @@ public class CmdGenerateQuery implements Command
     public void execute(Properties params)
     {
         String tableName = params.getProperty("table.name");
-        String orderedTableName = params.getProperty("ordered.table.name");
-        String hostname = params.getProperty("hostname");
+        String namenode = params.getProperty("namenode");
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
         String sparkQueryFilePath = params.getProperty("spark.query.file");
@@ -55,7 +53,7 @@ public class CmdGenerateQuery implements Command
         results.setProperty("success", "false");
         try
         {
-            GenerateQuery.Gen(tableName, orderedTableName, hostname, schemaFilePath, workloadFilePath, sparkQueryFilePath, hiveQueryFilePath);
+            GenerateQuery.Gen(tableName, namenode, schemaFilePath, workloadFilePath, sparkQueryFilePath, hiveQueryFilePath);
             results.setProperty("success", "true");
         } catch (IOException e)
         {
