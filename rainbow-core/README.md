@@ -12,7 +12,7 @@ statements to apply the data layouts in SQL-on-Hadoop environment.
 Spark (1.2.x and 1.3.x recommended) / Presto (0.179 or later recommended).
 HDFS datanode should use HDD as storage media.
 
-- Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/tree/master/rainbow-benchmark)
+- Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md)
   and follow the steps to generate benchmark data. Put data an HDFS directory,
   like /rainbow/text/. Find schema.txt and workload.txt in the benchmark.
 
@@ -161,7 +161,7 @@ you have to perform seek evaluation of different seek distances and save
 the result in a seek_cost.txt file like [this](https://github.com/dbiir/rainbow/blob/master/rainbow-layout/src/test/resources/seek_cost.txt).
 The first line is seek distance interval (in bytes). Each line under the first line contains
 the seek distance (in bytes) and the corresponding average seek cost (in milliseconds).
-See [Seek Cost Evaluation](https://github.com/dbiir/rainbow/tree/master/rainbow-seek)
+See [Seek Cost Evaluation](https://github.com/dbiir/rainbow/blob/master/rainbow-seek/README.md)
 for details on how to evaluate seek cost and get seek_cost.txt.
 
 To calculate the average size of each column chunks:
@@ -179,7 +179,7 @@ We can optimize the column order by ORDERING command:
 rainbow> ORDERING -s ./bench/schema.txt.new -o ./bench/schema_ordered.txt -w ./bench/workload.txt
 ```
 
-Here we used the default column ordering algorithm **SCOA**, the default seek cost function **POWER**,
+Here we use the default column ordering algorithm **SCOA**, the default seek cost function **POWER**,
 and the default computation budget **200**. For full usage information of ORDERING:
 ```
 rainbow> ORDERING -h
@@ -280,4 +280,4 @@ spark-sql cli, Presto, Hive and Impala.
 It is recommended to use HiveQL in spark-sql cli or Presto. By evaluating queries, it could be seen
 that query on the ordered and dupped tables runs much faster.
 
-To evaluate the queries automatically on Spark and log the query elapsing time, see [Workload Evaluation](https://github.com/dbiir/rainbow/tree/master/rainbow-evaluate).
+To evaluate the queries automatically on Spark and log the query elapsing time, see [Workload Evaluation](https://github.com/dbiir/rainbow/blob/master/rainbow-evaluate/README.md).
