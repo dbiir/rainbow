@@ -21,12 +21,12 @@ $ mvn clean
 $ mvn package -DskipTests
 ```
 
-Then you get a 'rainbow-benchmark-xxx-full.jar' in the target subdirectory.
+Then you get a 'rainbow-benchmark-xxx-full.jar' in ./target directory.
 Now you are ready to generate wide table data.
 
 ## Usage
 
-To get usage instructions:
+To get usage information:
 ```bash
 $ java -jar target/rainbow-benchmark-xxx-full.jar -h
 ```
@@ -36,13 +36,15 @@ For example, to generate a 4GB dataset with 4 concurrent threads:
 $ java -jar target/rainbow-benchmark-xxx-full.jar --data_size=4096 --thread_num=4 --directory=./benchmark_data
 ```
 
-Here, --directory specifies the directory of data template.
+Here, --directory argument specifies the directory of data template.
 
 ## Where is the Data
 
 Data is generated under the directory of data template.
-In this case, you can find the generated data in './benchmark_data/rainbow_[timestamp]_4094MB/'. There are a memo.txt and a 'data' subdirectory in it. And there are a number of data files generated under 'data', one by each thread.
-Each line in memo.txt denotes the the name of a file and the number of rows in the file.
+In this case, you can find the generated data in './benchmark_data/rainbow_[timestamp]_4094MB/'.
+There are a memo.txt and a 'data' subdirectory in it.
+And there are a number of data files generated under 'data' directory, one by each thread.
+Each line in memo.txt denotes the name of a file and the number of rows in the file.
 
 ## Next Step
 
