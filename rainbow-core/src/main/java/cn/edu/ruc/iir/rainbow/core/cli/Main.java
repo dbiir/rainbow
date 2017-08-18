@@ -397,7 +397,7 @@ public class Main
                     }
 
                     System.out.println("Executing command: " + command);
-                    //invoker.executeCommands(params);
+                    invoker.executeCommands(params);
                 } catch (IllegalArgumentException e)
                 {
                     System.out.println("Illegal Command: " + command);
