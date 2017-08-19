@@ -82,10 +82,11 @@ export SPARK_WORKER_MEMORY=4g
 
 ## Build
 
-Enter the directory of rainbow-core module which contains this README.md, run:
+Enter the root directory of rainbow, run:
 ```bash
 $ mvn clean
-$ mvn package -DskipTests
+$ mvn package
+$ cd ./rainbow-core
 ```
 
 Then you get 'rainbow-core-xxx-full.jar' in 'target' subdirectory.

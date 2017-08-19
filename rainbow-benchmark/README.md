@@ -18,7 +18,7 @@ ensure the column names in workload.txt are valid.
 In the directory of rainbow-benchmark module, run:
 ```bash
 $ mvn clean
-$ mvn package -DskipTests
+$ mvn package
 ```
 
 Then you get a 'rainbow-benchmark-xxx-full.jar' in ./target directory.

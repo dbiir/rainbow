@@ -1,12 +1,12 @@
-package cn.edu.ruc.iir.rainbow.core.invoker;
+package cn.edu.ruc.iir.rainbow.eva.invoker;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Invoker;
 import cn.edu.ruc.iir.rainbow.common.exception.CommandException;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
-import cn.edu.ruc.iir.rainbow.core.receiver.ReceiverGenerateDDL;
-import cn.edu.ruc.iir.rainbow.layout.cmd.CmdGenerateDDL;
+import cn.edu.ruc.iir.rainbow.eva.receiver.ReceiverWorkloadEvaluation;
+import cn.edu.ruc.iir.rainbow.eva.cmd.CmdWorkloadEvaluation;
 
 public class InvokerWorkloadEvaluation extends Invoker
 {
@@ -17,8 +17,8 @@ public class InvokerWorkloadEvaluation extends Invoker
     protected void createCommands()
     {
         // combine command to proper receiver
-        Command command = new CmdGenerateDDL();
-        command.setReceiver(new ReceiverGenerateDDL());
+        Command command = new CmdWorkloadEvaluation();
+        command.setReceiver(new ReceiverWorkloadEvaluation());
         try
         {
             this.addCommand(command);
