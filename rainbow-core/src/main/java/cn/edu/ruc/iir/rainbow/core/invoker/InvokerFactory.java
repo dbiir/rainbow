@@ -21,10 +21,6 @@ public class InvokerFactory
         {
             case GET_COLUMN_SIZE:
                 return new InvokerGetColumnSize();
-            case GENERATE_FILE:
-                return new InvokerGenerateFile();
-            case SEEK_EVALUATION:
-                return new InvokerSeekEvaluation();
             case ORDERING:
                 return new InvokerOrdering();
             case DUPLICATION:
@@ -39,8 +35,6 @@ public class InvokerFactory
                 return new InvokerBuildIndex();
             case REDIRECT:
                 return new InvokerRedirect();
-            case WORKLOAD_EVALUATION:
-                return new InvokerWorkloadEvaluation();
             default:
                 return null;
         }

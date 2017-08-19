@@ -1,10 +1,10 @@
-package cn.edu.ruc.iir.rainbow.core.receiver;
+package cn.edu.ruc.iir.rainbow.eva.receiver;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 
 import java.util.Properties;
 
-public class ReceiverGenerateFile implements Receiver
+public class ReceiverWorkloadEvaluation implements Receiver
 {
     /**
      * percentage is in range of (0, 1).
@@ -15,7 +15,7 @@ public class ReceiverGenerateFile implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GENERATE_FILE: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.println(("WORKLOAD_EVALUATION: " + Math.floor(percentage * 10000) / 100) + "% finished");
     }
 
     @Override
