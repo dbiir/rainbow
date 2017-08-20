@@ -64,6 +64,7 @@ public class CmdOrdering implements Command
         String workloadFilePath = params.getProperty("workload.file");
         String orderedFilePath = params.getProperty("ordered.schema.file");
         long budget = Long.parseLong(params.getProperty("computation.budget", "200"));
+        // TODO deal with possible IllegalArgumentException and NullPointerException thrown by `Enum.valueOf()`
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
@@ -102,7 +103,7 @@ public class CmdOrdering implements Command
             Algorithm algo = AlgorithmFactory.Instance().getAlgorithm(algoName,
                     budget, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
 
-            results.setProperty("init.cost", ""+algo.getSchemaSeekCost());
+            results.setProperty("init.cost", String.valueOf(algo.getSchemaSeekCost()));
             try
             {
                 ProgressListener progressListener = percentage -> {
@@ -118,7 +119,7 @@ public class CmdOrdering implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
             }
 
-            results.setProperty("final.cost", ""+algo.getCurrentWorkloadSeekCost());
+            results.setProperty("final.cost", String.valueOf(algo.getCurrentWorkloadSeekCost()));
             ColumnOrderBuilder.saveAsSchemaFile(new File(orderedFilePath), algo.getColumnOrder());
 
             results.setProperty("success", "true");
