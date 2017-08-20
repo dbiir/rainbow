@@ -36,7 +36,7 @@ public class Main
         } catch (ArgumentParserException e)
         {
             parser.handleError(e);
-            System.out.println("Rainbow Benchmark (https://github.com/dbiir/rainbow/tree/master/rainbow-benchmark).");
+            System.out.println("Rainbow Benchmark (https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md).");
             System.exit(1);
         }
 

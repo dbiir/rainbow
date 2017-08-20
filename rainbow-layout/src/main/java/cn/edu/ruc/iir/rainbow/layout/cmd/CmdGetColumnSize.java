@@ -9,6 +9,7 @@ import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.MetadataStat;
 import cn.edu.ruc.iir.rainbow.common.metadata.OrcMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.common.util.InputFactory;
 import cn.edu.ruc.iir.rainbow.common.util.OutputFactory;
 import cn.edu.ruc.iir.rainbow.layout.domian.FileFormat;
@@ -34,8 +35,7 @@ public class CmdGetColumnSize implements Command
      *   <li>schema.file,
      *   the path of the output file which will contain the column size</li>
      *   <li>file.format, orc or parquet</li>
-     *   <li>hdfs.data.path, in form of hdfs://namenode:port/path_of_dir,
-     *   it is the directory of unordered data files on hdfs,
+     *   <li>hdfs.data.path, it is the directory of unordered data files on hdfs,
      *   the files should be stored as file.format</li>
      * </ol>
      *
@@ -55,10 +55,8 @@ public class CmdGetColumnSize implements Command
         Properties results = new Properties(params);
         results.setProperty("success", "false");
 
-        String namenode = hdfsDataPath.substring(7, hdfsDataPath.indexOf(':'));
-        int port = Integer.parseInt(hdfsDataPath.substring(hdfsDataPath.indexOf(':')+1,
-                hdfsDataPath.indexOf('/', 7)));
-        String path = hdfsDataPath.substring(hdfsDataPath.indexOf('/', 7));
+        String namenode = ConfigFactory.Instance().getProperty("namenode").split(":")[0];
+        int port = Integer.parseInt(ConfigFactory.Instance().getProperty("namenode").split(":")[1]);
 
         MetadataStat stat = null;
 
@@ -67,10 +65,10 @@ public class CmdGetColumnSize implements Command
             switch (format)
             {
                 case ORC:
-                    stat = new OrcMetadataStat(namenode, port, path);
+                    stat = new OrcMetadataStat(namenode, port, hdfsDataPath);
                     break;
                 case PARQUET:
-                    stat = new ParquetMetadataStat(namenode, port, path);
+                    stat = new ParquetMetadataStat(namenode, port, hdfsDataPath);
                     break;
                 default:
                     ExceptionHandler.Instance().log(ExceptionType.ERROR, "supported file format " + format,

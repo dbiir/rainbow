@@ -7,6 +7,7 @@ import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
 import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.common.util.LogFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalEvaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkEvaluator;
@@ -42,10 +43,7 @@ public class CmdWorkloadEvaluation implements Command
     /**
      * params should contain the following settings:
      * <ol>
-     *   <li>method, LOCAL or SPARK, if LOCAL is used, the jar-ball contains
-     *   this method must be run by hadoop -jar command so that the correct hadoop
-     *   Configuration can be get and used to read files on HDFS.</li>
-     *   <li>master, the hostname of spark master if method=SPARK</li>
+     *   <li>method, LOCAL or SPARK</li>
      *   <li>ordered.table.dir, the path of ordered table directory on HDFS,
      *   should have the hdfs://namenode:port prefix</li>
      *   <li>table.dir, the path of unordered table directory on HDFS,
@@ -78,22 +76,27 @@ public class CmdWorkloadEvaluation implements Command
 
 
         String orderedPath = params.getProperty("ordered.table.dir");
-        String unorderedPath = params.getProperty("table.dir");
-        String workloadFilePath = params.getProperty("workload.file");
-        String log_dir = params.getProperty("log.dir");
+        String unorderedPath = "hdfs://" + ConfigFactory.Instance().getProperty("namenode") +
+                params.getProperty("table.dir");
+        String workloadFilePath = "hdfs://" + ConfigFactory.Instance().getProperty("namenode") +
+                params.getProperty("workload.file");
+        String logDir = params.getProperty("log.dir");
         boolean dropCache = Boolean.parseBoolean(params.getProperty("drop.cache"));
         String dropCachesSh = params.getProperty("drop.caches.sh");
         double workloadFileLength = (new File(workloadFilePath)).length();
         double readLength = 0;
 
-        if (params.getProperty("method").equalsIgnoreCase("local"))
+        if (!logDir.endsWith("/"))
         {
+            logDir += "/";
+        }
 
-
+        if (params.getProperty("method").equalsIgnoreCase("LOCAL"))
+        {
             Configuration conf = new Configuration();
             try (BufferedReader reader = new BufferedReader(new FileReader(workloadFilePath));
-                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(log_dir + "local_time"));
-                 BufferedWriter columnWriter = new BufferedWriter(new FileWriter(log_dir + "columns")))
+                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "local_time"));
+                 BufferedWriter columnWriter = new BufferedWriter(new FileWriter(logDir + "columns")))
             {
                 // get metadata
                 FileStatus[] orderedStatuses = LocalEvaluator.getFileStatuses(orderedPath, conf);
@@ -148,9 +151,11 @@ public class CmdWorkloadEvaluation implements Command
         }
         else if (params.getProperty("method").equalsIgnoreCase("spark"))
         {
-            String masterHostName = params.getProperty("master");
+            String masterHostName = ConfigFactory.Instance().getProperty("spark.master");
+            int appPort = Integer.parseInt(ConfigFactory.Instance().getProperty("spark.app.port"));
+            int driverWebappsPort = Integer.parseInt(ConfigFactory.Instance().getProperty("spark.driver.webapps.port"));
             try (BufferedReader reader = new BufferedReader(new FileReader(workloadFilePath));
-                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(log_dir + "spark_time")))
+                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "spark_time")))
             {
                 // get the column sizes
                 ParquetMetadataStat stat = new ParquetMetadataStat(masterHostName, 9000, orderedPath.split("9000")[1]);
@@ -202,13 +207,13 @@ public class CmdWorkloadEvaluation implements Command
                     {
                         Runtime.getRuntime().exec(dropCachesSh);
                     }
-                    StageMetrics orderedMetrics = SparkEvaluator.execute("ordered_" + i, masterHostName, orderedPath, columns, orderByColumn);
+                    StageMetrics orderedMetrics = SparkEvaluator.execute("ordered_" + i, masterHostName, appPort, driverWebappsPort, orderedPath, columns, orderByColumn);
                     // clear the caches and buffers
                     if (dropCache)
                     {
                         Runtime.getRuntime().exec(dropCachesSh);
                     }
-                    StageMetrics unorderedMetrics = SparkEvaluator.execute("unordered_" + i, masterHostName, unorderedPath, columns, orderByColumn);
+                    StageMetrics unorderedMetrics = SparkEvaluator.execute("unordered_" + i, masterHostName, appPort, driverWebappsPort, unorderedPath, columns, orderByColumn);
 
                     // log the results
                     timeWriter.write(i + "\t" + orderedMetrics.getDuration() + "\t" + unorderedMetrics.getDuration() + "\n");

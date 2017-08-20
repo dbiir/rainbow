@@ -132,42 +132,41 @@ public class SeekPerformer
      *
      * @param seekCosts
      * @param file
-     * @param initPos
-     * @param seekTimes
-     * @param readSize
+     * @param numSeeks
+     * @param readLength
      * @param seekDistance
      * @return
      * @throws IOException
      */
-    public int performLocalSeeks (long[] seekCosts, final File file, final long initPos,
-                                  final int seekTimes, final int readSize, final long seekDistance) throws IOException
+    public int performLocalSeeks (long[] seekCosts, final File file,
+                                  final int numSeeks, final int readLength, final long seekDistance) throws IOException
     {
-        if (seekCosts.length < seekTimes)
+        if (seekCosts.length < numSeeks)
         {
             return -1;
         }
         long fileLen = file.length();
-        long pos = initPos;
         RandomAccessFile raf = new RandomAccessFile(file, "r");
-        int size = 0;
-        byte[] buffer = new byte[readSize];
+        int readSize = 0;
+        byte[] buffer = new byte[readLength];
 
+        long pos = 0;
         raf.seek(pos);
-        while (size < readSize)
+        while (readSize < readLength)
         {
-            size += raf.read(buffer, size, readSize-size);
+            readSize += raf.read(buffer, readSize, readLength-readSize);
         }
         pos += seekDistance;
 
         int i = 0;
-        for (; i < seekTimes && pos < fileLen; ++i)
+        for (; i < numSeeks && pos < fileLen; ++i)
         {
-            size = 0;
+            readSize = 0;
             long startNanoTime = System.nanoTime();
             raf.seek(pos);
-            while (size < readSize)
+            while (readSize < readLength)
             {
-                size += raf.read(buffer, size, readSize-size);
+                readSize += raf.read(buffer, readSize, readLength-readSize);
             }
             long endNanoTime = System.nanoTime();
             seekCosts[i] = (endNanoTime-startNanoTime) / 1000;
@@ -183,7 +182,7 @@ public class SeekPerformer
      * @param seekCosts
      * @param seekTimes must be positive
      * @param path
-     * @return the middle seek cost
+     * @return the average seek cost
      * @throws IOException
      */
     public long logSeekCost (long[] seekCosts, int seekTimes, String path) throws IOException
@@ -201,7 +200,7 @@ public class SeekPerformer
         writer.close();
 
         /*
-        //取中位数
+        // get med
         Collections.sort(seekCostList);
         long midSeekCost = seekCostList.get(seekTimes/2);
         if (seekTimes % 2 == 0)
@@ -209,7 +208,7 @@ public class SeekPerformer
             midSeekCost = (midSeekCost + seekCostList.get(seekTimes/2-1)) / 2;
         }
         */
-        //取均值（期望）
+        // get average
         long midSeekCost = 0;
         for (long cost : seekCostList)
         {

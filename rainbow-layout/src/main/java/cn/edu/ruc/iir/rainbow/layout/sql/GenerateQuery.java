@@ -114,7 +114,7 @@ public class GenerateQuery
     /**
      * Currently only Parquet data format is supported in generated Spark queries.
      * @param tableName
-     * @param namenode
+     * @param namenode in form of localhost:9000
      * @param schemaFilePath
      * @param workloadFilePath
      * @param sparkQueryPath
@@ -166,7 +166,7 @@ public class GenerateQuery
 				sparkWriter.write("% query " + i + "\n");
 				sparkWriter.write("val sqlContext = new org.apache.spark.sql.SQLContext(sc)\n");
 				sparkWriter.write("import sqlContext.createSchemaRDD\n");
-				sparkWriter.write("val parquetFile = sqlContext.parquetFile(\"hdfs://" + namenode + ":9000" + dataDir + "/" + tableName + "\")\n");
+				sparkWriter.write("val parquetFile = sqlContext.parquetFile(\"hdfs://" + namenode + dataDir + "/" + tableName + "\")\n");
 				sparkWriter.write("parquetFile.registerTempTable(\"parq\")\n");
 				sparkWriter.write("val res = sqlContext.sql(\"SELECT " + columns + " FROM parq ORDER BY " + orderByColumn + " LIMIT 3000\")\n");
 				sparkWriter.write("res.count()\n");

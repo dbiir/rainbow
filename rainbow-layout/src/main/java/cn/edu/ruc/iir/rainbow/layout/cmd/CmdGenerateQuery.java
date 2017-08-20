@@ -5,6 +5,7 @@ import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ColumnNotFoundException;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.layout.sql.GenerateQuery;
 
 import java.io.IOException;
@@ -24,7 +25,6 @@ public class CmdGenerateQuery implements Command
      * params should contain the following settings:
      * <ol>
      *   <li>table.name</li>
-     *   <li>namenode</li>
      *   <li>schema.file</li>
      *   <li>workload.file</li>
      *   <li>spark.query.file</li>
@@ -43,7 +43,7 @@ public class CmdGenerateQuery implements Command
     public void execute(Properties params)
     {
         String tableName = params.getProperty("table.name");
-        String namenode = params.getProperty("namenode");
+        String namenode = ConfigFactory.Instance().getProperty("namenode");
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
         String sparkQueryFilePath = params.getProperty("spark.query.file");
