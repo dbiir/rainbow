@@ -28,6 +28,7 @@ public class ExceptionHandler
         if (type == null)
         {
             logger.error(message, e);
+            return;
         }
         switch (type)
         {
