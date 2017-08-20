@@ -102,7 +102,7 @@ public class CmdOrdering implements Command
             Algorithm algo = AlgorithmFactory.Instance().getAlgorithm(algoName,
                     budget, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
 
-            results.setProperty("init.cost", ""+algo.getSchemaSeekCost());
+            results.setProperty("init.cost", String.valueOf(algo.getSchemaSeekCost()));
             try
             {
                 ProgressListener progressListener = percentage -> {
@@ -118,7 +118,7 @@ public class CmdOrdering implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
             }
 
-            results.setProperty("final.cost", ""+algo.getCurrentWorkloadSeekCost());
+            results.setProperty("final.cost", String.valueOf(algo.getCurrentWorkloadSeekCost()));
             ColumnOrderBuilder.saveAsSchemaFile(new File(orderedFilePath), algo.getColumnOrder());
 
             results.setProperty("success", "true");
