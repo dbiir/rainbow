@@ -49,7 +49,8 @@ public class FileGenerator
 
         conf.setBoolean("dfs.support.append", true);
         FileSystem fs = FileSystem.get(URI.create("hdfs://" +
-                ConfigFactory.Instance().getProperty("namenode") + dataPath), conf);
+                ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                ConfigFactory.Instance().getProperty("namenode.port")+ dataPath), conf);
 
         Path path = new Path(dataPath);
         if (fs.exists(path) || !fs.isDirectory(path))

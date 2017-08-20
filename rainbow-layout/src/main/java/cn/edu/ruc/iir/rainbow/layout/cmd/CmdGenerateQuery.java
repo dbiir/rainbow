@@ -43,7 +43,8 @@ public class CmdGenerateQuery implements Command
     public void execute(Properties params)
     {
         String tableName = params.getProperty("table.name");
-        String namenode = ConfigFactory.Instance().getProperty("namenode");
+        String namenode = ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                ConfigFactory.Instance().getProperty("namenode.port");
         String schemaFilePath = params.getProperty("schema.file");
         String workloadFilePath = params.getProperty("workload.file");
         String sparkQueryFilePath = params.getProperty("spark.query.file");

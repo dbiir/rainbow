@@ -16,7 +16,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        ArgumentParser parser = ArgumentParsers.newArgumentParser("Rainbow Seek")
+        ArgumentParser parser = ArgumentParsers.newArgumentParser("Rainbow Seek Evaluation")
                 .defaultHelp(true)
                 .description("Evaluate seek cost of HDD-based file system.");
         parser.addArgument("-c", "--command").required(true)
@@ -31,7 +31,7 @@ public class Main
         } catch (ArgumentParserException e)
         {
             parser.handleError(e);
-            System.out.println("Rainbow Seek (https://github.com/dbiir/rainbow/blob/master/rainbow-seek/README.md).");
+            System.out.println("Rainbow Seek Evaluation (https://github.com/dbiir/rainbow/blob/master/rainbow-seek/README.md).");
             Scanner scanner = new Scanner(System.in);
             System.out.println(scanner.nextLine());
         }
