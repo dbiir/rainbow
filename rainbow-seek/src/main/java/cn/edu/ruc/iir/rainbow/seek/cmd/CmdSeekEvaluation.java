@@ -116,7 +116,8 @@ public class CmdSeekEvaluation implements Command
         {
             //evaluate hdfs seek cost
             Configuration conf  = new Configuration();
-            String namenode = ConfigFactory.Instance().getProperty("namenode");
+            String namenode = ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                    ConfigFactory.Instance().getProperty("namenode.port");
             try
             {
                 FileStatus[] statuses = HDFSInputFactory.Instance().getFileStatuses("hdfs://" + namenode + dataPath, conf);

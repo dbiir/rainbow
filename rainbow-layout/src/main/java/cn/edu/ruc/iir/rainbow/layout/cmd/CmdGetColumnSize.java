@@ -55,8 +55,8 @@ public class CmdGetColumnSize implements Command
         Properties results = new Properties(params);
         results.setProperty("success", "false");
 
-        String namenode = ConfigFactory.Instance().getProperty("namenode").split(":")[0];
-        int port = Integer.parseInt(ConfigFactory.Instance().getProperty("namenode").split(":")[1]);
+        String namenode = ConfigFactory.Instance().getProperty("namenode.host");
+        int port = Integer.parseInt(ConfigFactory.Instance().getProperty("namenode.port"));
 
         MetadataStat stat = null;
 
@@ -83,22 +83,25 @@ public class CmdGetColumnSize implements Command
             ExceptionHandler.Instance().log(ExceptionType.ERROR, "metadata error when getting metadata", e);
         }
 
-        try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
-             BufferedWriter writer = OutputFactory.Instance().getWriter(schemaFilePath + ".new"))
+        if (stat != null)
         {
-            String line = null;
-            double[] avgSizes = null;
-            avgSizes = stat.getAvgColumnChunkSize();
-            int i = 0;
-            while ((line = reader.readLine()) != null)
+            try (BufferedReader reader = InputFactory.Instance().getReader(schemaFilePath);
+                 BufferedWriter writer = OutputFactory.Instance().getWriter(schemaFilePath + ".new"))
             {
-                writer.write(line.split("\t")[0] + "\t" +
-                        line.split("\t")[1] + "\t" + avgSizes[i++]);
+                String line = null;
+                double[] avgSizes = null;
+                avgSizes = stat.getAvgColumnChunkSize();
+                int i = 0;
+                while ((line = reader.readLine()) != null)
+                {
+                    writer.write(line.split("\t")[0] + "\t" +
+                            line.split("\t")[1] + "\t" + avgSizes[i++]);
+                }
+                results.setProperty("success", "true");
+            } catch (IOException e)
+            {
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
             }
-            results.setProperty("success", "true");
-        } catch (IOException e)
-        {
-            ExceptionHandler.Instance().log(ExceptionType.ERROR, "I/O error, check the file paths", e);
         }
 
         if (this.receiver != null)
