@@ -17,7 +17,7 @@ public class TestCrawler
     {
         try
         {
-            List<StageMetrics> metricses =  Crawler.getInstance().getAllStageMetricses("10.172.96.77", 4040);
+            List<StageMetrics> metricses =  Crawler.Instance().getAllStageMetricses("10.172.96.77", 4040);
             for (StageMetrics metrics : metricses)
             {
                 System.out.println(metrics.getId() + ", " + metrics.getDuration());

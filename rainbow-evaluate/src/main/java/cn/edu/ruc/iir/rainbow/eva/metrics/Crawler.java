@@ -24,7 +24,7 @@ public class Crawler {
     private Crawler () {
     }
 
-    public static Crawler getInstance ()
+    public static Crawler Instance ()
     {
         if (instance == null)
         {
