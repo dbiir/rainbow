@@ -26,9 +26,9 @@ public class HDFSInputFactory
 
     private HDFSInputFactory () {}
 
-    public FileStatus[] getFileStatuses (String path, Configuration conf) throws IOException
+    public FileStatus[] getFileStatuses (String dirPath, Configuration conf) throws IOException
     {
-        FileSystem fs = FileSystem.get(URI.create(path), conf);
-        return fs.listStatus(new Path(path));
+        FileSystem fs = FileSystem.get(URI.create(dirPath), conf);
+        return fs.listStatus(new Path(dirPath));
     }
 }

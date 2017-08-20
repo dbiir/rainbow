@@ -8,6 +8,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
+import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -28,8 +29,10 @@ public class Main
                 .description("Rainbow: Data Layout Optimization framework for very wide tables on HDFS.");
         parser.addArgument("-f", "--config")
                 .help("specify the path of configuration file");
-        //parser.addArgument("-d", "--params_dir").required(true)
-        //       .help("specify the directory of parameter files");
+        parser.addArgument("-c", "--command")
+                .help("specify the command to execute");
+        parser.addArgument("-p", "--param_file")
+               .help("specify the path of parameter file for the command");
         Namespace namespace = null;
         try
         {
@@ -37,7 +40,7 @@ public class Main
         } catch (ArgumentParserException e)
         {
             parser.handleError(e);
-            System.out.println("Rainbow Core (https://github.com/dbiir/rainbow/tree/master/rainbow-core).");
+            System.out.println("Rainbow Core (https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md).");
             System.exit(1);
         }
 
@@ -56,20 +59,25 @@ public class Main
                 System.out.println("Using default system settings.");
             }
 
-            /*
-            String paramsDirPath = namespace.getString("params_dir");
-            if (! paramsDirPath.endsWith("/"))
+            if (namespace.getString("command") != null)
             {
-                paramsDirPath += "/";
+                // if run in the shell mode
+                String command = namespace.getString("command");
+                String paramFilePath = namespace.getString("param_file");
+                try
+                {
+
+                    Invoker invoker = InvokerFactory.Instance().getInvoker(command);
+                    Properties params = new Properties();
+                    params.load(new FileInputStream(paramFilePath));
+                    System.out.println("Executing command: " + command);
+                    invoker.executeCommands(params);
+                } catch (IllegalArgumentException e)
+                {
+                    System.out.println("Illegal Command: " + command);
+                }
+                return;
             }
-            File tmpFile = new File(paramsDirPath);
-            if ((!tmpFile.exists()) || (!tmpFile.isDirectory()))
-            {
-                System.out.println("Invalid parameter file directory.");
-                System.exit(1);
-            }
-            System.out.println("Using parameters in " + paramsDirPath + ".");
-            */
 
             while (true)
             {
@@ -114,7 +122,6 @@ public class Main
                 {
                     Invoker invoker = InvokerFactory.Instance().getInvoker(command);
                     Properties params = new Properties();
-                    //params.load(new FileInputStream(paramsDirPath + command + ".properties"));
 
                     if (command.equals("GENERATE_DDL"))
                     {
@@ -373,8 +380,6 @@ public class Main
                                 .help("specify the path of schema file");
                         parser1.addArgument("-w", "--workload_file").required(true)
                                 .help("specify the path of workload file");
-                        parser1.addArgument("-n", "--namenode").required(true)
-                                .help("specify name of the table to be loaded");
                         parser1.addArgument("-sq", "--spark_query_file").required(true)
                                 .help("specify the path of spark query file, which contains the generated query for spark cli");
                         parser1.addArgument("-hq", "--hive_query_file").required(true)
@@ -388,7 +393,6 @@ public class Main
                             parser1.handleError(e);
                             continue;
                         }
-                        params.setProperty("namenode", namespace1.getString("namenode"));
                         params.setProperty("schema.file", namespace1.getString("schema_file"));
                         params.setProperty("workload.file", namespace1.getString("workload_file"));
                         params.setProperty("table.name", namespace1.getString("table_name"));

@@ -34,20 +34,17 @@ public class CmdGenerateFile implements Command
      * params should contain the following settings:
      * <ol>
      *   <li>method, HDFS or LOCAL</li>
-     *   <li>dir, the directory on HDFS to store the generated files if method=HDFS</li>
-     *   <li>file, the local file path to store the generated data if method=LOCAL</li>
-     *   <li>block.size, the HDFS block size if method=HDFS</li>
-     *   <li>num.block,  the number of blocks if method=HDFS</li>
-     *   <li>file.size the size of the generated file if method=LOCAL</li>
+     *   <li>data.path, the directory on HDFS or local file system to store the generated files</li>
+     *   <li>block.size, the HDFS block size</li>
+     *   <li>num.block,  the number of blocks</li>
      * </ol>
-     * For HDFS, a lot of files will be generated, with each file only containing one block.
-     * Each file generated on HDFS use an unique integer number (NO) as the file name.
+     * A lot of files will be generated under data path, with each file only containing one block.
+     * Each file uses an unique integer number (NO) as the file name.
      *
      * This method will pass the following results to receiver:
      * <ol>
      *   <li>success, true or false</li>
-     *   <li>dir, if method=HDFS</li>
-     *   <li>file, if method=LOCAL</li>
+     *   <li>data.path</li>
      * </ol>
      * @param params
      */
@@ -75,35 +72,32 @@ public class CmdGenerateFile implements Command
             return;
         }
 
-        if (params.getProperty("method").equalsIgnoreCase("hdfs"))
+        String dataPath = params.getProperty("data.path");
+        long blockSize = Long.parseLong(params.getProperty("block.size"));
+        long numBlock = Long.parseLong(params.getProperty("num.block"));
+
+        if (params.getProperty("method").equalsIgnoreCase("HDFS"))
         {
             // generate hdfs file
-            String dirPath = params.getProperty("dir");
-            long blockSize = Long.parseLong(params.getProperty("block.size"));
-            long numBlock = Long.parseLong(params.getProperty("num.block"));
             try
             {
-                generator.generateHDFSFile(blockSize, numBlock, dirPath, progressListener);
+                generator.generateHDFSFile(blockSize, numBlock, dataPath, progressListener);
             } catch (IOException e)
             {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate hdfs file error", e);
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate HDFS file error", e);
             }
             results.setProperty("success", "true");
-            results.setProperty("dir", dirPath);
-        } else if (params.getProperty("method").equalsIgnoreCase("local"))
+        } else if (params.getProperty("method").equalsIgnoreCase("LOCAL"))
         {
             //generate local file
-            long FileSize = Long.parseLong(params.getProperty("file.size"));
-            String filePath = params.getProperty("file");
             try
             {
-                generator.generateLocalFile(FileSize, filePath, progressListener);
+                generator.generateLocalFile(blockSize, numBlock, dataPath, progressListener);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate local file error", e);
             }
             results.setProperty("success", "true");
-            results.setProperty("file", filePath);
         } else
         {
             ExceptionHandler.Instance().log(ExceptionType.ERROR, params.getProperty("method") +

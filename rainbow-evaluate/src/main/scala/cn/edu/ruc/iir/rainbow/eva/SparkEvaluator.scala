@@ -11,10 +11,10 @@ import scala.util.control.Breaks._
  */
 object SparkEvaluator {
 
-  def execute (appName:String, masterHostName:String, hdfsPath:String, columns:String, orderByColumn:String):StageMetrics =
+  def execute (appName:String, masterHostName:String, appPort:Int, driverWebappsPort:Int, hdfsPath:String, columns:String, orderByColumn:String):StageMetrics =
   {
     val conf = new SparkConf().setAppName(appName)
-      .setMaster("spark://" + masterHostName + ":7077")
+      .setMaster("spark://" + masterHostName + ":" + appPort)
       .set("spark.executor.memory","20g")
       .set("spark.driver.memory", "4g")
       .set("spark.driver.maxResultSize", "4g")
@@ -26,7 +26,7 @@ object SparkEvaluator {
     parquetFile.registerTempTable("parq");
     val res = sqlContext.sql("select " + columns + " from parq order by " + orderByColumn + " limit 10");
     res.count();
-    val metricses = Crawler.getInstance().getAllStageMetricses(masterHostName, 4040).asScala;
+    val metricses = Crawler.getInstance().getAllStageMetricses(masterHostName, driverWebappsPort).asScala;
     sc.stop();
 
     var metrics:StageMetrics = null;
