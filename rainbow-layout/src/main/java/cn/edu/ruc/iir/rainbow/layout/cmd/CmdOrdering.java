@@ -64,6 +64,7 @@ public class CmdOrdering implements Command
         String workloadFilePath = params.getProperty("workload.file");
         String orderedFilePath = params.getProperty("ordered.schema.file");
         long budget = Long.parseLong(params.getProperty("computation.budget", "200"));
+        // TODO deal with possible IllegalArgumentException and NullPointerException thrown by `Enum.valueOf()`
         SeekCostFunction.Type funcType = SeekCostFunction.Type.valueOf(
                 params.getProperty("seek.cost.function", SeekCostFunction.Type.POWER.name()).toUpperCase());
         SeekCostFunction seekCostFunction = null;
