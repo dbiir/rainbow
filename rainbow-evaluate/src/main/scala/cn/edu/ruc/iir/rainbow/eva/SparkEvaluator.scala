@@ -26,7 +26,7 @@ object SparkEvaluator {
     parquetFile.registerTempTable("parq");
     val res = sqlContext.sql("select " + columns + " from parq order by " + orderByColumn + " limit 10");
     res.count();
-    val metricses = Crawler.getInstance().getAllStageMetricses(masterHostName, driverWebappsPort).asScala;
+    val metricses = Crawler.Instance().getAllStageMetricses(masterHostName, driverWebappsPort).asScala;
     sc.stop();
 
     var metrics:StageMetrics = null;
