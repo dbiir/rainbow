@@ -31,7 +31,7 @@ $ cd ./rainbow-seek
 ```
 
 Then you get `rainbow-seek-xxx-full.jar` in `target` subdirectory.
-Now you are ready to run rainbow seek evaluation.
+Now you are ready to start rainbow seek evaluation.
 
 ## Usage
 
@@ -40,7 +40,7 @@ To get usage information:
 $ java -jar target/rainbow-seek-xxx-full.jar -h
 ```
 
-There are two required arguments:
+There are two arguments required:
 - `-c / --command`, specifies the command to execute, which can be GENERATE_FILE or SEEK_EVALUATION;
 - `-p / param_file`, specifies the parameter file to be used by the command.
 
