@@ -9,7 +9,6 @@ import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.io.FileInputStream;
 import java.util.Properties;
-import java.util.Scanner;
 
 public class Main
 {
@@ -29,8 +28,7 @@ public class Main
         {
             parser.handleError(e);
             System.out.println("Rainbow Workload Evaluation (https://github.com/dbiir/rainbow/blob/master/rainbow-evaluate/README.md).");
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(scanner.nextLine());
+            System.exit(0);
         }
 
         try

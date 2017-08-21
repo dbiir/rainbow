@@ -23,7 +23,6 @@ public class TestGenQuery {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_QUERY);
         Properties params = new Properties();
         params.setProperty("table.name", "PARQUET_TEST");
-        params.setProperty("namenode", "presto00");
         params.setProperty("schema.file", "G:\\DBIIR\\rainbow\\rainbow-core\\src\\test\\java\\dataset\\schema_dupped.txt");
         params.setProperty("workload.file", "G:\\DBIIR\\rainbow\\rainbow-core\\src\\test\\java\\dataset\\workload_dupped.txt");
         params.setProperty("spark.query.file", "G:\\DBIIR\\rainbow\\rainbow-core\\src\\test\\java\\dataset\\spark_dupped.sql");

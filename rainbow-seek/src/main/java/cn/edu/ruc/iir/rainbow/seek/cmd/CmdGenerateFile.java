@@ -74,14 +74,14 @@ public class CmdGenerateFile implements Command
 
         String dataPath = params.getProperty("data.path");
         long blockSize = Long.parseLong(params.getProperty("block.size"));
-        long numBlock = Long.parseLong(params.getProperty("num.block"));
+        long numBlocks = Long.parseLong(params.getProperty("num.blocks"));
 
         if (params.getProperty("method").equalsIgnoreCase("HDFS"))
         {
             // generate hdfs file
             try
             {
-                generator.generateHDFSFile(blockSize, numBlock, dataPath, progressListener);
+                generator.generateHDFSFile(blockSize, numBlocks, dataPath, progressListener);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate HDFS file error", e);
@@ -92,7 +92,7 @@ public class CmdGenerateFile implements Command
             //generate local file
             try
             {
-                generator.generateLocalFile(blockSize, numBlock, dataPath, progressListener);
+                generator.generateLocalFile(blockSize, numBlocks, dataPath, progressListener);
             } catch (IOException e)
             {
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "generate local file error", e);
