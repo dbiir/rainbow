@@ -15,7 +15,7 @@ without affecting parallelism, scalability and fault-tolerance.
 ### Wide Tables
 With these file formats, tables on HDFS are becoming very wide, from a few hundred columns to tens of thousands.
 Wide Table has some good features:
-- **Join Cost Saving:** distributed joins are very expensive in HDFS environment. With wide tables, distributed joins are longer needed.
+- **Join Cost Saving:** distributed joins are very expensive in HDFS environment. With wide tables, distributed joins are no longer needed.
 - **Easy Schema Modification:** new workloads and new schema requirements are emerging everyday. Adding new fields to a wide table is much easier than redesigning the schema following normal forms.
 - **Application Friendly:** new data features can be added to the table as a set of new fields without interrupting or modifying running applications.
 
