@@ -7,14 +7,12 @@ statements to apply the data layouts in SQL-on-Hadoop environment.
 ## Prepare
 
 - Prepare at least one physical machine with a HDD drive and at least 8GB memory.
-
 - Install Hadoop (1.2.1 and 2.7.3 recommended), Hive (1.2.x recommended),
 Spark (1.2.x and 1.3.x recommended) / Presto (0.179 or later recommended).
 HDFS datanode should use HDD as storage media.
-
 - Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md)
   and follow the steps to generate benchmark data. Put data an HDFS directory,
-  like /rainbow/text/. Find schema.txt and workload.txt in the benchmark.
+  like `/rainbow/text/`. Find `schema.txt` and `workload.txt` in the benchmark.
 
 ## Cluster Configurations
 In Hive, it is recommended to set these three settings to
@@ -28,7 +26,7 @@ mapred.max.split.size=268435456;
 These settings can be set by any of the three ways [here](https://cwiki.apache.org/confluence/display/Hive/AdminManual+Configuration).
 
 If you use ORC instead of Parquet,
-set orc.stripe.size instead of parquet.block.size.
+set `orc.stripe.size` instead of `parquet.block.size`.
 See more [ORC Configuration in Hive](https://orc.apache.org/docs/hive-config.html).
 
 >
@@ -48,7 +46,7 @@ will consume more memory when loading and querying data as well.
 Set it as large as your system could support.
 >
 
-In Hadoop's mapred-site.xml, add the following configurations:
+In Hadoop's `mapred-site.xml`, add the following configurations:
 ```xml
   <property>
     <name>mapred.child.java.opts</name>
@@ -60,22 +58,22 @@ In Hadoop's mapred-site.xml, add the following configurations:
   </property>
 ```
 
-In Hadoop's hadoop-env.sh, add the following setting:
+In Hadoop's `hadoop-env.sh`, add the following setting:
 ```sh
 export HADOOP_HEAPSIZE=4096
 ```
 
-In Presto's config.properties, set query.max-memory-per-node to at least 4GB:
+In Presto's `config.properties`, set query.max-memory-per-node to at least 4GB:
 ```sh
 query.max-memory-per-node=4GB
 ```
 
-In Spark's spark-defaults.conf, set spark.driver.memory to at least 4GB:
+In Spark's `spark-defaults.conf`, set spark.driver.memory to at least 4GB:
 ```sh
 spark.driver.memory    4g
 ```
 
-In Spark's spark-env.sh, set SPARK_WORKER_MEMORY to at least 4GB
+In Spark's `spark-env.sh`, set SPARK_WORKER_MEMORY to at least 4GB
 ```sh
 export SPARK_WORKER_MEMORY=4g
 ```
@@ -89,7 +87,7 @@ $ mvn package
 $ cd ./rainbow-core
 ```
 
-Then you get 'rainbow-core-xxx-full.jar' in 'target' subdirectory.
+Then you get `rainbow-core-xxx-full.jar` in `target` subdirectory.
 Now you are ready to run rainbow cli.
 
 ## Usage
@@ -107,13 +105,16 @@ java -jar target/rainbow-core-xxx-full.jar
 You can use a specific configuration file by specifying -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 
-A template of rainbow configuration file is [here](https://github.com/dbiir/rainbow/blob/master/rainbow-common/src/main/resources/rainbow.properties).
-Set data.dir in this file:
+A template of rainbow configuration file can be found at `../rainbow-common/src/main/resources/rainbow.properties`.
+Set `data.dir` in this file:
 ```
 data.dir=/rainbow
 ```
 It is the directory on HDFS to store the wide tables. The generated benchmark data
-should be put in {data.dir}/text/.
+should be put in `{data.dir}/text/`.
+
+Also set `namenode.host`, `namenode.port`, `spark.master`, `spark.app.port` and
+`spark.driver.webapps.port` to be the same as your cluster configurations.
 
 Now we are going to do data layout optimization experiments.
 
@@ -138,7 +139,7 @@ rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema.txt -t parq -d ./sql/parq_ddl
 rainbow> GENERATE_LOAD -r true -t parq -s ./bench/schema.txt -l ./sql/parq_load.sql
 ```
 
-In Hive, execute text_ddl.sql, parq_ddl.sql and then parq_load.sql
+In Hive, execute `text_ddl.sql`, `parq_ddl.sql` and then `parq_load.sql`
 to create a table in Parquet format and load data into the table.
 
 ### Build Seek Cost Model
@@ -170,7 +171,7 @@ To calculate the average size of each column chunks:
 rainbow> GET_COLUMN_SIZE -f PARQUET -s ./bench/schema.txt -p hdfs://localhost:9000/rainbow/parq/
 ```
 
-Then you get a schema.txt.new file under ./bench/.
+Then you get a `schema.txt.new` file under ./bench/.
 This file will be used instead of schema.txt in the following steps.
 
 ### Column Ordering
@@ -186,16 +187,16 @@ and the default computation budget **200**. For full usage information of ORDERI
 rainbow> ORDERING -h
 ```
 
-The ordered schema is stored in ./bench/schema_ordered.txt.
+The ordered schema is stored in `./bench/schema_ordered.txt `.
 
-The ordered schema in stored in schema_ordered.txt.
+The ordered schema in stored in `schema_ordered.txt`.
 With this file, we can generate the CREATE TABLE and LOAD DATA statements for the ordered table:
 ```
 rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema_ordered.txt -t parq_ordered -d ./sql/parq_ordered_ddl.sql
 rainbow> GENERATE_LOAD -r true -t parq_ordered -s ./bench/schema_ordered.txt -l ./sql/parq_ordered_load.sql
 ```
 
-In Hive, execute parq_ordered_ddl.sql and parq_ordered_load.sql to create table parq_ordered and load data into the table.
+In Hive, execute `parq_ordered_ddl.sql` and `parq_ordered_load.sql` to create table parq_ordered and load data into the table.
 
 ### Column Duplication
 
@@ -213,8 +214,8 @@ and the default computation budget **3000**. For full usage information of DUPLI
 rainbow> DUPLICATION -h
 ```
 
-The duplicated schema is stored in ./bench/schema_dupped.txt.
-The query workload with duplicated columns is stored in ./bench/workload_dupped.txt.
+The duplicated schema is stored in `./bench/schema_dupped.txt`.
+The query workload with duplicated columns is stored in `./bench/workload_dupped.txt`.
 
 Generate the CREATE TABLE and LOAD DATA statements for ordered table:
 ```
@@ -222,7 +223,7 @@ rainbow> GENERATE_DDL -f PARQUET -s ./bench/schema_dupped.txt -t parq_dupped -d 
 rainbow> GENERATE_LOAD -r true -t parq_dupped -s ./bench/schema_dupped.txt -l ./sql/parq_dupped_load.sql
 ```
 
-In Hive, execute parq_dupped_ddl.sql and parq_dupped_load.sql to create table parq_dupped
+In Hive, execute `parq_dupped_ddl.sql` and `parq_dupped_load.sql` to create table parq_dupped
 and load data into the table.
 
 ### Column Redirection
@@ -269,12 +270,12 @@ rainbow> GENERATE_QUERY -t parq_ordered -n localhost -s ./bench/schema.txt.new -
 rainbow> GENERATE_QUERY -t parq_dupped -n localhost -s ./bench/schema_dupped.txt -w ./bench/workload_dupped.txt -sq ./sql/spark_dupped.sql -hq ./sql/hive_dupped.sql
 ```
 
-Now we have a set of spark_\*.sql files and a set of hive_\*.sql files in ./sql.
+Now we have a set of `spark_\*.sql` files and a set of `hive_\*.sql` files in `./sql`.
 
-spark_\*.sql files contain the queries to be used in spark cli (not spark-sql cli).
+`spark_\*.sql` files contain the queries to be used in spark cli (not spark-sql cli).
 Currently, we only support Parquet and Spark-1.2.x / 1.3.x.
 
-hive_\*.sql files contain the queries written in HiveQL.
+`hive_\*.sql` files contain the queries written in HiveQL.
 Actually, they are standard SQL. So that they can be used in most systems such as
 spark-sql cli, Presto, Hive and Impala.
 

@@ -37,7 +37,7 @@ public class Main
         {
             parser.handleError(e);
             System.out.println("Rainbow Benchmark (https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md).");
-            System.exit(1);
+            System.exit(0);
         }
 
         try

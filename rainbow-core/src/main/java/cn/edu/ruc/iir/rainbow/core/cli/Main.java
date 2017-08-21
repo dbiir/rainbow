@@ -41,7 +41,7 @@ public class Main
         {
             parser.handleError(e);
             System.out.println("Rainbow Core (https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md).");
-            System.exit(1);
+            System.exit(0);
         }
 
         try
