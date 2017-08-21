@@ -44,9 +44,17 @@ Rainbow does not need to be installed. It does not change anything except your C
 
 Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md) to use it.
 
+## Contact us
+For feedback and questions, feel free to email us:
+* Haoqiong Bian bianhaoqiong@gmail.com
+* Guodong Jin jelly.guodong.jin@gmail.com
+* Youxian Tao taoyouxian@aliyun.com
+
+Welcome to contribute and submit pull requests :)
+
 ## Project Structure
 * **rainbow-core**
-  schedules the other modules (except rainbow-benchmark module) to make them work together and provides a simple API to rainbow users.
+  schedules the other modules and provides a command line interface of Rainbow.
 
 * **rainbow-benchmark**
   provides a wide table data generator. The generated data has similar schema and data distribution with real-world data while sensitive contents in the schema and data are masked.
@@ -55,7 +63,7 @@ Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/
   contains the common interface definitions, functions and utils.
 
 * **rainbow-evaluate**
-  issues queries to Spark or performs read-column operation on local Parquet files to evaluate the end-to-end gain of a column ordering / duplication layout.
+  issues queries to Spark or performs read-column operation on Parquet files to evaluate the I/O gain of a column ordering / duplication layout.
 
 * **rainbow-layout**
   generates column ordering and duplication layout.
@@ -65,3 +73,4 @@ Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/
 
 * **rainbow-seek**
   evaluates seek cost of a storage system (HDFS or local file system) and generates the seek cost function.
+
