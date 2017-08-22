@@ -17,12 +17,12 @@ public class ReceiverGenerateQuery implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GENERATE_QUERY: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.print("\rGENERATE_QUERY: " + ((int)(percentage * 10000) / 100.0) + "%    ");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("Finish.");
+        System.out.println("\nFinish.");
     }
 }

@@ -95,7 +95,7 @@ public class CmdGetColumnSize implements Command
                 while ((line = reader.readLine()) != null)
                 {
                     writer.write(line.split("\t")[0] + "\t" +
-                            line.split("\t")[1] + "\t" + avgSizes[i++]);
+                            line.split("\t")[1] + "\t" + avgSizes[i++] + "\n");
                 }
                 results.setProperty("success", "true");
             } catch (IOException e)

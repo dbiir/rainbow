@@ -15,12 +15,12 @@ public class ReceiverGetColumnSize implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("GET_COLUMN_SIZE: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.print("\rGET_COLUMN_SIZE: " + ((int)(percentage * 10000) / 100.0) + "%    ");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("Finish.");
+        System.out.println("\nFinish.");
     }
 }

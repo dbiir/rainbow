@@ -15,12 +15,12 @@ public class ReceiverWorkloadEvaluation implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("WORKLOAD_EVALUATION: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.print("\rWORKLOAD_EVALUATION: " + ((int)(percentage * 10000) / 100.0) + "%    ");
     }
 
     @Override
     public void action(Properties results)
     {
-        System.out.println("Finish.");
+        System.out.println("\nFinish.");
     }
 }
