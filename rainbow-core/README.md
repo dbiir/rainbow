@@ -265,9 +265,9 @@ Finally, we are going to evaluate the query performance on the three different d
 
 We have to generate queries for the three data layouts:
 ```
-rainbow> GENERATE_QUERY -t parq -n localhost -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_origin.sql -hq ./sql/hive_origin.sql
-rainbow> GENERATE_QUERY -t parq_ordered -n localhost -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_ordered.sql -hq ./sql/hive_ordered.sql
-rainbow> GENERATE_QUERY -t parq_dupped -n localhost -s ./bench/schema_dupped.txt -w ./bench/workload_dupped.txt -sq ./sql/spark_dupped.sql -hq ./sql/hive_dupped.sql
+rainbow> GENERATE_QUERY -t parq -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_origin.sql -hq ./sql/hive_origin.sql
+rainbow> GENERATE_QUERY -t parq_ordered -s ./bench/schema.txt.new -w ./bench/workload.txt -sq ./sql/spark_ordered.sql -hq ./sql/hive_ordered.sql
+rainbow> GENERATE_QUERY -t parq_dupped -s ./bench/schema_dupped.txt -w ./bench/workload_dupped.txt -sq ./sql/spark_dupped.sql -hq ./sql/hive_dupped.sql
 ```
 
 Now we have a set of `spark_\*.sql` files and a set of `hive_\*.sql` files in `./sql`.
