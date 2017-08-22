@@ -4,17 +4,17 @@ Rainbow is a tool that helps improve the I/O performance of wide tables stored i
 
 ### HDFS Column Store
 In many industrial and academic data analytical applications, huge amount of structured data is stored as wide two-dimension tables in columnar file formats on HDFS.
-Popular columnar file formats including RC File, ORC, Parquet and Carbondata are widely supported in data analytical
-systems over HDFS, such as Hive, Spark, Presto and Impala.
+Popular columnar file formats, including RC File, ORC, Parquet and Carbondata, are widely supported in data analytical
+systems over HDFS such as Hive, Spark, Presto and Impala.
 
 These file formats partition the data into row groups and place data inside
 a row group in columnar manner. A row group is stored in an HDFS block. This is an efficient
-way due to that it introduces most advantages of column store into Hadoop ecosystem
+way for that it introduces most advantages of column store into Hadoop ecosystem
 without affecting parallelism, scalability and fault-tolerance.
 
 ### Wide Tables
 With these file formats, tables on HDFS are becoming very wide, from a few hundred columns to tens of thousands.
-Wide Table has some good features:
+Wide Table has some important advantages:
 - **Join Cost Saving:** distributed joins are very expensive in HDFS environment. With wide tables, distributed joins are no longer needed.
 - **Easy Schema Modification:** new workloads and new schema requirements are emerging everyday. Adding new fields to a wide table is much easier than redesigning the schema following normal forms.
 - **Application Friendly:** new data features can be added to the table as a set of new fields without interrupting or modifying running applications.
