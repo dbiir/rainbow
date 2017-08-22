@@ -34,7 +34,7 @@ public class InsertionDup extends DupAlgorithm
     public void setup()
     {
         this.setColumnOrder(new ArrayList<>(this.getSchema()));
-        this.headroom = Double.parseDouble(ConfigFactory.Instance().getProperty("dup.storage.overhead"));
+        this.headroom = Double.parseDouble(ConfigFactory.Instance().getProperty("dup.storage.headroom"));
         this.maxDupedColumnNum = Integer.parseInt(ConfigFactory.Instance().getProperty("dup.max.duped.columns"));
         double initTotalSize = 0;
         // initialize the total size and column id to max dupId map.

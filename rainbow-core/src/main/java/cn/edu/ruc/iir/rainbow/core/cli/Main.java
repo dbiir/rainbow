@@ -306,16 +306,15 @@ public class Main
                         if (namespace1.getString("seek_cost_function") != null)
                         {
                             params.setProperty("seek.cost.function", namespace1.getString("seek_cost_function"));
-                        }
-
-                        if ( params.getProperty("seek.cost.function").equals("SIMULATED"))
-                        {
-                            if (namespace1.getString("seek_cost_file") == null)
+                            if (params.getProperty("seek.cost.function").equals("SIMULATED"))
                             {
-                                System.out.println("seek cost file is not given");
-                                continue;
+                                if (namespace1.getString("seek_cost_file") == null)
+                                {
+                                    System.out.println("seek cost file is not given");
+                                    continue;
+                                }
+                                params.setProperty("seek.cost.file", namespace1.getString("seek_cost_file"));
                             }
-                            params.setProperty("seek.cost.file", namespace1.getString("seek_cost_file"));
                         }
 
                         if (namespace1.getString("budget") != null)
@@ -343,7 +342,7 @@ public class Main
                             continue;
                         }
                         params.setProperty("dupped.schema.file", namespace1.getString("dupped_schema_file"));
-                        params.setProperty("workload.file", namespace1.getString("workload_file"));
+                        params.setProperty("dupped.workload.file", namespace1.getString("dupped_workload_file"));
                     }
 
                     if (command.equals("REDIRECT"))
