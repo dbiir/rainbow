@@ -25,19 +25,19 @@ mapred.max.split.size=268435456;
 
 These settings can be set by any of the three ways [here](https://cwiki.apache.org/confluence/display/Hive/AdminManual+Configuration).
 
-If you use ORC instead of Parquet,
+If you use ORC,
 set `orc.stripe.size` instead of `parquet.block.size`.
 See more [ORC Configuration in Hive](https://orc.apache.org/docs/hive-config.html).
 
 >
-Tips:\
-In [Parquet](http://parquet.apache.org/documentation/latest/),
-1GB row groups, 1GB HDFS block size and 1 HDFS block per HDFS file
-are recommended. But actually,
-row group size is set by parquet.block.size, and this is the size of an **IN-MEMORY**
-row group. If you want to ensure that there is only one row group in an HDFS block,
-it is a good idea to set parquet.block.size larger than mapred.max.split.size and
-dfs.block.size. Default parquet.block.size may be really small, like 128MB.
+> Tips:\
+> In [Parquet](http://parquet.apache.org/documentation/latest/),
+> 1GB row groups, 1GB HDFS block size and 1 HDFS block per HDFS file
+> are recommended. But actually,
+> row group size is set by parquet.block.size, and this is the size of an **IN-MEMORY**
+> row group. If you want to ensure that there is only one row group in an HDFS block,
+> it is a good idea to set parquet.block.size larger than mapred.max.split.size and
+> dfs.block.size. Default parquet.block.size may be really small, like 128MB.
 >
 In [ORC](https://orc.apache.org/docs/hive-config.html),
 orc.stripe.size is something similar with parquet.block.size.
