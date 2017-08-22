@@ -39,11 +39,11 @@ See more [ORC Configuration in Hive](https://orc.apache.org/docs/hive-config.htm
 > it is a good idea to set parquet.block.size larger than mapred.max.split.size and
 > dfs.block.size. Default parquet.block.size may be really small, like 128MB.
 >
-In [ORC](https://orc.apache.org/docs/hive-config.html),
-orc.stripe.size is something similar with parquet.block.size.
-Default ORC stripe size in Hive is 64MB. Larger stripes will boost query performance, but
-will consume more memory when loading and querying data as well.
-Set it as large as your system could support.
+> In [ORC](https://orc.apache.org/docs/hive-config.html),
+> orc.stripe.size is something similar with parquet.block.size.
+> Default ORC stripe size in Hive is 64MB. Larger stripes will boost query performance, but
+> will consume more memory when loading and querying data as well.
+> Set it as large as your system could support.
 >
 
 In Hadoop's `mapred-site.xml`, add the following configurations:
