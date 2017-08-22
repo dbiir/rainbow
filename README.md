@@ -19,10 +19,10 @@ Wide Table has some good features:
 - **Easy Schema Modification:** new workloads and new schema requirements are emerging everyday. Adding new fields to a wide table is much easier than redesigning the schema following normal forms.
 - **Application Friendly:** new data features can be added to the table as a set of new fields without interrupting or modifying running applications.
 
-Although everything looks good with wide tables stored as columnar formats on HDFS, the I/O efficiency and query
+Although everything looks good having the wide tables stored as columnar formats on HDFS, the I/O efficiency and query
 performance are far from optimal.
 
-In an experimental example, given a 400GB, 1187-column table store as Parquet in a single node HDFS. The read bandwidth of HDFS is 100MB/s. A query took 907 seconds to read 8 columns (0.3% data, i.e. 1.2GB)
+In an experimental example, given a 400GB, 1187-column table stored as Parquet in a single node HDFS. The read bandwidth of HDFS is 100MB/s. A query took 907 seconds to read 8 columns (0.3% data, i.e. 1.2GB)
 from the table. While ideally, it may take only 12 seconds.
 
 Such a huge gap between ideal and reality is caused by disk seeks. The columns read by a query may not be continuous on disk so that seek cost becomes the major part of I/O cost.
@@ -31,8 +31,8 @@ We wrote a **[Paper (SIGMOD'17)](http://dl.acm.org/citation.cfm?id=3035930)** on
 the paper.
 
 >
-Note: Rainbow does not contain any source code used in the original implementations described in section 5 and 6 of the paper.
-Copyrights and patents of the original implementations are not included in Rainbow.
+> Note: Rainbow does not contain any source code used in the original implementations described in section 5 and 6 of the paper.
+> Copyrights and patents of the original implementations are not included in Rainbow.
 >
 
 ## How to Use it?
