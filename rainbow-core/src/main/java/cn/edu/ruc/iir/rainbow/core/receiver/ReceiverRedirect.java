@@ -22,7 +22,7 @@ public class ReceiverRedirect implements Receiver
     public void action(Properties results)
     {
         System.out.println("\nFinish.\n");
-        if (results.contains("query.id"))
+        if (results.getProperty("query.id") != null)
         {
             System.out.println("Query ID: " + results.getProperty("query.id"));
         }
