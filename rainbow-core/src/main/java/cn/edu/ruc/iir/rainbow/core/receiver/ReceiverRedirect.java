@@ -15,17 +15,18 @@ public class ReceiverRedirect implements Receiver
     @Override
     public void progress(double percentage)
     {
-        System.out.println(("REDIRECT: " + Math.floor(percentage * 10000) / 100) + "% finished");
+        System.out.print("\rREDIRECT: " + ((int)(percentage * 10000) / 100.0) + "%    ");
     }
 
     @Override
     public void action(Properties results)
     {
+        System.out.println("\nFinish.\n");
         if (results.contains("query.id"))
         {
             System.out.println("Query ID: " + results.getProperty("query.id"));
         }
         System.out.println("Redirected access pattern: " + results.getProperty("access.pattern"));
-        System.out.println("Finish.");
+
     }
 }
