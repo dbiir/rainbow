@@ -13,9 +13,10 @@ import java.util.List;
 public class TestParquetMetadata
 {
     @Test
-    void testGetMetadata () throws IOException, MetadataException
+    public void testGetMetadata () throws IOException, MetadataException
     {
-        ParquetMetadataStat stat = new ParquetMetadataStat("10.172.96.77", 9000, "/lineitem_grouped_test_parq");
+        //ParquetMetadataStat stat = new ParquetMetadataStat("10.172.96.77", 9000, "/lineitem_grouped_test_parq");
+        ParquetMetadataStat stat = new ParquetMetadataStat("192.168.124.15", 9000, "/spark-data");
         double[] avgs = stat.getAvgColumnChunkSize();
         double[] devs = stat.getColumnChunkSizeStdDev(avgs);
         List<String> names = stat.getFieldNames();

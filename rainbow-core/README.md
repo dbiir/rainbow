@@ -168,7 +168,7 @@ for details on how to evaluate seek cost and get seek_cost.txt.
 
 To calculate the average size of each column chunks:
 ```
-rainbow> GET_COLUMN_SIZE -f PARQUET -s ./bench/schema.txt -p hdfs://localhost:9000/rainbow/parq/
+rainbow> GET_COLUMN_SIZE -f PARQUET -s ./bench/schema.txt -p /rainbow/parq/
 ```
 
 Then you get a `schema.txt.new` file under ./bench/.
