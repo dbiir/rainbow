@@ -1,0 +1,80 @@
+# Rainbow Configuration
+
+A `rainbow.properties` file can be used to control the behavior of Rainbow.
+There are many configuration properties in this file:
+
+```
+##### ---------- 1. Cluster Settings ---------- #####
+
+# HDFS configuration
+namenode.host=localhost
+namenode.port=9000
+
+# Spark configuration
+spark.master=localhost
+spark.app.port=7077
+spark.driver.webapps.port=4040
+
+# The directory on HDFS to store the wide tables
+data.dir=/rainbow
+
+# Table name of text format table
+# This table is used as the data source in data loading and format transformation
+text.table.name=text
+
+
+#####---------- 2. Column Ordering Algorithm Settings ----------#####
+
+# Column ordering algorithms
+scoa=cn.edu.ruc.iir.rainbow.layout.algorithm.impl.ord.FastScoa
+autopart=cn.edu.ruc.iir.rainbow.layout.algorithm.impl.ord.AutoPartC
+
+# Settings for column ordering algorithms
+scoa.cooling_rate=0.003
+scoa.init.temperature=10000
+
+
+#####---------- 3. Column Duplication Algorithm Settings ----------#####
+
+# Column duplication algorithms
+gravity=cn.edu.ruc.iir.rainbow.layout.algorithm.impl.dup.legacy.GravityDup
+insertion=cn.edu.ruc.iir.rainbow.layout.algorithm.impl.dup.FastInsertionDup
+refine=cn.edu.ruc.iir.rainbow.layout.algorithm.impl.dup.FastRefine
+
+# Settings for column duplication algorithms
+dup.storage.headroom=0.001
+dup.max.duped.columns=200
+refine.cooling_rate=0.003
+refine.init.temperature=0.0000001
+refine.budget=200
+refine.candidate.column.num=300
+refine.thread.num=4
+refine.select.frequency=10
+refine.frequency=10
+gravity.divisions=100
+gravity.gap=50
+gravity.max.cluster.length=500
+
+
+#####---------- 4. Column Redirection Settings ----------#####
+
+# Name of the inverted index to be cached in memory
+# This index is used in redirecting columns
+# Currently, inverted index is the only index used in column redirection
+inverted.index.name=inverted
+
+# Used to mark a duplicated column in files.
+# e.g. given DUP_MARK="_rainbow_dup_",
+# a column named column1 with dupId 2 will be saved in a file as column1_rainbow_dup_2
+# note that this should contain only characters which are legal in a SQL identifier.
+# it will be used in generating SQL statements.
+dup.mark=_rainbow_dup_
+```
+
+## Cluster Settings
+
+## Ordering Settings
+
+## Duplication Settings
+
+## Redirection Settings

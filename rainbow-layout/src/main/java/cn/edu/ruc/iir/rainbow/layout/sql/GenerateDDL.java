@@ -31,8 +31,8 @@ public class GenerateDDL
 			}
 			writer.write("\n)\n"
 					+ "STORED AS ORC\n"
-                    + "LOCATION '" + dataDir + "/" + tableName + "'\n"
-					+ "TBLPROPERTIES (\"orc.compress\"=\"NONE\")");
+                    + "LOCATION '" + dataDir + "/" + tableName + "'\n");
+					//+ "TBLPROPERTIES (\"orc.compress\"=\"NONE\")");
 		}
 	}
 	

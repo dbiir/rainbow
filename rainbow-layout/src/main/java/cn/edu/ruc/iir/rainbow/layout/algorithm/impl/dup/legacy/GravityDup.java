@@ -32,9 +32,9 @@ public class GravityDup extends Algorithm
     @Override
     public void setup()
     {
-        this.divisions = Integer.parseInt(ConfigFactory.Instance().getProperty("cbd.divisions"));
-        this.gap = Integer.parseInt(ConfigFactory.Instance().getProperty("cbd.gap"));
-        this.maxClusterLength = Integer.parseInt(ConfigFactory.Instance().getProperty("cbd.max.cluster.length"));
+        this.divisions = Integer.parseInt(ConfigFactory.Instance().getProperty("gravity.divisions"));
+        this.gap = Integer.parseInt(ConfigFactory.Instance().getProperty("gravity.gap"));
+        this.maxClusterLength = Integer.parseInt(ConfigFactory.Instance().getProperty("gravity.max.cluster.length"));
         this.maxDupedColumnNum = Integer.parseInt(ConfigFactory.Instance().getProperty("dup.max.duped.columns"));
         this.overhead = Double.parseDouble(ConfigFactory.Instance().getProperty("dup.storage.overhead"));
         Map<Integer, Column> idToColumn = new HashMap<>();
