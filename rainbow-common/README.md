@@ -71,10 +71,49 @@ inverted.index.name=inverted
 dup.mark=_rainbow_dup_
 ```
 
-## Cluster Settings
+### Cluster Settings
+Rainbow can generate SQL statements for creating, loading and querying data.
+In these statements, cluster settings are used to specify the HDFS and Spark
+URIs and paths.
 
-## Ordering Settings
+Rainbow creates external tables in Hive. The tables are stored under `data.dir` on HDFS.
 
-## Duplication Settings
+To load data into columnar format tables (Parquet or ORC),
+a TEXT format table is used as the data source. 
+`text.table.name` is the TEXT table name in Hive.
 
-## Redirection Settings
+### Column Ordering Algorithm Settings
+
+Column ordering is main technique used in Rainbow to optimize
+data layout for wide tables. There are two types of column ordering 
+algorithm in Rainbow: `autopart` and `scoa`.
+We can specify the implementation for these two algorithms.
+
+`cn.edu.ruc.iir.rainbow.layout.algorithm.impl.ord.FastScoa` is the 
+best implementation for `scoa`. It is the optimized SCOA algorithm used 
+in our [paper](http://dl.acm.org/citation.cfm?id=3035930).
+`cn.edu.ruc.iir.rainbow.layout.algorithm.impl.ord.AutoPartC` 
+is the best implementation of `autopart`. It is the baseline AutoPartC used in
+out paper. AutoPartC combines the [autopart](http://www.cs.cmu.edu/~natassa/aapubs/conference/AutoPart.pdf) 
+and [hill-climbing](http://dl.acm.org/citation.cfm?id=1315488). 
+vertical partitioning algorithms.
+
+`scoa.cooling_rate` and `scoa.init.temperature` are the 
+cooling rate and initial temperature of annealing schedule of 
+scoa. See Appendix C in our paper on tuning these two parameters.
+
+### Column Duplication Algorithm Settings
+
+Column duplication is used to further optimized the ordered data layout.
+There are two types of duplication algorithms: `gravity`
+and `insertion`. We can specify the best implementations of the algorithms.
+`cn.edu.ruc.iir.rainbow.layout.algorithm.impl.dup.FastInsertionDup` is the
+column duplication algorithm used in our paper. While `gravity` is just an
+experimental algorithm, currently it can not be used in real column duplication.
+
+`refine` is an simulated annealing based algorithm used in the refinement
+stages of insertion duplication algorithm.
+
+
+
+### Column Redirection Settings
