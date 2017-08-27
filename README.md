@@ -23,7 +23,7 @@ Although everything looks good having the wide tables stored as columnar formats
 performance are far from optimal.
 
 In an experimental example, given a 400GB, 1187-column table stored as Parquet in a single node HDFS. The read bandwidth of HDFS is 100MB/s. A query took 907 seconds to read 8 columns (0.3% data, i.e. 1.2GB)
-from the table. While ideally, it may take only 12 seconds.
+from the table. While ideally, it should take only 12 seconds.
 
 Such a huge gap between ideal and reality is caused by disk seeks. The columns read by a query may not be continuous on disk so that seek cost becomes the major part of I/O cost.
 
