@@ -116,6 +116,9 @@ should be put in `{data.dir}/text/`.
 Also set `namenode.host`, `namenode.port`, `spark.master`, `spark.app.port` and
 `spark.driver.webapps.port` to be the same as your cluster configurations.
 
+More details of Rainbow configuration properties are discussed in 
+[Rainbow Configuration](https://github.com/dbiir/rainbow/blob/master/rainbow-common/README.md).
+
 Now we are going to do data layout optimization experiments.
 
 ### Data Transform

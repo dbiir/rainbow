@@ -38,9 +38,9 @@ public class FastInsertionDup extends DupAlgorithm
     private WorkloadPattern workloadPattern = null;
 
     // configurations
-    private int selectFreq = 10;
+    private int selectStride = 10;
     //private int refineFreq = 5;
-    private int refineFreq = 10;
+    private int refineStride = 10;
     //private int refineBudget = 800;
     private int refineBudget = 200;
     //private int maxDupedColumnNum = 250;
@@ -72,10 +72,10 @@ public class FastInsertionDup extends DupAlgorithm
         this.maxDupedColumnNum = Integer.parseInt(ConfigFactory.Instance().getProperty("dup.max.duped.columns"));
         this.headroom = Double.parseDouble(ConfigFactory.Instance().getProperty("dup.storage.headroom"));
         this.refineBudget = Integer.parseInt(ConfigFactory.Instance().getProperty("refine.budget"));
-        this.candidateColumnNum = Integer.parseInt(ConfigFactory.Instance().getProperty("refine.candidate.column.num"));
+        this.candidateColumnNum = Integer.parseInt(ConfigFactory.Instance().getProperty("insertion.candidate.column.num"));
         this.threadNum = Integer.parseInt(ConfigFactory.Instance().getProperty("refine.thread.num"));
-        this.selectFreq = Integer.parseInt(ConfigFactory.Instance().getProperty("refine.select.frequency"));
-        this.refineFreq = Integer.parseInt(ConfigFactory.Instance().getProperty("refine.frequency"));
+        this.selectStride = Integer.parseInt(ConfigFactory.Instance().getProperty("insertion.select.stride"));
+        this.refineStride = Integer.parseInt(ConfigFactory.Instance().getProperty("insertion.refine.stride"));
 
         this.columnDupGain = new double[this.getColumnOrder().size()];
         this.columnDupPos = new int[this.getColumnOrder().size()];
@@ -204,7 +204,7 @@ public class FastInsertionDup extends DupAlgorithm
         while (dupedColIds.size() < this.maxDupedColumnNum && usedVolume < this.headroom * totalSize)
         {
             // select the columns for duplication
-            if (dupedColIds.size() % selectFreq == 0)
+            if (dupedColIds.size() % selectStride == 0)
             {
                 this.selectColumnsForDup();
             }
@@ -258,7 +258,7 @@ public class FastInsertionDup extends DupAlgorithm
 
 
             // refine
-            if (dupedColIds.size() > 0 && dupedColIds.size() % refineFreq == 0)
+            if (dupedColIds.size() > 0 && dupedColIds.size() % refineStride == 0)
             {
                 double refineGain = 0;
                 try
