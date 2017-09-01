@@ -11,7 +11,7 @@ statements to apply the data layouts in SQL-on-Hadoop environment.
 Spark (1.2.x and 1.3.x recommended) / Presto (0.179 or later recommended).
 HDFS datanode should use HDD as storage media.
 - Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md)
-  and follow the steps to generate benchmark data. Put data an HDFS directory,
+  and follow the steps to generate benchmark data. Put data in an HDFS directory,
   like `/rainbow/text/`. Find `schema.txt` and `workload.txt` in the benchmark.
 
 ## Cluster Configurations
