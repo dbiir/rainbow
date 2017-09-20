@@ -30,20 +30,26 @@ $ java -jar target/rainbow-evaluate-xxx-full.jar -h
 ```
 
 There is only one argument required:
-- `-p / param_file`, specifies the parameter file to be used.
+- `-p / --param_file`, specifies the parameter file to be used.
 
 Template of the parameter file can be found in `./src/main/resources/params/`.
 Edit the parameters before running workload evaluation.
 
+You can use a specific configuration file by specifying -f argument.
+If argument -f is not given, the default configuration file in the jar ball will be used.
+More details of Rainbow configuration properties are discussed in 
+[Rainbow Configuration](https://github.com/dbiir/rainbow/blob/master/rainbow-common/README.md).
+
+
 To perform workload evaluations, run:
 ```bash
-$ java -jar target/rainbow-evaluate-xxx-full.jar -f ./src/main/resources/params/WORKLOAD_EVALUATION.properties
+$ java -jar target/rainbow-evaluate-xxx-full.jar -p ./src/main/resources/params/WORKLOAD_EVALUATION.properties
 ```
 
 Parameters in `WORKLOAD_EVALUATION.properties` are:
 ```
-# LOCAL or SPARK
-method=SPARK
+# LOCAL, SPARK1 or SPARK2
+method=SPARK2
 # the path of unordered table directory on HDFS,
 table.dir=/rainbow/parq
 # the file path of workload file
@@ -60,9 +66,10 @@ Currently, we only support automatic workload evaluation on **Parquet** format t
 
 For the two evaluation `method`, LOCAL and SPARK:
 - **LOCAL** is to read the accessed columns of a query from HDFS by a Parquet reader.
-- **SPARK** is to execute the queries in Spark. The duration of the first mapPartitions stage is
+- **SPARK1** is to execute the queries in Spark 1 (1.3.x recommended). The duration of the first mapPartitions stage is
 recorded as the read latency of the query. Such a latency includes task initialization, scheduling and garbage
 collection overheads.
+- **SPARK2** same with *SPARK1*, except executing the queries in Spark 2 (2.1.x recommended).
 
 `table.dir` is the directory on HDFS which stores the Parquet files.
 
