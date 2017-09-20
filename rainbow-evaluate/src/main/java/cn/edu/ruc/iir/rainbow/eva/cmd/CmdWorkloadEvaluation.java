@@ -9,7 +9,8 @@ import cn.edu.ruc.iir.rainbow.common.exception.MetadataException;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalEvaluator;
-import cn.edu.ruc.iir.rainbow.eva.SparkEvaluator;
+import cn.edu.ruc.iir.rainbow.eva.SparkV1Evaluator;
+import cn.edu.ruc.iir.rainbow.eva.SparkV2Evaluator;
 import cn.edu.ruc.iir.rainbow.eva.domain.Column;
 import cn.edu.ruc.iir.rainbow.eva.metrics.LocalMetrics;
 import cn.edu.ruc.iir.rainbow.eva.metrics.StageMetrics;
@@ -39,7 +40,7 @@ public class CmdWorkloadEvaluation implements Command
     /**
      * params should contain the following settings:
      * <ol>
-     *   <li>method, LOCAL or SPARK</li>
+     *   <li>method, LOCAL, SPARK1 or SPARK2</li>
      *   <li>table.dir, the path of unordered table directory on HDFS</li>
      *   <li>workload.file workload file path</li>
      *   <li>log.dir the local directory used to write evaluation results, must end with '/'</li>
@@ -79,10 +80,13 @@ public class CmdWorkloadEvaluation implements Command
         {
             logDir += "/";
         }
-
+        Configuration conf = new Configuration();
+        conf.set("fs.hdfs.impl",
+                org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+        conf.set("fs.file.impl",
+                org.apache.hadoop.fs.LocalFileSystem.class.getName());
         if (params.getProperty("method").equalsIgnoreCase("LOCAL"))
         {
-            Configuration conf = new Configuration();
             try (BufferedReader workloadReader = new BufferedReader(new FileReader(workloadFilePath));
                  BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "local_duration.csv"));
                  BufferedWriter columnWriter = new BufferedWriter(new FileWriter(logDir + "accessed_columns.txt")))
@@ -93,7 +97,7 @@ public class CmdWorkloadEvaluation implements Command
                 ParquetMetadata[] metadatas = LocalEvaluator.getMetadatas(statuses, conf);
 
                 timeWriter.write("\"query id\",\"duration(ms)\"\n");
-                columnWriter.write("# Column index and name of accessed columns of each query in Parquet metadata.");
+                columnWriter.write("# Column index and name of accessed columns of each query in Parquet metadata.\n");
 
                 String line;
                 while ((line = workloadReader.readLine()) != null)
@@ -128,7 +132,8 @@ public class CmdWorkloadEvaluation implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate local error", e);
             }
         }
-        else if (params.getProperty("method").equalsIgnoreCase("SPARK"))
+        else if (params.getProperty("method").equalsIgnoreCase("SPARK1") ||
+                params.getProperty("method").equalsIgnoreCase("SPARK2"))
         {
             String sparkMaster = ConfigFactory.Instance().getProperty("spark.master");
             String namenodeHost = ConfigFactory.Instance().getProperty("namenode.host");
@@ -191,9 +196,31 @@ public class CmdWorkloadEvaluation implements Command
                     {
                         Runtime.getRuntime().exec(dropCachesSh);
                     }
-                    StageMetrics metrics = SparkEvaluator.execute("ordered_" + (i++) + queryId, sparkMaster, appPort, driverWebappsPort,
-                            "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
-                                    ConfigFactory.Instance().getProperty("namenode.port") + tablePath, columns, orderByColumn);
+
+                    StageMetrics metrics = null;
+                    if (params.getProperty("method").equalsIgnoreCase("SPARK1"))
+                    {
+                        metrics = SparkV1Evaluator.execute("rainbow_" + (i++) + "_" + queryId,
+                                sparkMaster, appPort, driverWebappsPort,
+                                ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
+                                Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
+                                ConfigFactory.Instance().getProperty("spark.executor.memory"),
+                                "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                                        ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
+                                columns, orderByColumn);
+                    }
+                    else
+                    {
+                        metrics = SparkV2Evaluator.execute("rainbow_" + (i++) + "_" + queryId,
+                                sparkMaster, appPort, driverWebappsPort,
+                                ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
+                                Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
+                                ConfigFactory.Instance().getProperty("spark.executor.memory"),
+                                "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                                        ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
+                                columns, orderByColumn);
+
+                    }
 
                     // log the results
                     timeWriter.write(queryId + "," + metrics.getDuration() + "\n");

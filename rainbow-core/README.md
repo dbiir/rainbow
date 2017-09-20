@@ -7,8 +7,8 @@ statements to apply the data layouts in SQL-on-Hadoop environment.
 ## Prepare
 
 - Prepare at least one physical machine with a HDD drive and at least 8GB memory.
-- Install Hadoop (1.2.1 and 2.7.3 recommended), Hive (1.2.x recommended),
-Spark (1.2.x and 1.3.x recommended) / Presto (0.179 or later recommended).
+- Install Hadoop (2.2 or later recommended), Hive (2.0 or later recommended),
+Spark (1.3.x or 2.1.x recommended) / Presto (0.179 or later recommended).
 HDFS datanode should use HDD as storage media.
 - Go to [Rainbow Benchmark](https://github.com/dbiir/rainbow/blob/master/rainbow-benchmark/README.md)
   and follow the steps to generate benchmark data. Put data in an HDFS directory,

@@ -35,7 +35,7 @@ public class Crawler {
 
     private Log log = LogFactory.getLog(this.getClass());
 
-    public List<StageMetrics> getAllStageMetricses (String ip, int port) throws MetricsException
+    public List<StageMetrics> getSparkV1StageMetricses (String ip, int port) throws MetricsException
     {
         String url = "http://" + ip + ":" + port + "/stages";
         String html = null;
@@ -72,22 +72,65 @@ public class Crawler {
             metrics.setDuration(Long.parseLong(columns[3].getAttribute("sorttable_customkey")));
             stageMetricses.add(metrics);
         }
+        return stageMetricses;
+    }
 
-        /*
-        // sort the metrics by id
-        for (int i = 0; i < stageMetricses.size(); ++i)
-        {
-            for (int j = i+1; j < stageMetricses.size(); ++j)
-            {
-                if (stageMetricses.get(i).getId() > stageMetricses.get(j).getId())
-                {
-                    StageMetrics metrics = stageMetricses.get(i);
-                    stageMetricses.set(i, stageMetricses.get(j));
-                    stageMetricses.set(j, metrics);
-                }
-            }
+    public List<StageMetrics> getSparkV2StageMetricses (String ip, int port) throws MetricsException
+    {
+        String url = "http://" + ip + ":" + port + "/stages";
+        String html = null;
+        try {
+            html = HttpFactory.getInstance().getPageHtml(url);
+        } catch (IOException e) {
+            log.error("Get html error:", e);
         }
-        */
+        Parser parser = Parser.createParser(html, "utf-8");//spark web ui用的是utf-8编码
+        HtmlPage page = new HtmlPage(parser);
+        try {
+            parser.visitAllNodesWith(page);
+        } catch (ParserException e) {
+            log.error("visit page error:", e);
+        }
+
+        TableTag[] tables = page.getTables();
+        List<StageMetrics> stageMetricses = new ArrayList<StageMetrics>();
+        TableTag table = null;
+        if (tables.length == 1)
+        {
+            table = tables[0];//there are three table in the page if the job is finished.
+        }
+        else
+        {
+            throw new MetricsException("job not finished, stage metrics not found.");
+        }
+
+        for (TableRow row : table.getRows())
+        {
+            TableColumn[] columns = row.getColumns();
+            StageMetrics metrics = new StageMetrics();
+            metrics.setId(Integer.parseInt(columns[0].toPlainTextString().trim()));
+            String unit = columns[3].toPlainTextString().trim().split(" ")[1].trim();
+            long ms = 1000;
+            if (unit.equalsIgnoreCase("s"))
+            {
+                ms = 1000;
+            }
+            else if (unit.equalsIgnoreCase("ms"))
+            {
+                ms = 1;
+            }
+            else if (unit.equalsIgnoreCase("min"))
+            {
+                ms = 60 * 1000;
+            }
+            else if (unit.equalsIgnoreCase("h"))
+            {
+                ms = 60 * 60 * 1000;
+            }
+            metrics.setDuration((long)(Double.parseDouble(columns[3].toPlainTextString().trim().split(" ")[0]) * ms));
+            stageMetricses.add(metrics);
+        }
+
         return stageMetricses;
     }
 

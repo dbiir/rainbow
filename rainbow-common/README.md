@@ -14,6 +14,9 @@ namenode.port=9000
 spark.master=localhost
 spark.app.port=7077
 spark.driver.webapps.port=4040
+spark.warehouse.dir=hdfs://localhost:9000/spark-warehouse
+spark.executor.cores=4
+spark.executor.memory=4g
 
 # The directory on HDFS to store the wide tables
 data.dir=/rainbow
