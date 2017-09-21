@@ -15,9 +15,10 @@ public class TestWorkloadVectorEvaluation
     {
         ConfigFactory.Instance().LoadProperties("/home/hank/Desktop/rainbow/rainbow-evaluate/rainbow.properties");
         Properties params = new Properties();
-        params.setProperty("method", "SPARK2");
-        params.setProperty("format", "PARQUET");
-        params.setProperty("table.dirs", "/rainbow2/parq_new_compress,/rainbow2/parq_ordered");
+        params.setProperty("method", "PRESTO");
+        params.setProperty("format", "ORC");
+        params.setProperty("table.dirs", "/rainbow2/orc,/rainbow2/orc_ordered");
+        params.setProperty("table.names", "orc,orc_ordered");
         params.setProperty("workload.file", "/home/hank/Desktop/rainbow/rainbow-evaluate/workload.txt");
         params.setProperty("log.dir", "/home/hank/Desktop/rainbow/rainbow-evaluate/workload_eva/");
         params.setProperty("drop.cache", "false");

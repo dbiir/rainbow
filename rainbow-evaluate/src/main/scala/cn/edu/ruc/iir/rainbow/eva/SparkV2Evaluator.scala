@@ -25,8 +25,10 @@ object SparkV2Evaluator {
         .master("spark://" + masterHostName + ":" + appPort)
         .appName(appName)
         .config("spark.executor.memory", executorMemory)
+        .config("spark.driver.memory", "2g")
         .config("spark.executor.cores", executorCores)
         .config("spark.sql.warehouse.dir", warehouseDir)
+        .config("spark.storage.memoryFraction", "0")
         //.config("spark.driver.maxResultSize", "1g")
         .getOrCreate();
       df = spark.read.parquet(hdfsPath);
@@ -36,8 +38,10 @@ object SparkV2Evaluator {
         .master("spark://" + masterHostName + ":" + appPort)
         .appName(appName)
         .config("spark.executor.memory", executorMemory)
+        .config("spark.driver.memory", "2g")
         .config("spark.executor.cores", executorCores)
         .config("spark.sql.warehouse.dir", warehouseDir)
+        .config("spark.storage.memoryFraction", "0")
         //.config("spark.driver.maxResultSize", "1g")
         .enableHiveSupport()
         .getOrCreate();

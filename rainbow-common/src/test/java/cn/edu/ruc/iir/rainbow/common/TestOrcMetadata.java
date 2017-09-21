@@ -38,6 +38,7 @@ public class TestOrcMetadata
 
         Reader reader = OrcFile.createReader(fileStatuses[0].getPath(),
                 OrcFile.readerOptions(conf));
+        System.out.println("file length:" + reader.getFileTail().getFileLength());
         List<String> columnNames = new ArrayList<>();
         columnNames.add("samplepercent");
         System.out.println(reader.getRawDataSizeOfColumns(columnNames));
