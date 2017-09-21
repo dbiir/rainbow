@@ -19,6 +19,10 @@ $ mvn package
 $ cd ./rainbow-evaluate
 ```
 
+Note that the default Spark version used in Rainbow is `2.1.0`. If you are
+willing to use Spark `1.x` (`1.3.x` recommended), edit spark version in 
+`./rainbow-evaluate/pom.xml`.
+
 Then you get `rainbow-evaluate-xxx-full.jar` in `target` subdirectory.
 Now you are ready to start rainbow workload evaluation.
 
@@ -35,7 +39,7 @@ There is only one argument required:
 Template of the parameter file can be found in `./src/main/resources/params/`.
 Edit the parameters before running workload evaluation.
 
-You can use a specific configuration file by specifying -f argument.
+You can also set a specific configuration file by -f argument.
 If argument -f is not given, the default configuration file in the jar ball will be used.
 More details of Rainbow configuration properties are discussed in 
 [Rainbow Configuration](https://github.com/dbiir/rainbow/blob/master/rainbow-common/README.md).
@@ -50,26 +54,37 @@ Parameters in `WORKLOAD_EVALUATION.properties` are:
 ```
 # LOCAL, SPARK1 or SPARK2
 method=SPARK2
+
+# PARQUET or ORC
+format=PARQUET
+
 # the path of unordered table directory on HDFS,
 table.dir=/rainbow/parq
+
 # the file path of workload file
 workload.file=/rainbow/workload.txt
+
 # the local directory used to write evaluation results
 log.dir=/tmp/log/dir
+
 # true or false, whether or not to drop file cache on each node in the cluster
 drop.cache=true
+
 # the file path of drop_caches.sh
 drop.caches.sh=/rainbow/drop_caches.sh
 ```
 
 Currently, we only support automatic workload evaluation on **Parquet** format tables.
 
-For the two evaluation `method`, LOCAL and SPARK:
+For the three evaluation `method`, LOCAL, SPARK1 and SPARK2:
 - **LOCAL** is to read the accessed columns of a query from HDFS by a Parquet reader.
 - **SPARK1** is to execute the queries in Spark 1 (1.3.x recommended). The duration of the first mapPartitions stage is
 recorded as the read latency of the query. Such a latency includes task initialization, scheduling and garbage
 collection overheads.
 - **SPARK2** same with *SPARK1*, except executing the queries in Spark 2 (2.1.x recommended).
+
+`format` is the format of the data to be read in evaluation. Can be `ORC` or `PARQUET`. 
+But `ORC` is currently only supported in `SPARK2` method.
 
 `table.dir` is the directory on HDFS which stores the Parquet files.
 

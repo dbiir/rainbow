@@ -25,8 +25,8 @@ public class TestOrcMetadata
     {
         Configuration conf = new Configuration();
         System.setProperty("hadoop.home.dir", "/");
-        FileSystem fileSystem = FileSystem.get(URI.create("hdfs://192.168.124.15:9000"), conf);
-        Path hdfsDirPath = new Path("/msra/orc_test");
+        FileSystem fileSystem = FileSystem.get(URI.create("hdfs://presto00:9000"), conf);
+        Path hdfsDirPath = new Path("/rainbow2/orc_new_compress");
         System.out.println(fileSystem.isFile(hdfsDirPath));
         FileStatus[] fileStatuses = fileSystem.listStatus(hdfsDirPath);
         System.out.println(fileStatuses.length);
@@ -39,7 +39,7 @@ public class TestOrcMetadata
         Reader reader = OrcFile.createReader(fileStatuses[0].getPath(),
                 OrcFile.readerOptions(conf));
         List<String> columnNames = new ArrayList<>();
-        columnNames.add("_col346");
+        columnNames.add("samplepercent");
         System.out.println(reader.getRawDataSizeOfColumns(columnNames));
         System.out.println(reader.getFileTail().getFooter().getTypes(0).getFieldNames(0));
         System.out.println(reader.getTypes().get(0).getSerializedSize());
@@ -65,8 +65,8 @@ public class TestOrcMetadata
     {
         Configuration conf = new Configuration();
         System.setProperty("hadoop.home.dir", "/");
-        FileSystem fileSystem = FileSystem.get(URI.create("hdfs://192.168.124.15:9000"), conf);
-        Path hdfsDirPath = new Path("/msra/orc_test");
+        FileSystem fileSystem = FileSystem.get(URI.create("hdfs://presto00:9000"), conf);
+        Path hdfsDirPath = new Path("/rainbow2/orc");
         FileStatus[] fileStatuses = fileSystem.listStatus(hdfsDirPath);
 
         Reader reader = OrcFile.createReader(fileStatuses[0].getPath(),
@@ -84,6 +84,7 @@ public class TestOrcMetadata
                 footerLength + ", " + stripeLength + ", " +
                 reader.getStripes().get(1).getOffset() + ", " + reader.getStripes().size());
         byte[] buffer = new byte[(int)footerLength];
+        //inputStream.seek();
         inputStream.readFully(offset + indexLength + dataLength, buffer);
 
         inputStream.close();
@@ -113,7 +114,8 @@ public class TestOrcMetadata
     public void testOrcMetadataStat () throws IOException, MetadataException
     {
         System.setProperty("hadoop.home.dir", "/");
-        OrcMetadataStat stat = new OrcMetadataStat("192.168.124.15", 9000, "/msra/orc_test");
+        OrcMetadataStat stat = new OrcMetadataStat("presto00", 9000, "/rainbow2/orc");
+        System.out.println(stat.getFieldNames());
         double[] sizes = stat.getAvgColumnChunkSize();
         double totalSize = 0;
         for (double size : sizes)

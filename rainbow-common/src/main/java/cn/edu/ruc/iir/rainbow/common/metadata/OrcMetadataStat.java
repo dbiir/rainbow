@@ -124,53 +124,66 @@ public class OrcMetadataStat implements MetadataStat
         for (int i = 0; i < this.fileReaders.size(); ++i)
         {
             Reader reader = this.fileReaders.get(i);
-            FileStatus status = this.fileStatuses.get(i);
-            // we are gonna to pull out the column chunk sizes from stripe footers one by one...
-            try (FSDataInputStream inputStream = this.fileSystem.open(status.getPath()))
+            if (reader.getFileTail().getPostscript().getCompression().name().equals("NONE"))
             {
-                for (StripeInformation stripeInfo : reader.getStripes())
+                FileStatus status = this.fileStatuses.get(i);
+                // we are gonna to pull out the column chunk sizes from stripe footers one by one...
+                try (FSDataInputStream inputStream = this.fileSystem.open(status.getPath()))
                 {
-                    long offset = stripeInfo.getOffset();
-                    long dataLength = stripeInfo.getDataLength();
-                    long indexLength = stripeInfo.getIndexLength();
-                    long footerLength = stripeInfo.getFooterLength();
-                    byte[] buffer = new byte[(int) footerLength];
-                    inputStream.readFully(offset + indexLength + dataLength, buffer);
-                    OrcProto.StripeFooter footer = OrcProto.StripeFooter.parseFrom(buffer);
-                    List<OrcProto.Stream> streams = footer.getStreamsList();
-                    for (OrcProto.Stream stream : streams)
+                    for (StripeInformation stripeInfo : reader.getStripes())
                     {
-                        int columnId = stream.getColumn();
-                        if (this.rootColumnIdToIndexMap.containsKey(columnId))
+                        long offset = stripeInfo.getOffset();
+                        long dataLength = stripeInfo.getDataLength();
+                        long indexLength = stripeInfo.getIndexLength();
+                        long footerLength = stripeInfo.getFooterLength();
+                        byte[] buffer = new byte[(int) footerLength];
+                        inputStream.readFully(offset + indexLength + dataLength, buffer);
+                        OrcProto.StripeFooter footer = OrcProto.StripeFooter.parseFrom(buffer);
+                        List<OrcProto.Stream> streams = footer.getStreamsList();
+                        for (OrcProto.Stream stream : streams)
                         {
-                            // this is the stream of a root column
-                            int index = this.rootColumnIdToIndexMap.get(columnId);
-                            this.columnChunkSizeSums[index] += stream.getLength();
-
-                        } else if (this.childIdToRootColumnIdMap.containsKey(columnId))
-                        {
-                            // this is the stream of a child column
-                            int rootId = this.childIdToRootColumnIdMap.get(columnId);
-                            int index = this.rootColumnIdToIndexMap.get(rootId);
-                            this.columnChunkSizeSums[index] += stream.getLength();
-                        } else
-                        {
-                            if (columnId != 0)
+                            int columnId = stream.getColumn();
+                            if (this.rootColumnIdToIndexMap.containsKey(columnId))
                             {
-                                throw new MetadataException("column id " +
-                                        columnId + " not found");
+                                // this is the stream of a root column
+                                int index = this.rootColumnIdToIndexMap.get(columnId);
+                                this.columnChunkSizeSums[index] += stream.getLength();
+
+                            } else if (this.childIdToRootColumnIdMap.containsKey(columnId))
+                            {
+                                // this is the stream of a child column
+                                int rootId = this.childIdToRootColumnIdMap.get(columnId);
+                                int index = this.rootColumnIdToIndexMap.get(rootId);
+                                this.columnChunkSizeSums[index] += stream.getLength();
+                            } else
+                            {
+                                if (columnId != 0)
+                                {
+                                    throw new MetadataException("column id " +
+                                            columnId + " not found");
+                                }
                             }
                         }
                     }
+                } catch (IOException e)
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR,
+                            "open orc file error", e);
+                } catch (MetadataException e)
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR,
+                            "read orc file metadata error", e);
                 }
-            } catch (IOException e)
+            }
+            else
             {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR,
-                        "open orc file error", e);
-            } catch (MetadataException e)
-            {
-                ExceptionHandler.Instance().log(ExceptionType.ERROR,
-                        "read orc file metadata error", e);
+                int index = 0;
+                for (String field : fieldNames)
+                {
+                    List<String> columnNames = new LinkedList<>();
+                    columnNames.add(field);
+                    this.columnChunkSizeSums[index++] += reader.getRawDataSizeOfColumns(columnNames);
+                }
             }
         }
     }

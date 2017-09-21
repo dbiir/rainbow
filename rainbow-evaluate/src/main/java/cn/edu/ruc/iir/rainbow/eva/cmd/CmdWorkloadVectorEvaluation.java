@@ -13,7 +13,6 @@ import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalParquetEvaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkV1Evaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkV2Evaluator;
-import cn.edu.ruc.iir.rainbow.eva.domain.Column;
 import cn.edu.ruc.iir.rainbow.eva.metrics.LocalMetrics;
 import cn.edu.ruc.iir.rainbow.eva.metrics.StageMetrics;
 import org.apache.commons.io.FileUtils;
@@ -22,15 +21,12 @@ import org.apache.hadoop.fs.FileStatus;
 import parquet.hadoop.metadata.ParquetMetadata;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
- * Created by hank on 17-5-4.
+ * Created by hank on 17-9-20.
  */
-public class CmdWorkloadEvaluation implements Command
+public class CmdWorkloadVectorEvaluation implements Command
 {
     private Receiver receiver = null;
 
@@ -45,7 +41,7 @@ public class CmdWorkloadEvaluation implements Command
      * <ol>
      *   <li>method, LOCAL, SPARK1 or SPARK2</li>
      *   <li>format, PARQUET or ORC</li>
-     *   <li>table.dir, the path of table directory on HDFS</li>
+     *   <li>table.dirs, list of the paths of tables on HDFS, separated by comma</li>
      *   <li>workload.file workload file path</li>
      *   <li>log.dir the local directory used to write evaluation results, must end with '/'</li>
      *   <li>drop.cache, true or false, whether or not drop file cache on each node in the cluster</li>
@@ -72,7 +68,7 @@ public class CmdWorkloadEvaluation implements Command
         };
         progressListener.setPercentage(0.0);
 
-        String tablePath = params.getProperty("table.dir");
+        String[] tablePaths = params.getProperty("table.dirs").split(",");
         String workloadFilePath = params.getProperty("workload.file");
         String logDir = params.getProperty("log.dir");
         boolean dropCache = Boolean.parseBoolean(params.getProperty("drop.cache"));
@@ -103,18 +99,28 @@ public class CmdWorkloadEvaluation implements Command
             }
 
             try (BufferedReader workloadReader = new BufferedReader(new FileReader(workloadFilePath));
-                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "local_duration.csv"));
-                 BufferedWriter columnWriter = new BufferedWriter(new FileWriter(logDir + "accessed_columns.txt")))
+                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "local_duration.csv")))
             {
                 // get metadata
-                FileStatus[] statuses = LocalParquetEvaluator.getFileStatuses("hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
-                        ConfigFactory.Instance().getProperty("namenode.port") + tablePath, conf);
-                ParquetMetadata[] metadatas = LocalParquetEvaluator.getMetadatas(statuses, conf);
+                List<FileStatus[]> fileStatusLists = new ArrayList<>();
+                List<ParquetMetadata[]> metadataLists = new ArrayList<>();
+                for (String tablePath : tablePaths)
+                {
+                    FileStatus[] statuses = LocalParquetEvaluator.getFileStatuses("hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                            ConfigFactory.Instance().getProperty("namenode.port") + tablePath, conf);
+                    ParquetMetadata[] metadatas = LocalParquetEvaluator.getMetadatas(statuses, conf);
+                    fileStatusLists.add(statuses);
+                    metadataLists.add(metadatas);
 
-                timeWriter.write("\"query id\",\"duration(ms)\"\n");
-                columnWriter.write("# Column index and name of accessed columns of each query in Parquet metadata.\n");
+                }
+
+                timeWriter.write("\"query id\"");
+                for (int i = 0; i < fileStatusLists.size(); ++i)
+                {
+                    timeWriter.write(",\"duration " + i + "(ms)\"");
+                }
+                timeWriter.write("\n");
                 timeWriter.flush();
-                columnWriter.flush();
 
                 String line;
                 while ((line = workloadReader.readLine()) != null)
@@ -122,24 +128,26 @@ public class CmdWorkloadEvaluation implements Command
                     readLength += line.length();
                     String columns = line.split("\t")[2];
                     String queryId = line.split("\t")[0];
+
                     // evaluate
-                    // clear the caches and buffers
-                    if (dropCache)
+                    timeWriter.write(queryId);
+                    for (int i = 0 ; i < fileStatusLists.size(); ++i)
                     {
-                        Runtime.getRuntime().exec(dropCachesSh);
+                        FileStatus[] statuses = fileStatusLists.get(i);
+                        ParquetMetadata[] metadatas = metadataLists.get(i);
+                        // clear the caches and buffers
+                        if (dropCache)
+                        {
+                            Runtime.getRuntime().exec(dropCachesSh);
+                        }
+                        LocalMetrics metrics = LocalParquetEvaluator.execute(statuses, metadatas, columns.split(","), conf);
+                        timeWriter.write("," + metrics.getTimeMillis());
                     }
-                    LocalMetrics metrics = LocalParquetEvaluator.execute(statuses, metadatas, columns.split(","), conf);
 
                     // log the results
-                    timeWriter.write(queryId + "," + metrics.getTimeMillis() + "\n");
+                    timeWriter.write("\n");
                     timeWriter.flush();
-                    columnWriter.write("[query " + queryId + "]:\n");
-                    for (Column column : metrics.getColumns())
-                    {
-                        columnWriter.write(column.getIndex() + "," + column.getName() + "\n");
-                    }
-                    columnWriter.write("\n\n");
-                    columnWriter.flush();
+
                     progressListener.setPercentage(readLength/workloadFileLength);
                 }
 
@@ -174,7 +182,7 @@ public class CmdWorkloadEvaluation implements Command
                         }
                         return;
                     }
-                    OrcMetadataStat stat = new OrcMetadataStat(namenodeHost, namenodePort, tablePath);
+                    OrcMetadataStat stat = new OrcMetadataStat(namenodeHost, namenodePort, tablePaths[0]);
                     int n = stat.getFieldNames().size();
                     List<String> names = stat.getFieldNames();
                     double[] sizes = stat.getAvgColumnChunkSize();
@@ -186,7 +194,7 @@ public class CmdWorkloadEvaluation implements Command
                 }
                 else if (params.getProperty("format").equalsIgnoreCase("PARQUET"))
                 {
-                    ParquetMetadataStat stat = new ParquetMetadataStat(namenodeHost, namenodePort, tablePath);
+                    ParquetMetadataStat stat = new ParquetMetadataStat(namenodeHost, namenodePort, tablePaths[0]);
                     int n = stat.getFieldNames().size();
                     List<String> names = stat.getFieldNames();
                     double[] sizes = stat.getAvgColumnChunkSize();
@@ -207,7 +215,12 @@ public class CmdWorkloadEvaluation implements Command
                     return;
                 }
 
-                timeWriter.write("\"query id\",\"duration(ms)\"\n");
+                timeWriter.write("\"query id\"");
+                for (int i = 0; i < tablePaths.length; ++i)
+                {
+                    timeWriter.write(",\"duration " + i + "(ms)\"");
+                }
+                timeWriter.write("\n");
                 timeWriter.flush();
 
                 // begin evaluate
@@ -239,45 +252,49 @@ public class CmdWorkloadEvaluation implements Command
                         Runtime.getRuntime().exec(dropCachesSh);
                     }
 
-                    StageMetrics metrics = null;
-                    if (params.getProperty("method").equalsIgnoreCase("SPARK1"))
+                    timeWriter.write(queryId);
+                    for (String tablePath : tablePaths)
                     {
-                        metrics = SparkV1Evaluator.execute("rainbow_" + (i++) + "_" + queryId,
-                                sparkMaster, appPort, driverWebappsPort,
-                                ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
-                                Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
-                                ConfigFactory.Instance().getProperty("spark.executor.memory"),
-                                "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
-                                        ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
-                                columns, orderByColumn);
-                    }
-                    else
-                    {
-                        metrics = SparkV2Evaluator.execute("rainbow_" + (i++) + "_" + queryId,
-                                sparkMaster, appPort, driverWebappsPort,
-                                ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
-                                Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
-                                ConfigFactory.Instance().getProperty("spark.executor.memory"),
-                                params.getProperty("format"),
-                                "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
-                                        ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
-                                columns, orderByColumn);
-                        if (params.getProperty("format").equalsIgnoreCase("ORC"))
+                        StageMetrics metrics = null;
+                        if (params.getProperty("method").equalsIgnoreCase("SPARK1"))
                         {
-                            File hiveLocalMetaStorePath = new File("metastore_db");
-                            try
+                            metrics = SparkV1Evaluator.execute("rainbow_" + i + "_" + queryId + "_[" + tablePath + "]",
+                                    sparkMaster, appPort, driverWebappsPort,
+                                    ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
+                                    Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
+                                    ConfigFactory.Instance().getProperty("spark.executor.memory"),
+                                    "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                                            ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
+                                    columns, orderByColumn);
+                        } else
+                        {
+                            metrics = SparkV2Evaluator.execute("rainbow_" + i + "_" + queryId + "_[" + tablePath + "]",
+                                    sparkMaster, appPort, driverWebappsPort,
+                                    ConfigFactory.Instance().getProperty("spark.warehouse.dir"),
+                                    Integer.parseInt(ConfigFactory.Instance().getProperty("spark.executor.cores")),
+                                    ConfigFactory.Instance().getProperty("spark.executor.memory"),
+                                    params.getProperty("format"),
+                                    "hdfs://" + ConfigFactory.Instance().getProperty("namenode.host") + ":" +
+                                            ConfigFactory.Instance().getProperty("namenode.port") + tablePath,
+                                    columns, orderByColumn);
+                            if (params.getProperty("format").equalsIgnoreCase("ORC"))
                             {
-                                FileUtils.deleteDirectory(hiveLocalMetaStorePath);
-                            } catch (IOException e)
-                            {
-                                ExceptionHandler.Instance().log(ExceptionType.ERROR, "delete hive local metastore error", e);
+                                File hiveLocalMetaStorePath = new File("metastore_db");
+                                try
+                                {
+                                    FileUtils.deleteDirectory(hiveLocalMetaStorePath);
+                                } catch (IOException e)
+                                {
+                                    ExceptionHandler.Instance().log(ExceptionType.ERROR, "delete hive local metastore error", e);
+                                }
                             }
+
                         }
-
+                        timeWriter.write("," + metrics.getDuration());
                     }
-
+                    ++i;
                     // log the results
-                    timeWriter.write(queryId + "," + metrics.getDuration() + "\n");
+                    timeWriter.write("\n");
                     timeWriter.flush();
                     progressListener.setPercentage(readLength/workloadFileLength);
                 }
