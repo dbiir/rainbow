@@ -22,7 +22,7 @@ import static parquet.format.converter.ParquetMetadataConverter.NO_FILTER;
 /**
  * Created by hank on 2015/2/5.
  */
-public class LocalEvaluator
+public class LocalParquetEvaluator
 {
     public static FileStatus[] getFileStatuses (String path, Configuration conf) throws IOException
     {

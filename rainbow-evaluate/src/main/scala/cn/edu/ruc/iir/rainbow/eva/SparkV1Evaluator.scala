@@ -12,7 +12,10 @@ import scala.util.control.Breaks._
  */
 object SparkV1Evaluator {
 
-  def execute (appName:String, masterHostName:String, appPort:Int, driverWebappsPort:Int, warehouseDir:String, executorCores:Int, executorMemory:String, hdfsPath:String, columns:String, orderByColumn:String):StageMetrics =
+  def execute (appName:String, masterHostName:String, appPort:Int, driverWebappsPort:Int,
+               warehouseDir:String, executorCores:Int, executorMemory:String,
+               hdfsPath:String, columns:String, orderByColumn:String):
+  StageMetrics =
   {
     // this is for Spark 1.2.x and 1.3.x
     val conf = new SparkConf().setAppName(appName)
