@@ -11,6 +11,7 @@ import cn.edu.ruc.iir.rainbow.common.metadata.OrcMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.metadata.ParquetMetadataStat;
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.eva.LocalParquetEvaluator;
+import cn.edu.ruc.iir.rainbow.eva.PrestoEvaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkV1Evaluator;
 import cn.edu.ruc.iir.rainbow.eva.SparkV2Evaluator;
 import cn.edu.ruc.iir.rainbow.eva.domain.Column;
@@ -291,10 +292,115 @@ public class CmdWorkloadEvaluation implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate Spark metadata error", e);
             }
 
-            if (receiver != null)
+
+        }
+        else if (params.getProperty("method").equalsIgnoreCase("PRESTO"))
+        {
+            String namenodeHost = ConfigFactory.Instance().getProperty("namenode.host");
+            int namenodePort = Integer.valueOf(ConfigFactory.Instance().getProperty("namenode.port"));
+            try (BufferedReader workloadReader = new BufferedReader(new FileReader(workloadFilePath));
+                 BufferedWriter timeWriter = new BufferedWriter(new FileWriter(logDir + "presto_duration.csv")))
             {
-                receiver.action(results);
+                // get the column sizes
+                Map<String, Double> nameSizeMap = new HashMap<>();
+                if (params.getProperty("format").equalsIgnoreCase("ORC"))
+                {
+                    OrcMetadataStat stat = new OrcMetadataStat(namenodeHost, namenodePort, tablePath);
+                    int n = stat.getFieldNames().size();
+                    List<String> names = stat.getFieldNames();
+                    double[] sizes = stat.getAvgColumnChunkSize();
+
+                    for (int j = 0; j < n; ++j)
+                    {
+                        nameSizeMap.put(names.get(j).toLowerCase(), sizes[j]);
+                    }
+                }
+                else if (params.getProperty("format").equalsIgnoreCase("PARQUET"))
+                {
+                    ParquetMetadataStat stat = new ParquetMetadataStat(namenodeHost, namenodePort, tablePath);
+                    int n = stat.getFieldNames().size();
+                    List<String> names = stat.getFieldNames();
+                    double[] sizes = stat.getAvgColumnChunkSize();
+
+                    for (int j = 0; j < n; ++j)
+                    {
+                        nameSizeMap.put(names.get(j).toLowerCase(), sizes[j]);
+                    }
+                }
+                else
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR, "Presto workload evaluation error.",
+                            new NotSupportedException(params.getProperty("format") + " format not supported"));
+                    if (receiver != null)
+                    {
+                        receiver.action(results);
+                    }
+                    return;
+                }
+                timeWriter.write("\"query id\",\"duration(ms)\"\n");
+                timeWriter.flush();
+
+                // begin evaluate
+                String line;
+                int i = 0;
+                while ((line = workloadReader.readLine()) != null)
+                {
+                    readLength += line.length();
+                    String columns = line.split("\t")[2];
+                    String queryId = line.split("\t")[0];
+
+                    // get the smallest column as the order by column
+                    String orderByColumn = null;
+                    double size = Double.MAX_VALUE;
+
+                    for (String name : columns.split(","))
+                    {
+                        if (nameSizeMap.get(name.toLowerCase()) < size)
+                        {
+                            size = nameSizeMap.get(name.toLowerCase());
+                            orderByColumn = name.toLowerCase();
+                        }
+                    }
+
+                    // evaluate
+                    // clear the caches and buffers
+                    if (dropCache)
+                    {
+                        Runtime.getRuntime().exec(dropCachesSh);
+                    }
+
+                    StageMetrics metrics = null;
+                    Properties properties = new Properties();
+                    String user = ConfigFactory.Instance().getProperty("presto.user");
+                    String password = ConfigFactory.Instance().getProperty("presto.password");
+                    String ssl = ConfigFactory.Instance().getProperty("presto.ssl");
+                    properties.setProperty("user", user);
+                    if (!password.equalsIgnoreCase("null"))
+                    {
+                        properties.setProperty("password", password);
+                    }
+                    properties.setProperty("SSL", ssl);
+                    metrics = PrestoEvaluator.execute(ConfigFactory.Instance().getProperty("presto.jdbc.url"),
+                            properties, params.getProperty("table.name"), columns, orderByColumn);
+
+                    // log the results
+                    timeWriter.write(queryId + "," + metrics.getDuration() + "\n");
+                    timeWriter.flush();
+                    progressListener.setPercentage(readLength/workloadFileLength);
+                }
+                results.setProperty("success", "true");
+            } catch (IOException e)
+            {
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate Presto i/o error", e);
+            } catch (MetadataException e)
+            {
+                ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate Presto metadata error", e);
             }
+        }
+
+        if (receiver != null)
+        {
+            receiver.action(results);
         }
     }
 }

@@ -30,6 +30,13 @@
             <version>0.7.0</version>
         </dependency>
 
+        <!-- presto -->
+        <dependency>
+            <groupId>com.facebook.presto</groupId>
+            <artifactId>presto-jdbc</artifactId>
+            <version>0.184</version>
+        </dependency>
+
         <!-- spark -->
         <dependency>
             <groupId>org.apache.spark</groupId>

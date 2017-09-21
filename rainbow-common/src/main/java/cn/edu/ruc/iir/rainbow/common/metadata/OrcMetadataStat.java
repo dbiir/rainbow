@@ -177,12 +177,24 @@ public class OrcMetadataStat implements MetadataStat
             }
             else
             {
+                // TODO: when compression is applied in ORC, we have to decompress the stripe footer, which is to be implemented.
+                // here we just get the approximate column chunk size by getRawDataSizeOfColumns.
                 int index = 0;
+                long fileLength = reader.getFileTail().getFileLength();
+                long rawDataSize = 0;
+                List<Long> columnSizeList = new LinkedList<>();
                 for (String field : fieldNames)
                 {
                     List<String> columnNames = new LinkedList<>();
                     columnNames.add(field);
-                    this.columnChunkSizeSums[index++] += reader.getRawDataSizeOfColumns(columnNames);
+                    long columnSize = reader.getRawDataSizeOfColumns(columnNames);
+                    rawDataSize += columnSize;
+                    columnSizeList.add(columnSize);
+                }
+                double ratio = 1.0*rawDataSize/fileLength;
+                for (long columnSize : columnSizeList)
+                {
+                    this.columnChunkSizeSums[index++] += (columnSize/ratio);
                 }
             }
         }
