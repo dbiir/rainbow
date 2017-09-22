@@ -21,7 +21,7 @@ $ cd ./rainbow-evaluate
 
 Note that the default Spark version used in Rainbow is `2.1.0`. If you are
 willing to use Spark `1.x` (`1.3.x` recommended), edit spark version in 
-`./rainbow-evaluate/pom.xml`.
+`./rainbow-evaluate/pom.xml` before running `mvn package`.
 
 Then you get `rainbow-evaluate-xxx-full.jar` in `target` subdirectory.
 Now you are ready to start rainbow workload evaluation.
@@ -52,7 +52,7 @@ $ java -jar target/rainbow-evaluate-xxx-full.jar -p ./src/main/resources/params/
 
 Parameters in `WORKLOAD_EVALUATION.properties` are:
 ```
-# LOCAL, SPARK1 or SPARK2
+# LOCAL, SPARK1, SPARK2 or PRESTO
 method=SPARK2
 
 # PARQUET or ORC
@@ -60,6 +60,9 @@ format=PARQUET
 
 # the path of unordered table directory on HDFS,
 table.dir=/rainbow/parq
+
+# the table name for presto, only needed when PRESTO method is used.
+table.name=orc
 
 # the file path of workload file
 workload.file=/rainbow/workload.txt
@@ -88,6 +91,10 @@ But `ORC` is currently only supported in `SPARK2` method.
 
 `table.dir` is the directory on HDFS which stores the Parquet files.
 
+`table.name` is used by *PRESTO*, it should be a table in the database specified
+by `presto.jdbc.url` in `rainbow.properties`. And this table must be stored
+under `table.dir`.
+
 `workload.file` is the path of workload file in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md).
 
 `log.dir` is the directory on local fs to store the evaluation results.
@@ -112,5 +119,5 @@ do
 done
 ```
 
-You should ensure that the system user running rainbow jars have the right permissions
+You should ensure that the system user running Rainbow jars have the right permissions
 to execute this script and clear the fs cache on the cluster nodes.
