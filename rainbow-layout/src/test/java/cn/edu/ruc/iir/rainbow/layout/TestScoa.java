@@ -27,10 +27,11 @@ public class TestScoa
     {
         List<Column> initColumnOrder = ColumnOrderBuilder.build(new File(TestScoa.class.getResource("/schema.txt").getFile()));
         List<Query> workload = WorkloadBuilder.build(new File(TestScoa.class.getResource("/workload.txt").getFile()), initColumnOrder);
+        System.out.println(workload.size());
         SeekCostFunction seekCostFunction = new PowerSeekCostFunction();
         //SimulatedSeekCostBuilder.build(new File("cord-generator/resources/seek_cost.txt"));
 
-        Algorithm fastScoa = AlgorithmFactory.Instance().getAlgorithm("scoa", 10, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
+        Algorithm fastScoa = AlgorithmFactory.Instance().getAlgorithm("scoa", 200, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
         System.out.println("Init cost: " + fastScoa.getSchemaSeekCost());
         try
         {

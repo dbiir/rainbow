@@ -96,6 +96,11 @@ public class Column implements Comparable<Column>
         return dupId;
     }
 
+    public void setSize (double size)
+    {
+        this.size = size;
+    }
+
     public void setDupId(int dupId)
     {
         this.dupId = dupId;
