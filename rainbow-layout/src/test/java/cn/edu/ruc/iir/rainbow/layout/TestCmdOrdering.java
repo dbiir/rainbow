@@ -18,7 +18,7 @@ public class TestCmdOrdering
         params.setProperty("workload.file", TestScoaGS.class.getResource("/workload.txt").getFile());
         params.setProperty("ordered.schema.file", TestScoaGS.class.getResource("/").getFile() + "ordered_schema.txt");
         params.setProperty("seek.cost.function", "power");
-        params.setProperty("computation.budget", "100");
+        params.setProperty("computation.budget", "10");
 
         Command command = new CmdOrdering();
         command.setReceiver(new Receiver()
