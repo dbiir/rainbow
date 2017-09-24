@@ -143,6 +143,12 @@ public class FastScoaGS extends FastScoa
         return this.bestState;
     }
 
+    public double getSchemaOverhead ()
+    {
+        return this.getNumRowGroups() * this.getWorkload().size() *  this.getTaskInitMs() +
+                this.getSchemaSeekCost() * this.getNumRowGroups();
+    }
+
     private void increaseRowGroupSize ()
     {
         this.rowGroupSize *= 2;
@@ -271,9 +277,9 @@ public class FastScoaGS extends FastScoa
                             this.numRowGroups, this.getColumnOrder());
                 }
 
-                //System.out.println("row group size: " + this.getRowGroupSize());
-                //System.out.println("number of row groups: " + this.getNumRowGroups());
-                //System.out.println("total seek cost: " + totalSeekCost);
+                System.out.println("row group size: " + this.getRowGroupSize());
+                System.out.println("number of row groups: " + this.getNumRowGroups());
+                System.out.println("total seek cost: " + totalSeekCost);
 
                 this.increaseRowGroupSize();
 
