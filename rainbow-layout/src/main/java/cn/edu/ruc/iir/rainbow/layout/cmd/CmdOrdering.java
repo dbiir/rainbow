@@ -1,13 +1,13 @@
 package cn.edu.ruc.iir.rainbow.layout.cmd;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
+import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.*;
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.Algorithm;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.AlgorithmFactory;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.ExecutorContainer;
-import cn.edu.ruc.iir.rainbow.common.cmd.ProgressListener;
 import cn.edu.ruc.iir.rainbow.layout.algorithm.impl.ord.FastScoaGS;
 import cn.edu.ruc.iir.rainbow.layout.builder.ColumnOrderBuilder;
 import cn.edu.ruc.iir.rainbow.layout.builder.SimulatedSeekCostBuilder;
@@ -18,7 +18,9 @@ import cn.edu.ruc.iir.rainbow.layout.seekcost.LinearSeekCostFunction;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.PowerSeekCostFunction;
 import cn.edu.ruc.iir.rainbow.layout.seekcost.SeekCostFunction;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,18 +137,26 @@ public class CmdOrdering implements Command
                 ExceptionHandler.Instance().log(ExceptionType.ERROR, "thread number is " + 1, e);
             }
 
+            ColumnOrderBuilder.saveAsSchemaFile(new File(orderedFilePath), algo.getColumnOrder());
+
             if (algo instanceof FastScoaGS)
             {
                 FastScoaGS gs = (FastScoaGS) algo;
                 results.setProperty("final.cost", String.valueOf(gs.getBestState().getTotalOverhead()));
                 results.setProperty("row.group.size", String.valueOf(gs.getRowGroupSize()));
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderedFilePath+".gs")))
+                {
+                    writer.write("row.group.size=" + results.getProperty("row.group.size"));
+                    writer.newLine();
+                    writer.write("init.cost=" + results.getProperty("init.cost"));
+                    writer.newLine();
+                    writer.write("final.cost=" + results.getProperty("final.cost"));
+                }
             }
             else
             {
                 results.setProperty("final.cost", String.valueOf(algo.getCurrentWorkloadSeekCost()));
             }
-
-            ColumnOrderBuilder.saveAsSchemaFile(new File(orderedFilePath), algo.getColumnOrder());
 
             results.setProperty("success", "true");
         } catch (IOException e)
