@@ -30,7 +30,7 @@
     <groupId>cn.edu.ruc.iir</groupId>
     <artifactId>rainbow</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>rainbow-core</module>
         <module>rainbow-common</module>
@@ -40,6 +40,5 @@
         <module>rainbow-redirect</module>
         <module>rainbow-benchmark</module>
     </modules>
-
 
 </project>
