@@ -1,8 +1,8 @@
 package cn.edu.ruc.iir.rainbow.benchmark.generator;
 
-import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
-import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
+import cn.edu.ruc.iir.rainbow.benchmark.util.DateUtil;
+import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -65,7 +65,7 @@ public class DataGeneratorThread extends Thread
     public void generateData(int dataSize)
     {
         BufferedWriter bw = null;
-        String fileName = DataUtil.getCurTime();
+        String fileName = DateUtil.getCurTime();
         String directory = filePath + "data/";
         String outGenPath = directory + fileName + ".txt";
         String outGenMemoPath = filePath + "memo.txt";
