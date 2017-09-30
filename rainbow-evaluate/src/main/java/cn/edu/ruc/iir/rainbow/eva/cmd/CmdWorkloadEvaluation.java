@@ -340,6 +340,14 @@ public class CmdWorkloadEvaluation implements Command
                 timeWriter.write("\"query id\",\"duration(ms)\"\n");
                 timeWriter.flush();
 
+                try
+                {
+                    Class.forName("com.facebook.presto.jdbc.PrestoDriver");
+                } catch (ClassNotFoundException e)
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate Presto get JDBC driver error", e);
+                }
+
                 // begin evaluate
                 String line;
                 int i = 0;
