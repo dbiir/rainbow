@@ -1,8 +1,8 @@
 package cn.edu.ruc.iir.rainbow.benchmark.generator;
 
-import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
 import cn.edu.ruc.iir.rainbow.benchmark.domain.Column;
-import cn.edu.ruc.iir.rainbow.benchmark.util.DataUtil;
+import cn.edu.ruc.iir.rainbow.benchmark.util.DateUtil;
+import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -58,7 +58,7 @@ public class DataGenerator
         int size = Math.floorDiv(dataSize, threadNum);
         try
         {
-            filePath = SysSettings.TEMPLATE_DIRECTORY + "/rainbow_" + DataUtil.getCurTime() + "_" + dataSize + "MB/";
+            filePath = SysSettings.TEMPLATE_DIRECTORY + "/rainbow_" + DateUtil.getCurTime() + "_" + dataSize + "MB/";
             for (int i = 0; i < threadNum; i++)
             {
                 DataGeneratorThread t = new DataGeneratorThread(filePath, columnName, columnList, size);
