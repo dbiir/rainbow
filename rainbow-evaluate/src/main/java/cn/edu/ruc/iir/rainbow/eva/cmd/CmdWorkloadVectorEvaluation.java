@@ -363,6 +363,14 @@ public class CmdWorkloadVectorEvaluation implements Command
 
                 String[] tableNames = params.getProperty("table.names").split(",");
 
+                try
+                {
+                    Class.forName("com.facebook.presto.jdbc.PrestoDriver");
+                } catch (ClassNotFoundException e)
+                {
+                    ExceptionHandler.Instance().log(ExceptionType.ERROR, "evaluate Presto get JDBC driver error", e);
+                }
+
                 // begin evaluate
                 String line;
                 int i = 0;

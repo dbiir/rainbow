@@ -13,9 +13,9 @@ public class TestCmdPerfEstimation
     public void test ()
     {
         Properties params = new Properties();
-        params.setProperty("schema.file", TestScoaGS.class.getResource("/schema.txt").getFile());
+        params.setProperty("schema.file", TestScoaGS.class.getResource("/ordered_schema.txt").getFile());
         params.setProperty("workload.file", TestScoaGS.class.getResource("/workload.txt").getFile());
-        params.setProperty("log.file", TestScoaGS.class.getResource("/").getFile() + "estimate_duration.csv");
+        params.setProperty("log.file", TestScoaGS.class.getResource("/").getFile() + "ordered_estimate_duration.csv");
         params.setProperty("seek.cost.function", "power");
 
         Command command = new CmdPerfEstimation();

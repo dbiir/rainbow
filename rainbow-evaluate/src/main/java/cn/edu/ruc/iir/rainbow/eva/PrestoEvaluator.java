@@ -10,6 +10,7 @@ public class PrestoEvaluator
     public static StageMetrics execute (String jdbcUrl, Properties jdbcProperties, String tableName, String columns, String orderByColumn)
     {
         StageMetrics stageMetrics = new StageMetrics();
+
         try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcProperties))
         {
             Statement statement = connection.createStatement();
