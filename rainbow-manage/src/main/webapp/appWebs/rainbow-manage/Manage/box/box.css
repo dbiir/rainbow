@@ -1,0 +1,119 @@
+#jquery-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 90;
+	width: 100%;
+	height: 500px;
+}
+#jquery-lightbox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	text-align: center;
+	line-height: 0;
+}
+#jquery-lightbox a img { border: none; }
+#lightbox-container-image-box{
+    position:relative;
+    width:250px;
+    height:250px;
+    margin:0 auto;
+    border-radius:5px 5px 0 0;
+    background-color:#fff;}
+#lightbox-container-image { padding: 10px; }
+#lightbox-loading {
+	position: absolute;
+	top: 40%;
+	left: 0%;
+	height: 25%;
+	width: 100%;
+	text-align: center;
+	line-height: 0;
+}
+#lightbox-nav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 10;
+}
+#lightbox-container-image-box > #lightbox-nav { left: 0; }
+#lightbox-nav a { outline: none;}
+#lightbox-nav-btnPrev, #lightbox-nav-btnNext {
+	width: 49%;
+	height: 100%;
+	zoom: 1;
+	display: block;
+}
+#lightbox-nav-btnPrev { 
+	left: 0; 
+	float: left;
+}
+#lightbox-nav-btnNext { 
+	right: 0; 
+	float: right;
+}
+#lightbox-container-image-data-box{
+    overflow:auto;
+    width:100%;
+    margin:0 auto;                                   
+    padding:0 10px 0;
+    border-radius:0 0 5px 5px;
+    background-color:#fff;
+    font:12px/1.5em Verdana,'\5b8b\4f53',sans-serif;
+}
+#lightbox-container-image-data {
+	padding: 0 10px; 
+	color: #666; 
+}
+#lightbox-container-image-data #lightbox-image-details { 
+	width: 70%; 
+	float: left; 
+	text-align: left; 
+}	
+#lightbox-image-details-caption { font-weight: bold; }
+#lightbox-image-details-currentNumber {
+	display: block; 
+	clear: left; 
+	padding-bottom: 1.0em;	
+}			
+#lightbox-secNav-btnClose {
+	width: 66px; 
+	float: right;
+	padding-bottom: 0.7em;	
+}
+
+/*娼窞璁哄潧*/
+i{ font-style:normal}
+.clear{ clear:both}
+.tz{background:#fff; padding:15px; margin-bottom:50px; border-radius:5px; width:400px;float:right;}
+.cou_video{ background:url(../images/tz_img1.png) no-repeat; width:529px; height:375px; padding:6px 0 0 6px;}
+.cou_video img{ width:523px; height:351px;}
+.bbs_text{height:300px; overflow:hidden;}
+.bbs_span{color:#666; margin-top:15px;}
+.bbs_span span{display:block;line-height:20px;}
+.bbs_font{ margin-bottom:5px;}
+.bbs_fti{font-size:18px; font-family:"寰蒋闆呴粦"; color:#000;}
+.bbs_i{ display:block}
+
+.title_a{ color:#666; text-decoration:none}
+.title_a:hover{ border-bottom:3px solid #DE3D3D}
+
+.bbs_sign{ color:#ff0000}
+.coubut a{width:1000px;display:block; margin-bottom:15px; background:url(../images/img2.png) no-repeat; height:60px;}
+
+.backToTop{position:fixed;_position:absolute;z-index:999;width:180px;left:0;bottom:42%;_bottom:"auto"}
+
+.qqLeft{position:fixed;_position:absolute;z-index:999;width:80px;right:0;bottom:32%;_bottom:"auto"}
+.qqLeft ul{background:url(../images/si_serviceleft2.png) no-repeat;width:79px;padding:100px 0 5px 0}
+.qqLeft ul li{display:block;text-indent:-9999px;background:url(../images/si_serviceleft_03.png) no-repeat;text-align:center;width:79px}
+.qqLeft ul li a{color:#fff;display:block;width:78px}
+.qqLeft ul li:hover{background-color:#d93d69}
+.qqLeft .si_serviceleftLI1,.qqLeft .si_serviceleftLI1 a{height:67px}
+.si_serviceleftLI2 a{height:86px;margin:3px 0}
+.qqLeft .si_serviceleftLI2,.qqLeft .si_serviceleftLI2 a{height:86px;margin:3px 0}
+.qqLeft .si_serviceleftLI2{background-position:0 -75px;margin:3px 0}

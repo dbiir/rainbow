@@ -1,0 +1,284 @@
+﻿.divTop{ position:fixed; z-index:89;  background-color:#f0f0f0;text-shadow:1px 1px 1px #fff;  width:100%}
+.divTop .divNav{ } 
+.divTop .divNav .logo{padding:0px ; font-size:18px} 
+.divTop .divNav .menus{} 
+.divTop .divNav .menus ul{ list-style:none; }
+.divTop .divNav .menus ul li{ list-style:none; float:left; height:80px; width:130px; line-height:80px; font-size:16px ; text-align:center}
+.divTop .divNav .menus ul li:hover{ background-color:#11b7e0; border-bottom:2px solid #f8bc40; cursor:pointer}
+.divTop .divNav .menus ul li:hover{  color:#fafafa}
+.divTop .divNav .menus ul li.active{ background-color:#20c3eb;  border-bottom:2px solid green; font-weight:bold } 
+         
+        
+.divMiddle{ padding-top:100px; padding-bottom:20px}
+.divMiddle .divPage{} 
+        
+/*面板*/
+.divPan{ margin-bottom:10px; border:1px solid #ddd}
+.divPan .divHeader{ border-bottom:1px solid #ddd}
+.divPan .divHeader .divTitle{ color:#444; font-size:1.1em; text-shadow:1px 1px 1px #fff; padding:10px; font-weight:bold;color: #00a7d0;font-size: 1.1em;}
+.divPan .divHeader .divBtns{ margin-right:15px; margin-top :10px}
+.divPan .divBody{background-color:#fafafa}
+.divPan .divFooter{ border-top:1px solid #ddd}
+        
+/* 顶部菜单 */
+.lstTopMenu{ list-style:none; padding:0px; margin:0px}
+.liTopMenuItem{ float:left; padding:0px 0px; font-size:1.1em;}
+.liTopMenuItem.active{ color:#e42e35}
+.liTopMenuItem:hover{  cursor:pointer; color:#00a7d0; border-bottom:1px solid #00a7d0}
+.liTopMenuItem .divTopMenuItem{  padding:0px 15px; text-align:center}
+.liTopMenuItem .divTopMenuItem i{ font-size:2.5em}
+        
+/* 带有左侧菜单的框架 */
+.divFrame{ /*padding-left:180px;*/ min-height:600px;}
+.divFrame .divLeftMenuPan{ position:fixed; margin-left:-180px;z-index: 1;}
+.divFrame .divLeftMenuPan .lstLeftMenus{ width:160px; background-color:#fafafa; border:1px solid #eee; list-style:none; padding:0px; margin:0px }
+.divFrame .divLeftMenuPan .lstLeftMenus .liLeftMenuTitle{ padding:10px 15px; border-bottom:1px solid #eee; color:#00a7d0; font-weight:bold; font-size:1.1em}
+.divFrame .divLeftMenuPan .lstLeftMenus .liLeftMenuItem{ padding:10px 15px; border-bottom:1px solid #eee;  border-top:1px solid #fff; }
+.divFrame .divLeftMenuPan .lstLeftMenus .liLeftMenuItem:hover{ cursor:pointer; font-weight:bold}
+.divFrame .divLeftMenuPan .lstLeftMenus .liLeftMenuItem.active{ color:#00a7d0; border-left:2px solid #00a7d0}
+ 
+/* Optimization */
+/*.divFrame{ padding-left:180px}*/
+.divFrame .divLeftPan{  font-size:14px; width:160px; background-color:#fff; position:fixed; margin-left:-180px} 
+.divFrame .divLeftPan .divLeftPanHeader{ padding:10px 15px ; background-color:#00c0ef; color:#fff; font-weight:bold} 
+.divFrame .divLeftPan .divLeftPanBody{}
+.divFrame .divLeftPan .divLeftPanBody ul{ list-style:none; padding:0px; margin:0px }
+.divFrame .divLeftPan .divLeftPanBody ul li{ padding:10px; padding-left:20px; border-bottom:1px solid #ddd} 
+.divFrame .divLeftPan .divLeftPanBody ul li:hover{ cursor:pointer; font-weight:bold}
+.divFrame .divLeftPan .divLeftPanBody ul li.active{ color:#00c0ef ; font-weight:bold; border-left:2px solid #00c0ef }
+
+.filestyle {display: block;margin: auto;} 
+        
+/* 标题栏 */
+.divMainTitleBar{ border-bottom:1px solid #ddd}
+.divMainTitleBar .spanTitle{ padding:10px 15px; color:#00a7d0; font-weight:bold}
+.divMainTitleBar .spanBtns{}
+.divMainTitleBar .spanBtns ul{ clear:both; list-style:none; padding:0px; margin:0px}
+.divMainTitleBar .spanBtns ul li{ float:left; padding:10px; padding-bottom:0px}
+         
+/*筛选栏*/         
+.divFilter{ padding:10px; background-color:#fafafa; box-shadow:1px 1px 1px #aaa }
+.divFilter .spanTitle{ font-weight:bold; color:#00a7d0; padding-top:3px }
+.divFilter .spanTitleNote{ font-weight:bold; color: green; padding-top:3px }
+.divFilter .spanFilterItem{ padding-left:10px;}
+.divFilter .spanFilterItem .spanLab{ padding-top:3px}
+.divFilter .spanFilterItem .spanEditor{ padding-left:5px}
+.divFilter .spanFilterItem .spanEditor input, select{ padding-left:5px; height:27px; border:1px solid #bbb}
+.divFilter .spanFilterItem .spanAcBtn{ padding-top:3px}
+
+/* Progress */
+.divFilter .divPickItems{padding-left: 10px;padding-top: 3px;}
+.divFilter .divPickItems ul{ border:1px solid #00a7d0; border-radius:5px; color:#00a7d0; list-style:none; padding:0px; margin:0px; margin-top:-3px}
+.divFilter .divPickItems ul li{ float:left; text-align:center; padding:3px 15px; border-right:1px solid #00a7d0;}
+.divFilter .divPickItems ul li:last-child{ border:0px}
+.divFilter .divPickItems ul li.active{ background-color:#00a7d0; color:#fff; font-weight:bold}
+.divFilter .divPickItems ul li:hover{ cursor:pointer; font-weight:bold}
+        
+/*编辑*/
+.divForms{ clear:both}
+.divForms .divRowItem{}
+.divForms .divRowItem .divItem{ padding-left:80px; position:relative; padding-top:10px; }
+.divForms .divRowItem .divItem .divLab{ position:absolute; width:70px; text-align:right; margin-left:-80px; padding-top:3px}
+.divForms .divRowItem .divItem .divLabs{ position:absolute; width:140px; text-align:right; margin-left:-80px; padding-top:3px;/*color:#E9373D;font-weight:bold;*/}
+.divForms .divRowItem .divItem input{ width:100%; padding-left:5px; color:#555 }
+.divForms .divRowItem .divItem select{ width:100%; color:#555 }
+.divForms .divRowItem .divItem textarea{ width:100%; padding:5px ; color:#555}
+.divForms .divBtns{ padding:00px 0px;}
+.divForms .divBtns button{ margin-left:15px}
+         
+/*表格*/
+table.DataTab{ width:100%}
+table.DataTab tr th{ background-color:#f6f6f6   ; padding:10px 0px; text-align:center; border:1px solid #ddd; table-layout:fixed} 
+table.DataTab tr td{ background-color:#fafafa; padding:4px 4px;  border:1px solid #eee;} 
+table.DataTab tr td .divTdActions{ display:inline-block}
+table.DataTab tr td .divTdActions ul{ padding:0px; margin:0px; list-style:none} 
+table.DataTab tr td .divTdActions ul li{ float:left; padding:0px 5px; border-right:1px solid #ddd}
+table.DataTab tr td .divTdActions ul li:last-child{  border:0px}
+        
+        
+/*列表1*/
+ul.lstList{ padding:0px; margin:0px; list-style:none}
+ul.lstList li{ padding:10px; border-bottom:1px solid #ddd; border-top:1px solid #fff}
+ul.lstList li:first-child{ border-top:0px}
+ul.lstList li:last-child{ border-bottom:0px}
+ul.lstList li .divItem{ position:relative; padding-left:190px}
+ul.lstList li .divItem .divIcon{ width:160px; position:absolute; margin-left:-190px}
+ul.lstList li .divItem .divIcon img{ width:100%}
+ul.lstList li .divItem .divDatas{ min-height:100px}
+ul.lstList li .divItem .divDatas .divTitle{ padding-bottom:10px; font-size:1.2em; font-weight:bold; color:#333}
+ul.lstList li .divItem .divDatas .divDesc{ font-size:0.9em}
+ul.lstList li .divItem .divDatas .divInfo{ position:absolute; width:100%; bottom:0px}
+ul.lstList li .divItem .divDatas .divInfo .divInfoItem{ padding:5px 10px; border:1px solid #ddd; display:inline-block; background-color:#fff; font-size:0.9em}
+ul.lstList li:hover{ cursor:pointer; background-color:#fff}
+ul.lstList li:hover .divItem .divDatas .divTitle{ color:#00a7d0} 
+        
+        
+/*列表式表格1*/
+.divListGrid{ padding:15px}
+.divListGrid .divGridItem{ padding-bottom:10px}
+.divListGrid .divGridItem .divItem{ border:1px solid #efefef}
+.divListGrid .divGridItem .divItem .divIcon{ position:relative;cursor:pointer; }
+.divListGrid .divGridItem .divItem .divIcon img{ width:100%}
+.divListGrid .divGridItem .divItem .divIcon .divBottomCaption{ position:absolute; bottom:0px; width:100%;filter: alpha(opacity=70); opacity: 0.7;  background-color:#333;  padding:5px; color:#ede503; text-shadow:1px 1px 1px #000 }
+.divListGrid .divGridItem .divItem .divIcon .divLeftTop{position:absolute; top:10px; left:10px; color:#fff; text-shadow:1px 1px 1px #000; font-weight:bold }
+.divListGrid .divGridItem .divItem .divIcon .divLeftTop:hover{color:#00a7d0; }
+.divListGrid .divGridItem .divItem .divIcon .divRightTop{position:absolute; top:10px; right:10px}
+.divListGrid .divGridItem .divItem .divDatas{ padding:10px;border-top: 1px solid #efefef;} 
+.divListGrid .divGridItem .divItem:hover{ box-shadow:1px 1px 1px #aaa}
+.divListGrid .divGridItem .divItem:hover .divDatas{ color:#444}
+                            
+/*分页工具栏*/         
+.divPaging{ text-align:center; background-color:#fafafa; padding:0px 0px;  border-top:1px solid #fff; font-size:0.85em}
+.divPaging .divPagingInner{ display:inline-block; margin:0px auto}
+.divPaging .divPagingInner .BtnItem{ border:1px solid #1a9eff; padding:3px 10px; margin:5px 10px; border-radius:3px}
+.divPaging .divPagingInner .Number{ padding:1px 10px; margin:5px 10px}
+.divPaging .divPagingInner .Number input{ text-align:center; font-weight:bold; width:40px}
+.divPaging .divPagingInner .Number i{ font-size:1.5em; padding :3px 5px}
+
+
+/*分页工具栏1*/         
+.divPagingOutter{ background-color:#fafafa; padding:0px 0px;  border-top:1px solid #fff; font-size:0.85em} 
+.divPagingOutter .divItem{ width:100%;margin:0px auto;padding:8px 10px; } 
+.divPagingOutter .divItem .cmbPageSize{ height:20px;padding-left:0px; } 
+.divPagingOutter .divItem .Number{ padding:1px 10px; }
+.divPagingOutter .divItem .Number input{ text-align:center; font-weight:bold;height:20px;width:30px}
+.divPagingOutter .divItem .Number i{ font-size:1.5em; padding :3px 5px;}
+.divPagingOutter .divItemCenter{ width:100%;margin:0px auto;padding:8px 10px; text-align:center; } 
+.divPagingOutter .divItem .PageTools {display: inline;padding-top:3px;}
+.divPagingOutter .divItem .PageTools a {padding: 0px 5px;color: #07b30b;}
+.divPagingOutter .divItem .PageTools a:hover {cursor: pointer;}
+.divPagingOutter .divItem .PageTools b {color: #444;} 
+        
+/*多选1列表*/
+ul.lstPickItem{ list-style:none; padding:0px; margin:0px}
+ul.lstPickItem li{ float:left; padding:5px 10px; border-left:1px solid #fff;border-right:1px solid #ddd;}
+ul.lstPickItem li:first-child{border-left:0px }
+ul.lstPickItem li:last-child{border-right:0px }
+ul.lstPickItem li:hover{ cursor:pointer; font-weight:bold; background-color:#fafafa}
+ul.lstPickItem li.active{ color:#00a7d0; font-weight:bold}
+        
+.divBottom{ background-color:#444; color:#fff; text-shadow:1px 1px 1px #222}
+.divBottom .divMas{ padding:10px 15px; font-size:1.2em; border-bottom:1px solid #111}
+.divBottom .divDtl{ padding:15px 15px; font-size:1em; border-top:1px solid #555; text-shadow:1px 1px 1px #444; color:#f0f0f0}  
+
+/*筛选条件样式*/
+/*分类*/
+.divCeng .none { width:100%; padding:0px;box-shadow: 1px 1px 1px #aaa;}
+.divCeng .divTypes{padding: 0px;}
+.divCeng .divTypes .divLoad{padding: 10px 0px 5px 10px;background-color: #fff;}
+.divCeng .divTypes .divType{border-left: 1px solid #e32057;border-right: 1px solid #e32057;padding: 10px 0px 5px 10px;background-color: #fff;} 
+.divCeng .divTypes .divType table tr td {text-align: left;padding-left: 10px;}
+.divCeng .divTypes .divType table tr .editor{cursor:pointer;}
+.divCeng .divTypes .divType table tr .editor.active {font-weight:bold;color: #e32057;}
+.divCeng .divTypes .divType table tr .editor:hover {font-weight:bold;color: #444;} 
+.divCeng .divTypes .divType .Mas {width: 80px;}  
+/*筛选条件*/
+.divSearch {padding: 10px 0px 5px 0px;background-color: #fff; }
+.divSearch .table {width: 100%;}
+.divSearch table tr td {text-align: left;padding-left: 10px;} 
+.divSearch .Mas {width: 80px;color: #e42e35;}
+/*列表*/  
+.RecordList {padding:0px;width: 100%;}
+.RecordList ul {list-style: none;float: left;padding: 0px;width: 100%;}
+.RecordList ul li {width: 100%;border-bottom: 1px solid #efefef;margin-top: 10px;}
+.RecordList ul li .divItem {background-color: #fff;padding: 10px;color: #999;}
+.RecordList ul li .divItem:hover { box-shadow:1px 1px 1px #aaa }
+.RecordList ul li .divItem .ImgIcon {float: left;width: 160px;height: 100px;border: 1px solid #dbdbdb;}
+.RecordList ul li .divItem .ImgIcon img {width: 160px;height: 100px;cursor:pointer;}
+.RecordList ul li .divItem .ItemContent {margin-left: 180px;height: 90px;padding: 0px;}
+.RecordList ul li .divItem .ItemContent .MasterTitle {font-size: 14px;font-weight: bold;padding-bottom: 8px;color: #444;} 
+.RecordList ul li .divItem .ItemContent .MasterTitle .subTitle:hover {color:#00a7d0;cursor:pointer;} 
+.RecordList ul li .divItem .ItemContent .MasterTitle .label:hover {cursor:pointer;} 
+.RecordList ul li .divItem .ItemContent .SubInfos {height: 24px;}
+.RecordList ul li .divItem .ItemContent .SubInfos .InfoBlod {/*font-weight: bold;*/color: #666;}
+
+/* Toast */
+.ibox {clear:both;margin: 0px;padding: 0px;width:100%;}
+.ibox .ibox-content {clear: both;line-height: normal;padding:25px;}
+.web_transparent {position: fixed;z-index: 1000;top: 0;right: 0;left: 0;bottom: 0;}
+.web-toast {position: fixed;z-index: 5000;width: 13em;min-height: 4em;top: 200px;left:50%;background: rgba(40, 40, 40, 0.75);text-align: center;border-radius: 5px;color: #FFFFFF;} 
+.web-toast_content { font-size: 16px;}
+.sk-spinner-three-bounce.sk-spinner{margin: 20px auto 10px;text-align: center; }
+.sk-spinner-three-bounce div {width: 18px;height: 18px;background-color: #00a7d0;border-radius: 100%;display: inline-block;-webkit-animation: sk-threeBounceDelay 1.4s infinite ease-in-out;animation: sk-threeBounceDelay 1.4s infinite ease-in-out;-webkit-animation-fill-mode: both;animation-fill-mode: both;}
+.sk-spinner-three-bounce .sk-bounce1 {-webkit-animation-delay: -.32s;animation-delay: -.32s;}
+.sk-spinner-three-bounce .sk-bounce2 {-webkit-animation-delay: -.16s;animation-delay: -.16s;}
+@-webkit-keyframes sk-threeBounceDelay {
+    0%,100%,80% {-webkit-transform: scale(0);transform: scale(0);}
+    40% {-webkit-transform: scale(1);transform: scale(1);}
+}
+@keyframes sk-threeBounceDelay {
+0%,100%,80% {-webkit-transform: scale(0);transform: scale(0);}
+40% {-webkit-transform: scale(1);transform: scale(1);}
+}
+
+
+/*spinner*/
+.pinkspin{color:#ef1a60;}
+.greenspin{color:#07b30b;}
+
+
+.form-control {border: 1px solid #ccc; border-radius: 3px;box-shadow: none; padding: 0px 10px;height: 26px;width:250px;}
+ 
+.divSubMenu{ position:absolute; top:55px;padding: 0px 5px;} 
+.divSubMenu ul{ list-style:none; padding:0px; margin:0px; border:1px solid #f0f0f0;    border-radius: 2px;} 
+.divSubMenu ul li{ padding:5px 5px; font-size:0.9em; text-align:center}
+.divSubMenu ul li:hover {color:#00a7d0; background-color:#f0f0f0;cursor:pointer;}
+/*.divSubMenu ul li i{color:#ddd}*/
+
+/*right side*/
+.divSection{ /*margin:10px 0px*/margin:0px;}
+.divSection .divTitle{ padding:10px 15px; color:#00a7d0; border-left:2px solid #00a7d0}
+.divGridList{ padding:15px 15px; background-color:#f0f0f0}
+.divGridList .divItem{  background-color:#fafafa; border:1px solid #fafafa;margin-bottom:10px  }
+.divGridList .divItem .divImg{ position:relative; }
+.divGridList .divItem .divImg img{ width:100%}
+.divGridList .divItem .divImg .divCaption{ position:absolute;  bottom:0px; width:100%; padding:10px; background-color:#333; color:#f5f5f5; text-shadow:1px 1px 1px #000;    opacity: 0.7}
+.divGridList .divItem:hover{ background-color:#fff;box-shadow:1px 1px 1px #aaa}
+.divGridList .divItem .divImg:hover {cursor: pointer;}
+.divGridList .divItem:hover .divImg .divCaption{ color:#00a7d0}
+.divGridList .divItem .divDatas { padding:10px}
+.divGridList .divItem .divDatas .divInfo{ padding-bottom:0px}
+.divGridList .divItem .divDatas .divDesc{ font-size:0.9em; color:#999}
+
+
+.divGridList .divItem:hover .lessonplay{ opacity: 1;}
+.lessonplay {background: rgba(0,0,0,.4); width: 100%; height: 100%;z-index: 100;position: absolute;left: 0;top: 0;opacity: 0;}
+.lessonplay .playericon {position: absolute;z-index: 120;width: 50px;height: 50px;display: block;left: 50%;margin-left: -25px;top: 50%;margin-top: -25px;background: url(https://s1.jikexueyuan.com/course/images/player_icon_5c67475.png) no-repeat;background-size: 50px 50px;cursor: pointer;}
+
+.videomask{position: fixed;top: 0;right: 0;bottom: 0;left: 0;/*width: 100%;*/height: 100%;z-index: 10001;background-color: #000;opacity: 0.7;display: none;/*overflow-x: hidden;overflow-y: auto;*/}
+.videomask2{position: fixed;top: 0;right: 0;bottom: 0;left: 0;/*width: 100%;*/height: 100%;z-index: 10002;/*background-color: #000;*//*opacity: 0.5;*/display: none;/*overflow-x: hidden;overflow-y: auto;*/} 
+.videomask2 img{display:block;clear:both;cursor:pointer;width:30px;height:30px;float:right;margin:10px} 
+.videomask2 .divVideo{display:block;width:700px;height:500px;margin:130px auto;} 
+video {width: 100% !important;height: auto !important;}
+
+/*Explanation begin*/
+.divPan .divPanUl {padding: 0px;width: 100%;}
+.divPan .divPanUl ul {list-style: none; float: left;padding: 0px;width: 100%;}
+.divPan .divPanUl ul li {width: 100%;}
+.divPan .divPanUl ul li .divItem {background-color: #fff;padding: 10px;margin-bottom: 10px;color: #999;}
+.divPan .divPanUl ul li .divItem:hover {background-color: #fafafa;box-shadow: 1px 1px 1px #aaa;}
+.divPan .divPanUl ul li .divItem .ImgIcon {float: left;width: 240px;height: 165px;border: 1px solid #dbdbdb;} 
+.divPan .divPanUl ul li .divItem .ImgIcon img {width: 240px;height: 165px;}
+.divPan .divPanUl ul li .divItem .ImgIcon img:hover {border: 1px solid #e32057;}
+.divPan .divPanUl ul li .divItem .ItemContent {margin-left: 270px;height: -90px;padding: 0px;}
+.divPan .divPanUl ul li .divItem .ItemContent .MasterTitle {font-size: 25px;font-weight: bold;padding-bottom: 15px;color: #444;}
+.SubInfos {height: 24px;}
+.SubInfos .InfoBlod {font-weight: bold;color: #666;}
+/*Explanation end*/
+
+/*.divPan{ background-color:#fff}
+.divPan .divPanHeader{ border-bottom:1px solid #ddd} 
+.divPan .divPanHeader .divPanHeaderTitle{ padding:10px 15px; font-weight:bold}
+.divPan .divPanHeader .divPanActions{}
+.divPan .divPanHeader .divPanActions ul{ list-style:none; padding:0px; margin:0px}
+.divPan .divPanHeader .divPanActions ul li{ float:left; padding:5px 10px; border:1px solid #38b7ea; color:#38b7ea; border-radius:3px}
+.divPan .divPanHeader .divPanActions ul li:hover{ cursor:pointer; font-weight:bold}*/ 
+
+.divPan {margin-bottom: 20px;/*margin-left: 30px;*/background-color: #fff;}
+.divPan .divPanHeader{ border-bottom:1px dashed #ddd; height:40px;} 
+.divPan .divPanBody {/*border-bottom: 1px solid #ddd;*/}
+.divPan .divPanFooter {padding: 10px 15px;}
+.divPan .divPanHeader ul.lstFilters {list-style: none;padding: 0px;margin: 0px;}
+.divPan .divPanHeader ul.lstFilters li {float: left;padding: 10px 15px;}
+.divPan .divPanHeader ul.lstFilters li:hover {cursor: pointer;font-weight: bold;}
+.divPan .divPanHeader ul.lstFilters li.active {color: #3398c1;font-weight: bold;/*border-bottom: 1px solid #3398c1;*/}

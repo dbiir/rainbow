@@ -1,0 +1,37 @@
+﻿<div class="divFrame">
+    <div class="divFilter clearfix" style=" margin-bottom:10px;">
+        <span class="spanTitle pull-left"><i class="fa fa-wikipedia-w text-bold"></i> How to Start the Demo ?</span>
+        <span class="spanTitleNote pull-left" style="padding-left: 20px;"> ( Click the Image to See it clearly. ) </span>
+    </div>
+    <div class="divPan">
+        <div class="divPanUl">
+            <ul>
+                <%
+                for( var i=0;i< tplData.length;i++){
+                var aItem= tplData[i];
+                %>
+                <li>
+                    <div class="divItem clearfix">
+                        <div class="ImgIcon">
+                            <a href="images/<%=aItem.bimg %>.jpg" title="<%=aItem.say %>">
+                                <img class="WxImg" src="images/<%=aItem.simg %>.jpg" />
+                            </a>
+                        </div>
+                        <div class="ItemContent">
+                            <div class="MasterTitle">
+                                <span><%=aItem.caption %> </span>
+                            </div>
+                            <div class="SubInfos row">
+                                <div class="col-md-4">
+                                    Note:
+                                    <span><%=aItem.say %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <%} %>
+            </ul>
+        </div>
+    </div>
+</div>

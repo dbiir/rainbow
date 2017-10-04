@@ -1,0 +1,44 @@
+﻿<div class="divFrame">
+    <!--<div class="divFilter clearfix" style=" margin-bottom:10px">
+        <span class="spanTitle pull-left"><i class="fa fa-filter"></i> Filters</span>
+
+        <div class="divBtns pull-left">
+            <span class="spanFilterItem pull-left clearfix">
+                <span class="pull-left spanLab">Type</span>
+                <span class="pull-left spanEditor">
+                    <select id="cmbRoles" onchange="Pipeline.OnPickRoles()">
+                        <option value="0">All</option>
+                    </select>
+                </span>
+            </span>
+        </div> 
+    </div>-->
+
+    <div class="divPan">
+        <div class="divHeader clearfix">
+            <div class="divTitle pull-left"><i class="fa fa-list"></i> Pipeline Lists</div>
+            <div class="divBtns pull-right">
+                <ul class="lstPickItem clearfix" style="margin-top:-5px">
+                    <li><a href="javascript:Pipeline.doShowDlg(0)" class=""><i class="fa fa-plus"></i> Add Pipeline</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="divBody" style="padding:10px">
+            <table cellpadding="0" cellspacing="0" class="DataTab" style="table-layout:fixed; width:100%">
+                <tr>
+                    <th style="width:50px">Num</th>
+                    <th style="width:110px">Caption</th>
+                    <th style="width:100px">Format</th>
+                    <th style="width:120px">DataSource</th>
+                    <th style="width:130px">Row Group Size</th>
+                    <th style="width:150px">Compression CodeC</th>
+                    <th>Description</th>
+                    <th style="width:200px">Operation</th>
+                </tr>
+                <tbody id="tBodyPipelines">
+                    <tr><td colspan="8" id="tBodyTr"></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
