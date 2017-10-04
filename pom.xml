@@ -39,6 +39,8 @@
         <module>rainbow-layout</module>
         <module>rainbow-redirect</module>
         <module>rainbow-benchmark</module>
+        <module>rainbow-client</module>
+        <module>rainbow-manage</module>
     </modules>
 
 </project>
