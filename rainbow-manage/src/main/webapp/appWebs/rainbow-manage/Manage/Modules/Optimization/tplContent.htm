@@ -1,0 +1,52 @@
+﻿<div class="divSection" style="padding: 3px;">
+    <style>
+        .divAcTimes {
+            background-color: #eaeaea;
+            padding: 15px;
+            position: relative;
+        }
+
+            .divAcTimes .divAc {
+                position: relative;
+                padding-bottom: 10px;
+                padding-left: 180px;
+            }
+
+                .divAcTimes .divAc .divDt {
+                    position: absolute;
+                    padding: 10px;
+                    border-radius: 5px;
+                    background-color: #38b7ea;
+                    color: #fff;
+                    margin-left: -180px;
+                }
+
+                .divAcTimes .divAc .divData {
+                    padding: 10px;
+                    border-radius: 5px;
+                    background-color: #fff;
+                }
+    </style>
+    <div class="divAcTimes">
+        <%if(tplData.length > 0){
+        for( var i=0;i< tplData.length; i++){ var aAc=tplData[i];
+        %>
+        <div class="divAc">
+            <div class="divDt"><i class="fa fa-calendar"></i> <%=aAc.time %></div>
+            <div class="divData">
+                <% 
+                    if(aAc.desc == "Pipeline Created" || aAc.desc == "Accepting Optimized Strategy") {
+                %>
+                <b><%=aAc.desc %></b>
+                <a style="font-weight:bold;font-size:1.4em;" href="javascript:Optimization.doShowDtl(<%=i %>)"><i class="fa fa-hand-o-left"></i></a>                <%} else{%>
+                <b></b><%=aAc.desc %>
+                <%} %>
+            </div>
+        </div>
+        <%}}  else { %>
+        <div class="divInfo">
+            <div style="color:#ff0000"><i class="fa fa-warning"></i> No Record Process !</div>
+        </div>
+        <%} %>
+    </div>
+</div> 

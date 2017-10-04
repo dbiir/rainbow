@@ -1,0 +1,29 @@
+﻿<%
+    for( var i=0;i< tplData.length;i++){
+        var aItem = tplData[i];
+%>
+                <tr class="tr<%=i %>">
+                    <td style="text-align:center"><%=i+1 %></td>
+                    <td style="text-align:center" class="blue"><a href="javascript:Pipeline.doShowDtl(<%=i%>)"><%=aItem.caption %></a></td>
+                    <td style="text-align:center"><%=aItem.format %></td> 
+                    <td style="text-align:center;" class="text-green"><%=aItem.dataSource %></td> 
+                    <td style="text-align:center"><%=aItem.rowGroupSize %> （MB）</td>
+                    <td style="text-align:center"><%=aItem.compression %></td>
+                    <td><div class="wrap"><%=aItem.description %></div></td>
+                    <td style="text-align:center">
+                        <div class="divTdActions">
+                            <ul class="lstBtnList clearfix">
+                                <% if ( aItem.state == 1){ %>
+                                <li><a href="javascript:Pipeline.doStop(<%=i %>)"><i class="fa fa-stop"></i> Stop</a></li>
+                                <%} else if ( aItem.state == 0 ||  aItem.state == 2){ %>
+                                <li class="red"><a href="javascript:Pipeline.doDelete(<%=i %>)"><i class="fa fa-minus-circle"></i> Remove</a></li>
+                                <%} %>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>  
+<%} %>
+ <% if ( tplData.length == 0){ %>
+<tr class="none"> 
+    <td colspan="8" class="text-red text-center"><i class="fa fa-exclamation-triangle"></i> No Pipelines to show！</td></tr>
+    <%} %> 

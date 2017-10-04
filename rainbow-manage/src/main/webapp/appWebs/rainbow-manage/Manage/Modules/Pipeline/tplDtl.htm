@@ -1,0 +1,89 @@
+﻿<div class="divFrame">
+    <style>
+        .ItemContent {
+            padding: 10px;
+            /*padding-bottom: 30px;*/
+        }
+
+            .ItemContent .MasterTitle {
+                font-size: 14px;
+                font-weight: bold;
+                padding-bottom: 8px;
+                color: #444;
+            }
+
+        .SubInfos {
+            height: 32px;
+        }
+
+            .SubInfos .InfoBlod {
+                font-weight: bold;
+                color: #666;
+            }
+    </style>
+    <div class="divPan">
+        <div class="divHeader clearfix">
+            <div class="divTitle pull-left">
+                <span class="pull-left" style="color:#20c3eb">Pipeline Info</span>
+                <span class="pull-left" style="padding:3px 10px;color:#808080;"><i class="fa fa-chevron-right"></i></span>
+                <span class="pull-left" id="curPipelineCaption" style="color:#444;"><%=tplData.caption %></span>
+            </div>
+            <div class="divBtns pull-right">
+                <ul class="lstPickItem clearfix" style="margin-top:-5px">
+                    <li><a href="javascript:Pipeline.Refresh()" class=""><i class="fa fa-reply-all"></i> Return Lists</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="divBody" style="padding:10px">
+            <div class="ItemContent">
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod">No : </span>&nbsp;&nbsp;&nbsp;<span id="txtNo"><%=tplData.no %></span>
+                    </div>
+                    <div class="col-md-5">
+                        <span class="InfoBlod">Format : </span><span><%=tplData.format %></span>
+                    </div>
+                </div>
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod">
+                            Column Order :
+                        </span>&nbsp;&nbsp;&nbsp;
+                        <%if(tplData.columnOrder == 1){%>
+                        <span class="text-green"> Allowed </span>
+                        <%} else{%>
+                        <span class="text-red"> No </span>
+                        <%}%>
+                    </div>
+                    <div class="col-md-5">
+                        <span class="InfoBlod">Row Group Size : </span>&nbsp;&nbsp;&nbsp;<span><%=tplData.rowGroupSize %> （MB）</span>
+                    </div>
+                </div>
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod">Compression CodeC : </span>&nbsp;&nbsp;&nbsp;<span><%=tplData.compression %></span>
+                    </div>
+                    <div class="col-md-5">
+                        <span class="InfoBlod">Description : </span>&nbsp;&nbsp;&nbsp;<span><%=tplData.description %></span>
+                    </div>
+                </div>
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod">DataSource : </span><span><%=tplData.dataSource %></span>
+                    </div>
+                    <div class="col-md-5">
+                    </div>
+                </div>
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod">URL : </span><span><%=tplData.url %></span>
+                    </div>
+                    <div class="col-md-5">
+                        <span class="InfoBlod">Store Path: </span>&nbsp;&nbsp;&nbsp;<span><%=tplData.storePath %></span>
+                    </div>
+                </div>
+                <!--<hr />-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+    <link rel="shortcut icon" type="image/x-icon"
+          href="" />
+    <link href="../../../applibs/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet"
+          type="text/css" />
+    <link href="../../../applibs/icons/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <script src="../../../applibs/sdk/jQuery-2.1.3.min.js" type="text/javascript"></script>
+    <script src="../../../applibs/bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../../applibs/bootstrap-3.3.5-dist/datetimepicker/js/bootstrap-datetimepicker.js"
+            type="text/javascript"></script>
+    <script src="../../../applibs/bootstrap-3.3.5-dist/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
+            type="text/javascript"></script>
+    <link href="Commons/Style.css?v=1" rel="stylesheet" />
+    <link href="Commons/admin.css" rel="stylesheet" />
+    <script src="../../../applibs/sdk/json.js" type="text/javascript"></script>
+    <script src="../../../applibs/sdk/date.js" type="text/javascript"></script>
+    <script src="../../../applibs/sdk/baiduTpls.js" type="text/javascript"></script>
+    <script src="../../../applibs/sdk/hhls.js" type="text/javascript"></script>
+    <script src="Modules/Index/Index.js"></script>
+    <script src="Modules/Pipline/Pipline.js"></script>
+    <script src="Modules/Monitor/Monitor.js"></script>
+    <script src="Modules/Duration/Duration.js"></script>
+    <title>Rainbow-Manage</title>
+    <style>
+        body {
+            background: #F1F2F6;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #777;
+            font: 13px/1.5 hiragino sans gb,microsoft yahei,simsun;
+        }
+
+        a, a:link, a:visited, a:active {
+            color: green;
+            text-decoration: none;
+        }
+
+            a:hover {
+                cursor: pointer;
+                color: #07b30b;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        label:hover {
+            font-weight: bold;
+        }
+
+        .red a, .red a:link, .red a:visited, .red a:active {
+            color: #f6296d;
+            text-decoration: none;
+        }
+
+            .red a:hover {
+                cursor: pointer;
+                color: #f6296d;
+                text-decoration: none;
+            }
+
+        .green a, .green a:link, .green a:visited, .green a:active {
+            color: #07b30b;
+            text-decoration: none;
+        }
+
+            .green a:hover {
+                cursor: pointer;
+                color: #07b30b;
+                text-decoration: none;
+            }
+
+        .yellow a, .yellow a:link, .yellow a:visited, .yellow a:active {
+            color: #deb809;
+            text-decoration: none;
+        }
+
+            .yellow a:hover {
+                cursor: pointer;
+                color: #deb809;
+                text-decoration: none;
+            }
+
+        .wrap {
+            overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <script>
+        function doFunction() {
+            try {
+
+            }
+            catch (e) {; }
+        }
+        $(document).ready(function () {
+            Index.Load();
+        });
+    </script>
+</head>
+<body style="background-image:url('https://bce.bdstatic.com/portal/img/ffffff-0_d8974688.gif')">
+    <div class="divTop">
+        <div class="divNav bg-aqua-active">
+            <div class="container">
+                <span class="logo pull-left" style="height:80px; line-height:80px; padding:0px 10px;font-weight:bold;font-size:2em">
+                    Rainbow Manage
+                </span>
+                <span class="" style="height:80px; line-height:80px; padding:0px 10px">
+                    DBIIR @ RUC
+                </span>
+                <span class="pull-right menus">
+                    <ul>
+                        <li class="active" onclick="Index.OnClickMenuItem(0)">
+                            <i class="fa fa-database"></i> Pipline
+                        </li>
+                        <li id="MyProject" onclick="Index.OnClickMenuItem(1)">
+                            <i class="fa fa-line-chart"></i> Duration
+                        </li>
+                        <li id="Account" onclick="Index.OnClickMenuItem(2)">
+                            <i class="fa fa-laptop"></i> Monitor
+                        </li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+        <div class="divSplit" style="border-top:1px solid #ddd; border-bottom:1px solid #fff"></div>
+    </div>
+    <div class="divMiddle" style="min-height:550px;padding-top:140px; padding-bottom:20px">
+        <div class="container">
+            <div class="divPage">
+                <div class="divFrame">
+                    <div class="divMain" id="divModulePage">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="divBottom">
+        <div class="container">
+            <div class="col-lg-9 col-md-9">
+                <div class="divMas"><i class="fa fa-rss-square"></i> Technical Team</div>
+                <div class="divDtl">
+                    Database & Intelligent Information Retrieval Lab. @ Renmin Univ. of China. All Rights Reserved.
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

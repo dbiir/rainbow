@@ -1,0 +1,60 @@
+﻿<div class="divPan ">
+<div class="divPanHeader">
+    <ul class="lstFilters clearfix">
+        <li class="active">
+            <i class="fa fa-cog"></i> Workload Upload
+        </li> 
+    </ul>
+</div>
+<div class="divPanBody">
+    <div class="divResult" style="padding:10px;padding-bottom: 15px;">
+        <!--<div class="row">
+            <div class="col-lg-8 col-md-8">
+                <div class="divScore">
+                    <textarea rows="4" class="form-control" placeholder="You can put the column of your sql here..." style="width:100%;font-size:10px;" id="txtSQL"></textarea>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2">
+                <div class="divAcBtns clearfix">
+                    <span class="AcBtn">
+                        <button class="btn btn-danger btn-block" onclick="Optimization.doClear()">
+                            <i class="fa fa-trash-o"></i> Reset
+                        </button>
+                        <button class="btn btn-block btn-success" onclick="Optimization.doExcute()">
+                            <i class="fa fa-cloud-upload"></i> Upload
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2">
+            </div>
+        </div>
+        <hr>-->
+        <div class="row">
+            <!--workload upload begin-->
+            <form id="evaluateForm" style="padding:0px 20px" action="http://127.0.0.1:8080/rw/workloadUpload" enctype="multipart/form-data" method="post">
+                <div class="SubInfos row">
+                    <div class="col-md-5">
+                        <span class="InfoBlod text-light-blue">Workload File: </span>&nbsp;&nbsp;&nbsp;
+                        <div class="btn btn-default btn-file">
+                            <i class="fa fa-paperclip"></i> Attachment
+                            <input type="file" name="workload" onchange="Optimization.doOpenFile(this);">
+                            <span id="txtWorkload" class="label label-default" style="padding: 0px 6px;border-radius: 1em;display:none;">1</span>
+                        </div>
+                        <br />
+                        <span>Please select your workload to start evaluation.</span>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-block btn-success" id="btnUpload" onclick="Optimization.doUpload()">
+                                <i class="fa fa-cloud-upload"></i> Upload File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--workload upload end-->
+        </div>
+    </div>
+</div>
+</div>
