@@ -40,7 +40,7 @@
         <module>rainbow-redirect</module>
         <module>rainbow-benchmark</module>
         <module>rainbow-client</module>
-        <module>rainbow-manage</module>
+        <module>rainbow-web</module>
     </modules>
 
 </project>
