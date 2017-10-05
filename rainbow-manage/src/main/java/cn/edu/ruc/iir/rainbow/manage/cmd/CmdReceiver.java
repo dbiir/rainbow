@@ -4,23 +4,16 @@ import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Invoker;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.InvokerException;
-import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.common.util.InputFactory;
-import cn.edu.ruc.iir.rainbow.core.invoker.INVOKER;
-import cn.edu.ruc.iir.rainbow.core.invoker.InvokerFactory;
-import cn.edu.ruc.iir.rainbow.eva.invoker.InvokerWorkloadVectorEvaluation;
+import cn.edu.ruc.iir.rainbow.cli.INVOKER;
+import cn.edu.ruc.iir.rainbow.cli.InvokerFactory;
 import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
-import cn.edu.ruc.iir.rainbow.layout.cmd.CmdPerfEstimation;
 import cn.edu.ruc.iir.rainbow.manage.hdfs.common.SysConfig;
 import cn.edu.ruc.iir.rainbow.manage.hdfs.model.Pipeline;
 import cn.edu.ruc.iir.rainbow.manage.util.FileUtil;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 /**
