@@ -42,7 +42,7 @@ SQL statements. The generated CREATE TABLE and LOAD DATA statements can be used 
 
 Rainbow does not need to be installed. It does not change anything except your CREATE TABLE statements.
 
-Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md) to use it.
+Follow the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md) to use it.
 
 ## Contact us
 For feedback and questions, feel free to email us:
@@ -53,7 +53,7 @@ For feedback and questions, feel free to email us:
 Welcome to contribute and submit pull requests :)
 
 ## Project Structure
-* **rainbow-core**
+* **rainbow-cli**
   schedules the other modules and provides a command line interface of Rainbow.
 
 * **rainbow-benchmark**

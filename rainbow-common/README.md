@@ -158,7 +158,7 @@ After columns in the table schema been duplicated, a query had to
 redirect the accessed columns to get benefits from column duplication.
 To perform column redirection for queries, we have to firstly build an index.
 More details are discussed in 
-[Column Redirection](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md#column-redirection).
+[Column Redirection](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md#column-redirection).
 
 Instructions for configuration properties of column redirection are given in
 their comments.

@@ -5,7 +5,7 @@ Given a seek cost function of seek distance, rainbow reorders the location of co
 contended columns inside the row group so that co-accessed columns are likely to be read by
 paying lower seek costs.
 
-In rainbow, we use a feasible method to get a more accurate (compared with [LINEAR or POWER](https://github.com/dbiir/rainbow/tree/master/rainbow-core#build-seek-cost-model)) seek cost function
+In rainbow, we use a feasible method to get a more accurate (compared with [LINEAR or POWER](https://github.com/dbiir/rainbow/tree/master/rainbow-cli#build-seek-cost-model)) seek cost function
 which is very important to column layout optimization. The method is to perform real seek operations
 on HDFS with different seek distance, and fit the seek cost function with the recorded seek costs and
 corresponding distances.
@@ -17,9 +17,9 @@ Follow the steps here to use it.
 
 - Install Hadoop (1.2.1 and 2.7.3 recommended). HDFS datanode should use HDD as storage media.
 - It is recommended to firstly
-[Build Columnar Format Data on HDFS](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md#data-transform).
+[Build Columnar Format Data on HDFS](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md#data-transform).
 - Set HDFS configurations in rainbow.properties like
-[this](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md#usage).
+[this](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md#usage).
 
 ## Build
 
@@ -120,7 +120,7 @@ This is used to simulate the real data reading pattern when executing queries.
 
 `log.dir` is the directory on local fs to store the seek evaluation results.
 A `seek_cost.txt` file will be generated in this directory.
-This file is used to create [SIMULATED](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md#build-seek-cost-model)
+This file is used to create [SIMULATED](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md#build-seek-cost-model)
 seek cost function for data layout optimization.
 
 `drop.caches.sh` is the path of shell script file which is used to drop file system cache on each node
