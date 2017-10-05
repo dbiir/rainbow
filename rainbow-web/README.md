@@ -1,6 +1,6 @@
-# Rainbow Manage
+# Rainbow Web
 
-Rainbow Manage .
+Rainbow Web.
 
 
 ## Build
@@ -18,4 +18,4 @@ To get usage information:
 $ java cn.edu.ruc.iir.rainbow.web.server.RwServer
 ```
 
-- Go to [Rainbow Manage](https://github.com/dbiir/rainbow-demo/blob/rainbow-web/README.md) and follow the steps in it.
+- Go to [Rainbow Web](https://github.com/dbiir/rainbow-demo/blob/rainbow-web/README.md) and follow the steps in it.
