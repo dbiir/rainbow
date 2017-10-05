@@ -8,7 +8,7 @@ provides an easier way to evaluate query performance automatic.
 
 ## Prepare
 
-- Finish the steps in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).
+- Finish the steps in [Rainbow Cli](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).
 
 ## Build
 
@@ -95,7 +95,7 @@ But `ORC` is currently only supported in `SPARK2` method.
 by `presto.jdbc.url` in `rainbow.properties`. And this table must be stored
 under `table.dir`.
 
-`workload.file` is the path of workload file in [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).
+`workload.file` is the path of workload file in [Rainbow Cli](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).
 
 `log.dir` is the directory on local fs to store the evaluation results.
 A `spark_duration.csv` or `local_duration.csv` file (depends on which method been used) will be generated in this directory.
