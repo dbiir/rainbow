@@ -1,6 +1,6 @@
-# Rainbow Cli
+# Rainbow CLI
 
-Rainbow Cli contains a command line interface which provides
+Rainbow CLI contains a command line interface which provides
 a set of commands to calculate optimized data layouts and generate SQL
 statements to apply the data layouts in SQL-on-Hadoop environment.
 
