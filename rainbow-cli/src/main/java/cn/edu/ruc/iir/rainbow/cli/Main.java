@@ -23,7 +23,7 @@ public class Main
 {
     public static void main(String args[])
     {
-        ArgumentParser parser = ArgumentParsers.newArgumentParser("Rainbow Cli")
+        ArgumentParser parser = ArgumentParsers.newArgumentParser("Rainbow CLI")
                 .defaultHelp(true)
                 .description("Rainbow: Data Layout Optimization framework for very wide tables on HDFS.");
         parser.addArgument("-f", "--config")
@@ -39,7 +39,7 @@ public class Main
         } catch (ArgumentParserException e)
         {
             parser.handleError(e);
-            System.out.println("Rainbow Cli (https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).");
+            System.out.println("Rainbow CLI (https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md).");
             System.exit(0);
         }
 
