@@ -61,4 +61,4 @@ $ hdfs dfs -mkdir -p /rainbow/text
 $ hdfs dfs -put ./benchmark_data/data/* /rainbow/text/
 ```
 
-- Go to [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-core/README.md) and follow the steps in it.
+- Go to [Rainbow Core](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md) and follow the steps in it.

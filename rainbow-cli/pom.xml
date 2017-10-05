@@ -16,7 +16,7 @@
         <mainClass>cn.edu.ruc.iir.rainbow.cli.Main</mainClass>
     </properties>
 
-    <artifactId>rainbow-core</artifactId>
+    <artifactId>rainbow-cli</artifactId>
 
     <dependencies>
         <dependency>
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>rainbow-core</finalName>
+        <finalName>rainbow-cli</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -81,8 +81,8 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>rainbow-core</finalName>
-                            <outputDirectory>/target</outputDirectory>
+                            <finalName>rainbow-cli</finalName>
+                            <outputDirectory>${project.parent.basedir}/rainbow-cli/target</outputDirectory>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>full</shadedClassifierName>
                             <filters>

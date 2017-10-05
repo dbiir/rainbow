@@ -84,22 +84,22 @@ Enter the root directory of rainbow, run:
 ```bash
 $ mvn clean
 $ mvn package
-$ cd ./rainbow-core
+$ cd ./rainbow-cli
 ```
 
-Then you get `rainbow-core-xxx-full.jar` in `target` subdirectory.
+Then you get `rainbow-cli-xxx-full.jar` in `target` subdirectory.
 Now you are ready to run rainbow cli.
 
 ## Usage
 
 To get usage instructions:
 ```bash
-$ java -jar target/rainbow-core-xxx-full.jar -h
+$ java -jar target/rainbow-cli-xxx-full.jar -h
 ```
 
 We can simply start rainbow cli without any argument:
 ```bash
-java -jar target/rainbow-core-xxx-full.jar
+java -jar target/rainbow-cli-xxx-full.jar
 ```
 
 You can use a specific configuration file by specifying -f argument.
