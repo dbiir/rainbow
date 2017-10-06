@@ -94,12 +94,12 @@ public class AccessPatternCache
             this.prevAPC = new HashSet<>(this.APC);
             //--------------------------
             // this tries to adjust LifeTime adaptively.
-            if (sim > 0.93)
+            if (sim > (1-Threshold*0.8))
             {
                 this.LifeTime *= 1.2;
                 return false;
             }
-            else if (sim < 0.905)
+            else if (sim < (1-Threshold*0.95))
             {
                 this.LifeTime *= 0.8;
             }
