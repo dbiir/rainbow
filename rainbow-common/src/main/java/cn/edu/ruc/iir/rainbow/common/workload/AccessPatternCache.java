@@ -66,7 +66,7 @@ public class AccessPatternCache
                 {
                     this.updateCounter = 0;
                     prevSize = this.APC.size();
-                    System.out.println(this.updateCounter + ", * " + this.prevSize);
+                    //System.out.println(this.updateCounter + ", * " + this.prevSize);
                     this.prevAPC = new HashSet<>(this.APC);
                     return true;
                 }
