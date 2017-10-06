@@ -42,7 +42,9 @@ SQL statements. The generated CREATE TABLE and LOAD DATA statements can be used 
 
 Rainbow does not need to be installed. It does not change anything except your CREATE TABLE statements.
 
-Follow the steps in [Rainbow CLI](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md) to use it.
+Follow the steps in [Rainbow CLI](https://github.com/dbiir/rainbow/blob/master/rainbow-cli/README.md) to use the command line interface of Rainbow.
+
+Or follow the steps in [Rainbow Web](https://github.com/dbiir/rainbow/blob/master/rainbow-web/README.md) to use the Web user interface of Rainbow.
 
 ## Contact us
 For feedback and questions, feel free to email us:
