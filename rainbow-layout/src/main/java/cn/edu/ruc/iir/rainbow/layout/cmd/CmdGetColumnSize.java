@@ -42,6 +42,7 @@ public class CmdGetColumnSize implements Command
      * this method will pass the following results to receiver:
      * <ol>
      *   <li>schema.file</li>
+     *   <li>num.row.group</li>
      *   <li>success, true or false</li>
      * </ol>
      * @param params
@@ -97,6 +98,7 @@ public class CmdGetColumnSize implements Command
                     writer.write(line.split("\t")[0] + "\t" +
                             line.split("\t")[1] + "\t" + avgSizes[i++] + "\n");
                 }
+                results.setProperty("num.row.group", String.valueOf(stat.getRowGroupCount()));
                 results.setProperty("success", "true");
             } catch (IOException e)
             {

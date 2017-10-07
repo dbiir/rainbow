@@ -49,12 +49,16 @@ public class CmdOrdering implements Command
      *   <li>seek.cost.function, should be one of linear, power, simulated, if it is not given, then power is applied</li>
      *   <li>seek.cost.file, if seek.cost.function is set to simulated, this param should be given</li>
      *   <li>computation.budget</li>
+     *   <li>row.group.size, in bytes, if algorithm.name is scoa.gs</li>
+     *   <li>num.row.group, if algorithm.name is scoa.gs</li>
      * </ol>
      *
      * this method will pass the following results to receiver:
      * <ol>
      *   <li>init.cost, in milliseconds</li>
      *   <li>final.cost, in milliseconds</li>
+     *   <li>row.group.size, in bytes</li>
+     *   <li>num.row.group</li>
      *   <li>ordered.schema.file</li>
      *   <li>success, true or false</li>
      * </ol>
@@ -110,8 +114,8 @@ public class CmdOrdering implements Command
             if (algo instanceof FastScoaGS)
             {
                 FastScoaGS gs = (FastScoaGS) algo;
-                gs.setNumRowGroups(Integer.parseInt(ConfigFactory.Instance().getProperty("node.row_group.num")));
-                gs.setRowGroupSize(Long.parseLong(ConfigFactory.Instance().getProperty("node.row_group.size")));
+                gs.setNumRowGroups(Integer.parseInt(params.getProperty("num.row.group")));
+                gs.setRowGroupSize(Long.parseLong(params.getProperty("row.group.size")));
                 gs.setNumMapSlots(Integer.parseInt(ConfigFactory.Instance().getProperty("node.map.slots")));
                 gs.setTotalMemory(Long.parseLong(ConfigFactory.Instance().getProperty("node.memory")));
                 gs.setTaskInitMs(Integer.parseInt(ConfigFactory.Instance().getProperty("node.task.init.ms")));
@@ -142,8 +146,9 @@ public class CmdOrdering implements Command
             if (algo instanceof FastScoaGS)
             {
                 FastScoaGS gs = (FastScoaGS) algo;
-                results.setProperty("final.cost", String.valueOf(gs.getBestState().getTotalOverhead()));
+                results.setProperty("final.cost", String.valueOf(gs.getCurrentOverhead()));
                 results.setProperty("row.group.size", String.valueOf(gs.getRowGroupSize()));
+                results.setProperty("num.row.group", String.valueOf(gs.getNumRowGroups()));
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderedFilePath+".gs")))
                 {
                     writer.write("row.group.size=" + results.getProperty("row.group.size"));
