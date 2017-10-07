@@ -18,7 +18,9 @@ public class TestCmdOrdering
         params.setProperty("workload.file", TestScoaGS.class.getResource("/workload.txt").getFile());
         params.setProperty("ordered.schema.file", TestScoaGS.class.getResource("/").getFile() + "ordered_schema.txt");
         params.setProperty("seek.cost.function", "power");
-        params.setProperty("computation.budget", "10");
+        params.setProperty("computation.budget", "200");
+        params.setProperty("num.row.group", "100");
+        params.setProperty("row.group.size", "134217728");
 
         Command command = new CmdOrdering();
         command.setReceiver(new Receiver()
@@ -38,6 +40,7 @@ public class TestCmdOrdering
                 System.out.println(results.getProperty("ordered.schema.file"));
                 System.out.println(results.getProperty("final.cost"));
                 System.out.println(results.getProperty("row.group.size"));
+                System.out.println(results.getProperty("num.row.group"));
                 System.out.println("\nFinish.");
             }
         });

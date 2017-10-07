@@ -27,14 +27,15 @@ public class TestScoaGS
         SeekCostFunction seekCostFunction = new PowerSeekCostFunction();
         //SimulatedSeekCostBuilder.build(new File("cord-generator/resources/seek_cost.txt"));
 
-        FastScoaGS fastScoa = (FastScoaGS) AlgorithmFactory.Instance().getAlgorithm("scoa.gs", 1000, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
+        FastScoaGS fastScoa = (FastScoaGS) AlgorithmFactory.Instance().getAlgorithm("scoa.gs", 200, new ArrayList<>(initColumnOrder), workload, seekCostFunction);
         fastScoa.setNumRowGroups(100);
         fastScoa.setRowGroupSize(1024l*1024l*128l);
         fastScoa.setNumMapSlots(4);
         fastScoa.setTotalMemory(1024l*1024l*1024l*8l);
         fastScoa.setTaskInitMs(10);
 
-        System.out.println("Init seek cost: " + fastScoa.getSchemaSeekCost() * 100);
+        System.out.println("Init seek cost: " + fastScoa.getSchemaSeekCost() * fastScoa.getNumRowGroups());
+        System.out.println("Init overhead: " + fastScoa.getSchemaOverhead());
         try
         {
             ExecutorContainer container = new ExecutorContainer(fastScoa, 1);
@@ -47,7 +48,7 @@ public class TestScoaGS
         }
 
         System.out.println("Final seek cost: " + (fastScoa.getCurrentWorkloadSeekCost() * fastScoa.getNumRowGroups()));
-        System.out.println("Final overhead: " + fastScoa.getBestState().getTotalOverhead());
+        System.out.println("Final overhead: " + fastScoa.getCurrentOverhead());
         System.out.println("Final number of row groups: " + fastScoa.getNumRowGroups());
         System.out.println("Final row group size： " + fastScoa.getRowGroupSize());
         ColumnOrderBuilder.saveAsSchemaFile(new File(TestScoaGS.class.getResource("/").getFile() + "scoa_ordered_schema.txt"), fastScoa.getColumnOrder());

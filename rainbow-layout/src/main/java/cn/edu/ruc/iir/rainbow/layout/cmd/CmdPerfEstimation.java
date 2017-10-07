@@ -37,6 +37,7 @@ public class CmdPerfEstimation implements Command
      * <ol>
      *   <li>schema.file</li>
      *   <li>workload.file</li>
+     *   <li>num.row.group</li>
      *   <li>seek.cost.function, should be one of linear, power, simulated, if it is not given, then power is applied</li>
      *   <li>seek.cost.file, if seek.cost.function is set to simulated, this param should be given</li>
      *   <li>log.file the local directory used to write evaluation results, must end with '/'</li>
@@ -112,7 +113,7 @@ public class CmdPerfEstimation implements Command
         }
 
         String logFile = params.getProperty("log.file");
-        int rowGroupNum = Integer.parseInt(ConfigFactory.Instance().getProperty("node.row_group.num"));
+        int rowGroupNum = Integer.parseInt(params.getProperty("num.row.group"));
         int taskInitMs = Integer.parseInt(ConfigFactory.Instance().getProperty("node.task.init.ms"));
         int numMapSlots = Integer.parseInt(ConfigFactory.Instance().getProperty("node.map.slots"));
         int diskBandwidth = Integer.parseInt(ConfigFactory.Instance().getProperty("node.disk.bandwidth"));

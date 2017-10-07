@@ -17,6 +17,7 @@ public class TestCmdPerfEstimation
         params.setProperty("workload.file", TestScoaGS.class.getResource("/workload.txt").getFile());
         params.setProperty("log.file", TestScoaGS.class.getResource("/").getFile() + "ordered_estimate_duration.csv");
         params.setProperty("seek.cost.function", "power");
+        params.setProperty("num.row.group", "13");
 
         Command command = new CmdPerfEstimation();
         command.setReceiver(new Receiver()
