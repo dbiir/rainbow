@@ -8,42 +8,51 @@ package cn.edu.ruc.iir.rainbow.web.hdfs.model;
  * @author: Tao
  * @date: Create in 2017-09-15 10:45
  **/
-public class Optimizer {
+public class Optimizer
+{
 
     private Integer columncorder;
     private Integer rowgroupsize;
     private String compression;
 
-    public Optimizer() {
+    public Optimizer()
+    {
     }
 
-    public Optimizer(Integer columncorder, Integer rowgroupsize, String compression) {
+    public Optimizer(Integer columncorder, Integer rowgroupsize, String compression)
+    {
         this.columncorder = columncorder;
         this.rowgroupsize = rowgroupsize;
         this.compression = compression;
     }
 
-    public Integer getColumncorder() {
+    public Integer getColumncorder()
+    {
         return columncorder;
     }
 
-    public void setColumncorder(Integer columncorder) {
+    public void setColumncorder(Integer columncorder)
+    {
         this.columncorder = columncorder;
     }
 
-    public Integer getRowgroupsize() {
+    public Integer getRowgroupsize()
+    {
         return rowgroupsize;
     }
 
-    public void setRowgroupsize(Integer rowgroupsize) {
+    public void setRowgroupsize(Integer rowgroupsize)
+    {
         this.rowgroupsize = rowgroupsize;
     }
 
-    public String getCompression() {
+    public String getCompression()
+    {
         return compression;
     }
 
-    public void setCompression(String compression) {
+    public void setCompression(String compression)
+    {
         this.compression = compression;
     }
 }

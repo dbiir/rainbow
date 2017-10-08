@@ -12,32 +12,39 @@ import java.util.List;
  * @author: Tao
  * @date: Create in 2017-09-17 10:37
  **/
-public class Process {
+public class Process
+{
 
     private String pipelineNo;
     private List<State> pipelineState = new ArrayList<>();
 
-    public Process() {
+    public Process()
+    {
     }
 
-    public Process(String pipelineNo, List<State> pipelineState) {
+    public Process(String pipelineNo, List<State> pipelineState)
+    {
         this.pipelineNo = pipelineNo;
         this.pipelineState = pipelineState;
     }
 
-    public String getPipelineNo() {
+    public String getPipelineNo()
+    {
         return pipelineNo;
     }
 
-    public void setPipelineNo(String pipelineNo) {
+    public void setPipelineNo(String pipelineNo)
+    {
         this.pipelineNo = pipelineNo;
     }
 
-    public List<State> getPipelineState() {
+    public List<State> getPipelineState()
+    {
         return pipelineState;
     }
 
-    public void setPipelineState(List<State> pipelineState) {
+    public void setPipelineState(List<State> pipelineState)
+    {
         this.pipelineState = pipelineState;
     }
 }

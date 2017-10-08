@@ -7,19 +7,22 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class DBUtils {
+public class DBUtils
+{
 
     private static Logger log = Logger.getLogger(DBUtils.class);
     private static DBUtils instance = null;
- 
+
     private static String DRIVER;
     private static String URL;
     private static String USERID;
     private static String USERPASSWORD;
     private static Connection conn = null;
 
-    private DBUtils() {
-        try {
+    private DBUtils()
+    {
+        try
+        {
             ConfigFactory config = ConfigFactory.Instance();
             DRIVER = config.getProperty("driver");
             URL = config.getProperty("url");
@@ -28,63 +31,79 @@ public class DBUtils {
 
             Class.forName(DRIVER);
             conn = DriverManager.getConnection(URL, USERID, USERPASSWORD);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public static DBUtils Instance() {
-        if (instance == null) {
+    public static DBUtils Instance()
+    {
+        if (instance == null)
+        {
             instance = new DBUtils();
         }
         return instance;
     }
 
-    public static void close(ResultSet rs, Statement st, Connection conn) {
-        try {
+    public static void close(ResultSet rs, Statement st, Connection conn)
+    {
+        try
+        {
             if (rs != null)
                 rs.close();
             if (st != null)
                 st.close();
             if (conn != null)
                 conn.close();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public static void close(Statement st, Connection conn) {
-        try {
+    public static void close(Statement st, Connection conn)
+    {
+        try
+        {
             if (st != null)
                 st.close();
             if (conn != null)
                 conn.close();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public static ResultSet Select(String SQL) {
+    public static ResultSet Select(String SQL)
+    {
         Statement statement = null;
         ResultSet rs = null;
-        try {
+        try
+        {
             statement = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             rs = statement.executeQuery(SQL);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("Select from sql server error! errmsg:{}", e);
         }
         return rs;
     }
 
-    public static void Execute(String SQL) {
+    public static void Execute(String SQL)
+    {
         Statement statement = null;
-        try {
+        try
+        {
             statement = conn.createStatement();
             statement.execute(SQL);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("Execute sql error! errmsg:{}", e);
-        } finally {
+        } finally
+        {
             close(statement, conn);
         }
     }

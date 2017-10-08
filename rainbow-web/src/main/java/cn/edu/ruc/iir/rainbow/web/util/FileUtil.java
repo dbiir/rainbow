@@ -3,21 +3,25 @@ package cn.edu.ruc.iir.rainbow.web.util;
 import java.io.*;
 import java.util.Date;
 
-public class FileUtil {
+public class FileUtil
+{
     /**
      * @param file
      * @return String
      * @Title: readFile
      * @Description: 文件的读和写
      */
-    public static String readFile(File file) {
-        if (!file.exists()) {
+    public static String readFile(File file)
+    {
+        if (!file.exists())
+        {
             return "";
         }
         FileInputStream fileInputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
-        try {
+        try
+        {
             // 获取磁盘的文件
             // File file = new File(fileName);
             // 开始读取磁盘的文件
@@ -28,19 +32,24 @@ public class FileUtil {
             bufferedReader = new BufferedReader(inputStreamReader);
             StringBuffer buffer = new StringBuffer();
             String string = null;
-            while ((string = bufferedReader.readLine()) != null) {
+            while ((string = bufferedReader.readLine()) != null)
+            {
                 buffer.append(string + "\n");
             }
             return buffer.toString();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
             return null;
-        } finally {
-            try {
+        } finally
+        {
+            try
+            {
                 bufferedReader.close();
                 inputStreamReader.close();
                 fileInputStream.close();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -52,27 +61,35 @@ public class FileUtil {
      * @Title: readFile
      * @Description:方法的重载
      */
-    public static String readFile(String fileName) {
+    public static String readFile(String fileName)
+    {
         return readFile(new File(fileName));
     }
 
     public static void writeFile(String content, String filename)
-            throws IOException {
+            throws IOException
+    {
         // 要写入的文件
         File file = new File(filename);
         // 写入流对象
         PrintWriter printWriter = null;
-        try {
+        try
+        {
             printWriter = new PrintWriter(file);
             printWriter.print(content);
             printWriter.flush();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
-            if (printWriter != null) {
-                try {
+        } finally
+        {
+            if (printWriter != null)
+            {
+                try
+                {
                     printWriter.close();
-                } catch (Exception e2) {
+                } catch (Exception e2)
+                {
                     e2.printStackTrace();
                 }
             }
@@ -81,22 +98,29 @@ public class FileUtil {
 
 
     public static void writeFile(String content, String filename, boolean flag)
-            throws IOException {
+            throws IOException
+    {
         File file = new File(filename);
         FileWriter fw = new FileWriter(file, flag);
         // 写入流对象
         PrintWriter printWriter = null;
-        try {
+        try
+        {
             printWriter = new PrintWriter(fw);
             printWriter.print(content);
             printWriter.flush();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
-            if (printWriter != null) {
-                try {
+        } finally
+        {
+            if (printWriter != null)
+            {
+                try
+                {
                     printWriter.close();
-                } catch (Exception e2) {
+                } catch (Exception e2)
+                {
                     e2.printStackTrace();
                 }
             }
@@ -104,30 +128,39 @@ public class FileUtil {
     }
 
     public static void appendFile(String content, String filename)
-            throws IOException {
+            throws IOException
+    {
         boolean flag = false;
         // 要写入的文件
         File file = new File(filename);
-        if (file.exists()) {
+        if (file.exists())
+        {
             flag = true;
         }
         FileWriter fw = new FileWriter(file, true);
         // 写入流对象
         PrintWriter printWriter = null;
-        try {
+        try
+        {
             printWriter = new PrintWriter(fw);
-            if (flag) {
+            if (flag)
+            {
                 printWriter.print("\r\n");
             }
             printWriter.print(content);
             printWriter.flush();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
-            if (printWriter != null) {
-                try {
+        } finally
+        {
+            if (printWriter != null)
+            {
+                try
+                {
                     printWriter.close();
-                } catch (Exception e2) {
+                } catch (Exception e2)
+                {
                     e2.printStackTrace();
                 }
             }
@@ -140,13 +173,15 @@ public class FileUtil {
      * @Title: main
      * @Description: 入口函数
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException
+    {
         String aCashe = new Date().toString();
         FileUtil fileUtil = new FileUtil();
         fileUtil.write(aCashe);
     }
 
-    private void write(String aCashe) throws IOException {
+    private void write(String aCashe) throws IOException
+    {
         File file = new File(this.getClass().getClassLoader()
                 .getResource(("cashe/cashe.txt")).getFile());
         String filename = file.getAbsolutePath();
@@ -157,7 +192,8 @@ public class FileUtil {
         FileUtil.appendFile(aCashe, filename);
     }
 
-    private static void FileFunc() throws IOException {
+    private static void FileFunc() throws IOException
+    {
         // 公式：内容+模板=文件
         String pack = "com.hh.server";
         String model = "server";
@@ -174,7 +210,8 @@ public class FileUtil {
         String filePath = rootPath + "src/" + path;
         System.out.println("3. " + filePath);
         File rootFile = new File(filePath);
-        if (!rootFile.exists()) {
+        if (!rootFile.exists())
+        {
             rootFile.mkdirs();
         }
         String fileName = filePath + "/" + model + ".java";
@@ -182,20 +219,24 @@ public class FileUtil {
         writeFile(templateContent, fileName);
     }
 
-    public static void delDirectory(String path) {
+    public static void delDirectory(String path)
+    {
         File f = new File(path);
         delDirectory(f);
     }
 
-    public static void delDirectory(File path) {
+    public static void delDirectory(File path)
+    {
         if (!path.exists())
             return;
-        if (path.isFile()) {
+        if (path.isFile())
+        {
             path.delete();
             return;
         }
         File[] files = path.listFiles();
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++)
+        {
             delDirectory(files[i]);
         }
         path.delete();

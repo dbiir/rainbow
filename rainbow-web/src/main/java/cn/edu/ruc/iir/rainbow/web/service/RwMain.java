@@ -36,16 +36,20 @@ import java.util.UUID;
  * @author: Tao
  * @date: Create in 2017-09-12 23:17
  **/
-public class RwMain {
+public class RwMain
+{
 
     private static RwMain instance = null;
 
-    private RwMain() {
+    private RwMain()
+    {
 
     }
 
-    public static RwMain Instance() {
-        if (instance == null) {
+    public static RwMain Instance()
+    {
+        if (instance == null)
+        {
             instance = new RwMain();
         }
         return instance;
@@ -54,7 +58,8 @@ public class RwMain {
     /**
      * Pipeline Create
      */
-    public void schemaUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void schemaUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         UploadHandleServlet uploadHandler = new UploadHandleServlet();
         List<String> names = uploadHandler.upload(request, response);
         Pipeline pipeline = new Pipeline(names);
@@ -65,7 +70,8 @@ public class RwMain {
         t2.start();
     }
 
-    public void processLayout(Pipeline pipeline, String state) {
+    public void processLayout(Pipeline pipeline, String state)
+    {
         // add state
         String time = DateUtil.formatTime(new Date());
         savePipelineState(pipeline, state, time);
@@ -73,28 +79,34 @@ public class RwMain {
         Layout l = new Layout(pipeline, state, time);
         layouts.add(l);
         String aJson = JSONArray.toJSONString(layouts);
-        try {
+        try
+        {
             FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/layout.txt");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    private List<Layout> getLayoutInfo(Pipeline pipeline) {
+    private List<Layout> getLayoutInfo(Pipeline pipeline)
+    {
         List<Layout> l = new ArrayList<Layout>(); // Layout lists
         String aJson = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/layout.txt");
-        if (!aJson.equals("")) {
+        if (!aJson.equals(""))
+        {
             l = JSON.parseArray(aJson,
                     Layout.class);
         }
         return l;
     }
 
-    private void processPipeline(Pipeline pipeline) {
+    private void processPipeline(Pipeline pipeline)
+    {
         SysConfig.PipelineList.add(pipeline);
         String aJson = JSONArray.toJSONString(SysConfig.PipelineList);
         // write to local
-        try {
+        try
+        {
             FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/cashe.txt");
 //            HdfsUtil hdfsUtil = HdfsUtil.getHdfsUtil();
             // write to hdfs
@@ -108,31 +120,38 @@ public class RwMain {
             savePipelineState(pipeline, SysConfig.PipelineState[1]);
             changeState(pipeline.getNo(), 1);
 //            loadDataByPipeline(pipeline);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void loadDataByPipeline(Pipeline pipeline) {
+    public void loadDataByPipeline(Pipeline pipeline)
+    {
         DataSourceFactory dsf = DataSourceFactory.Instance();
-        try {
+        try
+        {
             DataSource ds = dsf.getDataSource(pipeline.getDataSource());
             ds.loadData(pipeline);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
-        } catch (DataSourceException e) {
+        } catch (DataSourceException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public String getDataUrl() {
+    public String getDataUrl()
+    {
         return ConfigFactory.Instance().getProperty("datasource");
     }
 
     /**
      * Pipeline List
      */
-    public String getPipelineData() {
+    public String getPipelineData()
+    {
         String aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/cashe.txt");
         if (aJson.length() > 0)
             SysConfig.PipelineList = JSON.parseArray(aJson,
@@ -140,49 +159,62 @@ public class RwMain {
         return JSON.toJSONString(SysConfig.PipelineList);
     }
 
-    private void savePipelineState(Pipeline pipeline, String state) {
+    private void savePipelineState(Pipeline pipeline, String state)
+    {
         String time = DateUtil.formatTime(new Date());
         State s = new State(time, state);
         Process p = searchProcessByPno(pipeline.getNo());
-        if (p != null) {
+        if (p != null)
+        {
             p.getPipelineState().add(s);
-        } else {
+        } else
+        {
             List<State> PipelineState = new ArrayList<>();
             PipelineState.add(s);
             p = new Process(pipeline.getNo(), PipelineState);
         }
         SysConfig.ProcessList.add(p);
         String processListJson = JSONArray.toJSONString(SysConfig.ProcessList);
-        try {
+        try
+        {
             FileUtil.writeFile(processListJson, SysConfig.Catalog_Project + "cashe/process.txt");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    private void savePipelineState(Pipeline pipeline, String state, String time) {
+    private void savePipelineState(Pipeline pipeline, String state, String time)
+    {
         State s = new State(time, state);
         Process p = searchProcessByPno(pipeline.getNo());
-        if (p != null) {
+        if (p != null)
+        {
             p.getPipelineState().add(s);
-        } else {
+        } else
+        {
             List<State> PipelineState = new ArrayList<>();
             PipelineState.add(s);
             p = new Process(pipeline.getNo(), PipelineState);
         }
         SysConfig.ProcessList.add(p);
         String processListJson = JSONArray.toJSONString(SysConfig.ProcessList);
-        try {
+        try
+        {
             FileUtil.writeFile(processListJson, SysConfig.Catalog_Project + "cashe/process.txt");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void delete(String no) {
+    public void delete(String no)
+    {
         int i = 0;
-        for (Pipeline p : SysConfig.PipelineList) {
-            if (p.getNo().equals(no)) {
+        for (Pipeline p : SysConfig.PipelineList)
+        {
+            if (p.getNo().equals(no))
+            {
                 SysConfig.PipelineList.remove(i);
                 break;
             }
@@ -194,18 +226,24 @@ public class RwMain {
         t.start();
     }
 
-    private void updatePipelineList() {
+    private void updatePipelineList()
+    {
         String aJson = JSONArray.toJSONString(SysConfig.PipelineList);
-        try {
+        try
+        {
             FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/cashe.txt");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void stop(String no) {
-        for (Pipeline p : SysConfig.PipelineList) {
-            if (p.getNo().equals(no)) {
+    public void stop(String no)
+    {
+        for (Pipeline p : SysConfig.PipelineList)
+        {
+            if (p.getNo().equals(no))
+            {
                 p.setState(2);
                 break;
             }
@@ -213,10 +251,13 @@ public class RwMain {
         updatePipelineList();
     }
 
-    public Process searchProcessByPno(String pno) {
+    public Process searchProcessByPno(String pno)
+    {
         Process p1 = null;
-        for (Process p : SysConfig.ProcessList) {
-            if (p.getPipelineNo().equals(pno)) {
+        for (Process p : SysConfig.ProcessList)
+        {
+            if (p.getPipelineNo().equals(pno))
+            {
                 p1 = p;
                 break;
             }
@@ -224,12 +265,16 @@ public class RwMain {
         return p1;
     }
 
-    public Pipeline getPipelineByNo(String no, int state) {
+    public Pipeline getPipelineByNo(String no, int state)
+    {
         Pipeline pipeline = new Pipeline();
-        for (Pipeline p : SysConfig.PipelineList) {
-            if (p.getNo().equals(no)) {
+        for (Pipeline p : SysConfig.PipelineList)
+        {
+            if (p.getNo().equals(no))
+            {
                 pipeline = p;
-                if (state != 0) {
+                if (state != 0)
+                {
                     p.setState(state);
                 }
                 break;
@@ -238,7 +283,8 @@ public class RwMain {
         return pipeline;
     }
 
-    public void beginSampling(Pipeline pipeline) {
+    public void beginSampling(Pipeline pipeline)
+    {
         savePipelineState(pipeline, SysConfig.PipelineState[2]);
         // copy mini batch (thread, sampling) in evaluating cluster
         getSampling(pipeline, true);
@@ -247,7 +293,8 @@ public class RwMain {
     /**
      * Sampling
      */
-    public void startSampling(String arg) {
+    public void startSampling(String arg)
+    {
         Pipeline pipeline = getPipelineByNo(arg, 1);
         savePipelineState(pipeline, SysConfig.PipelineState[2]);
         // copy mini batch (thread, sampling) in evaluating cluster
@@ -256,19 +303,25 @@ public class RwMain {
     }
 
     // default: sampling size <= list[i] size
-    public void getSampling(Pipeline pipeline, boolean sample) {
+    public void getSampling(Pipeline pipeline, boolean sample)
+    {
         DataSourceFactory dsf = DataSourceFactory.Instance();
-        try {
+        try
+        {
             DataSource ds = dsf.getDataSource(pipeline.getDataSource());
-            if (sample && ds.getSampling(pipeline)) {
+            if (sample && ds.getSampling(pipeline))
+            {
                 ds.loadDataToExamination(pipeline, false);
                 savePipelineState(pipeline, SysConfig.PipelineState[3]);
-            } else {
+            } else
+            {
                 ds.loadDataToExamination(pipeline, true);
             }
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
-        } catch (DataSourceException e) {
+        } catch (DataSourceException e)
+        {
             e.printStackTrace();
         }
     }
@@ -276,50 +329,62 @@ public class RwMain {
     /**
      * Workload Upload
      */
-    public void queryUpload(String arg, String pno) {
+    public void queryUpload(String arg, String pno)
+    {
         String realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + pno + "/" + "\\workload.txt";
         String line = UUID.randomUUID() + "\t1\t" + arg + "\r\n";
-        try {
+        try
+        {
             FileUtil.writeFile(line, realSavePath, true);
             Thread t = new Thread(() -> changeState(pno, 1));
             t.start();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public String clientUpload(String arg, String pno, String id, String weight) {
+    public String clientUpload(String arg, String pno, String id, String weight)
+    {
         String res = "";
         String realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + pno + "/" + "\\workload.txt";
         String line = id + "\t" + weight + "\t" + arg + "\r\n";
-        try {
+        try
+        {
             FileUtil.writeFile(line, realSavePath, true);
             res = "{\"Res\":\"OK\"}";
             Thread t = new Thread(() -> changeState(pno, 1));
             t.start();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             res = "{\"Res\":\"Error\"}";
             e.printStackTrace();
         }
         return res;
     }
 
-    private void changeState(String pno, int state) {
-        for (Pipeline p : SysConfig.PipelineList) {
-            if (p.getNo().equals(pno)) {
+    private void changeState(String pno, int state)
+    {
+        for (Pipeline p : SysConfig.PipelineList)
+        {
+            if (p.getNo().equals(pno))
+            {
                 p.setState(state);
                 break;
             }
         }
         String aJson = JSONArray.toJSONString(SysConfig.PipelineList);
-        try {
+        try
+        {
             FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/cashe.txt");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void workloadUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void workloadUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         UploadHandleServlet uploadHandler = new UploadHandleServlet();
         List<String> names = uploadHandler.upload(request, response);
         Pipeline pipeline = getPipelineByNo(names.get(1), 0);
@@ -328,31 +393,39 @@ public class RwMain {
         t.start();
     }
 
-    public void getEstimation(Pipeline pipeline, boolean ordered) {
+    public void getEstimation(Pipeline pipeline, boolean ordered)
+    {
         // PerfEstimation
         CmdReceiver instance = CmdReceiver.getInstance(pipeline);
         instance.generateEstimation(ordered);
-        if (ordered) {
+        if (ordered)
+        {
             pipeline = updatePipelineByGs(pipeline);
             processLayout(pipeline, SysConfig.PipelineState[7]);
-        } else {
+        } else
+        {
             savePipelineState(pipeline, SysConfig.PipelineState[5]);
             beginOptimizing(pipeline);
         }
     }
 
-    private Pipeline updatePipelineByGs(Pipeline p) {
+    private Pipeline updatePipelineByGs(Pipeline p)
+    {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + p.getNo() + "/schema_ordered.txt.gs";
         p.setColumnOrder(1);
         File f = new File(filePath);
-        if (!f.exists()) {
+        if (!f.exists())
+        {
 
-        } else {
-            try (BufferedReader reader = InputFactory.Instance().getReader(filePath)) {
+        } else
+        {
+            try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+            {
                 String line = reader.readLine();
                 String[] splits = line.split("=");  //  row.group.size=1073741824
                 p.setRowGroupSize((int) (Double.valueOf(splits[1]) / SysSettings.MB));
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -362,20 +435,23 @@ public class RwMain {
     /**
      * Layout Strategy
      */
-    public void optimization(String arg) {
+    public void optimization(String arg)
+    {
         Pipeline pipeline = getPipelineByNo(arg, 1);
         savePipelineState(pipeline, SysConfig.PipelineState[6]);
         Thread t = new Thread(() -> getOptimization(pipeline));
         t.start();
     }
 
-    public void beginOptimizing(Pipeline pipeline) {
+    public void beginOptimizing(Pipeline pipeline)
+    {
         savePipelineState(pipeline, SysConfig.PipelineState[6]);
         Thread t = new Thread(() -> getOptimization(pipeline));
         t.start();
     }
 
-    public void accept(String arg) {
+    public void accept(String arg)
+    {
         Pipeline pipeline = getPipelineByNo(arg, 3);
         pipeline = updatePipelineByGs(pipeline);
         // Accept Optimization (change the state)
@@ -384,7 +460,8 @@ public class RwMain {
         t.start();
     }
 
-    public void getOptimization(Pipeline pipeline) {
+    public void getOptimization(Pipeline pipeline)
+    {
         // GET_COLUMN_SIZE, ORDERING
         CmdReceiver instance = CmdReceiver.getInstance(pipeline);
         instance.getColumnSize();
@@ -400,20 +477,24 @@ public class RwMain {
         t1.start();
     }
 
-    public String getOrdered(String arg) {
+    public String getOrdered(String arg)
+    {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + arg + "/ordered.txt";
         File f = new File(filePath);
-        if (!f.exists()) {
+        if (!f.exists())
+        {
             return "";
         }
         String msg = FileUtil.readFile(filePath);
         return msg;
     }
 
-    public String getEstimate_Sta(String arg) {
+    public String getEstimate_Sta(String arg)
+    {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + arg + "/estimate_duration.csv";
         File f = new File(filePath);
-        if (!f.exists()) {
+        if (!f.exists())
+        {
             return "[]";
         }
         List<Statistic> list = new ArrayList<Statistic>();
@@ -421,38 +502,45 @@ public class RwMain {
         list.add(s1);
         filePath = SysConfig.Catalog_Project + "pipeline/" + arg + "/estimate_duration_ordered.csv";
         f = new File(filePath);
-        if (f.exists()) {
+        if (f.exists())
+        {
             Statistic s2 = getStatisticByFilePath(filePath, "Optimized");
             list.add(s2);
         }
         return JSON.toJSONString(list);
     }
 
-    private Statistic getStatisticByFilePath(String filePath, String name) {
+    private Statistic getStatisticByFilePath(String filePath, String name)
+    {
         DecimalFormat df = new DecimalFormat("######0.00");
         Statistic s1 = null;
-        try (BufferedReader reader = InputFactory.Instance().getReader(filePath)) {
+        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+        {
             String line = reader.readLine();
             String[] splits;
             int i = 0;
             List<double[]> li1 = new ArrayList<double[]>();
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null)
+            {
                 splits = line.split(",");
                 double[] s = {Double.valueOf(i), Double.valueOf(df.format(Double.valueOf(splits[1]) / 1000))};
                 li1.add(s);
                 i++;
             }
             s1 = new Statistic(name, li1);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return s1;
     }
 
-    public String getLayout(String arg) {
+    public String getLayout(String arg)
+    {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + arg + "/layout.txt";
         File f = new File(filePath);
-        if (!f.exists()) {
+        if (!f.exists())
+        {
             return "[]";
         }
         String aJson = FileUtil.readFile(filePath);
@@ -463,7 +551,8 @@ public class RwMain {
     /**
      * Evaluation
      */
-    public void startEvaluation(String arg) {
+    public void startEvaluation(String arg)
+    {
         Pipeline pipeline = getPipelineByNo(arg, 1);
         savePipelineState(pipeline, SysConfig.PipelineState[8]);
         // Evaluate (rainbow-evaluate)
@@ -471,39 +560,47 @@ public class RwMain {
         t.start();
     }
 
-    public void getEvaluation(Pipeline pipeline) {
+    public void getEvaluation(Pipeline pipeline)
+    {
         CmdReceiver instance = CmdReceiver.getInstance(pipeline);
         // ordered
         instance.WorkloadVectorEvaluation();
         savePipelineState(pipeline, SysConfig.PipelineState[9]);
     }
 
-    public String getStatistic(String arg) {
+    public String getStatistic(String arg)
+    {
         DecimalFormat df = new DecimalFormat("######0.00");
         String method = ConfigFactory.Instance().getProperty("evaluation.method");
         String filePath = SysConfig.Catalog_Project + "pipeline/" + arg + "/";
         if (method.equals("SPARK2"))
             filePath += "spark_duration.csv";
-        else {
+        else
+        {
             filePath += "presto_duration.csv";
         }
         File f = new File(filePath);
-        if (!f.exists()) {
+        if (!f.exists())
+        {
             return "[]";
         }
         List<Statistic> list = new ArrayList<Statistic>();
-        try (BufferedReader reader = InputFactory.Instance().getReader(filePath)) {
+        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+        {
             String line = reader.readLine();
             String[] splits;
             int i = 0;
             List<double[]> li1 = new ArrayList<double[]>();
             List<double[]> li2 = new ArrayList<double[]>();
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null)
+            {
                 splits = line.split(",");
-                if (splits.length == 2) {
+                if (splits.length == 2)
+                {
                     double[] s = {Double.valueOf(i), Double.valueOf(splits[1])};
                     li1.add(s);
-                } else {
+                } else
+                {
                     double[] s = {Double.valueOf(i), Double.valueOf(df.format(Double.valueOf(splits[1]) / 1000))};
                     double[] s1 = {Double.valueOf(i), Double.valueOf(df.format(Double.valueOf(splits[2]) / 1000))};
                     li1.add(s);
@@ -514,34 +611,42 @@ public class RwMain {
             Statistic s1, s2;
             s1 = new Statistic("Current", li1);
             list.add(s1);
-            if (li2.size() > 0) {
+            if (li2.size() > 0)
+            {
                 s2 = new Statistic("Optimized", li2);
                 list.add(s2);
-            } else {
+            } else
+            {
 
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return JSON.toJSONString(list);
     }
 
-    public String getQueryByRowID(int rowID, String pno) {
+    public String getQueryByRowID(int rowID, String pno)
+    {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + pno + "/workload.txt";
         String query = null;
-        try (BufferedReader reader = InputFactory.Instance().getReader(filePath)) {
+        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+        {
             String line = reader.readLine();
             String[] splits;
             int i = 0;
-            while ((line = reader.readLine()) != null) {
-                if (i == rowID) {
+            while ((line = reader.readLine()) != null)
+            {
+                if (i == rowID)
+                {
                     splits = line.split("\t");
                     query = splits[2];
                     break;
                 }
                 i++;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return query;
@@ -550,7 +655,8 @@ public class RwMain {
     /**
      * Pipeline Process Timeline
      */
-    public String getProcessState(String arg) {
+    public String getProcessState(String arg)
+    {
         String aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/process.txt");
         SysConfig.ProcessList = JSON.parseArray(aJson, Process.class);
         return JSON.toJSONString(SysConfig.ProcessList);
@@ -559,12 +665,14 @@ public class RwMain {
     /**
      * Pipeline Process Detail
      */
-    public String getPipelineDetail(String pno, String time, String desc) {
+    public String getPipelineDetail(String pno, String time, String desc)
+    {
         Pipeline p = getPipelineByNo(pno, 0);
         String filePath = SysConfig.Catalog_Project + "pipeline/" + pno + "/layout.txt";
         String aJson = FileUtil.readFile(filePath);
         List<Layout> l = new ArrayList<Layout>(); // Layout lists
-        if (aJson.length() > 0) {
+        if (aJson.length() > 0)
+        {
             l = JSON.parseArray(aJson,
                     Layout.class);
         }

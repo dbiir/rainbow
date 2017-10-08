@@ -11,39 +11,47 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.IOException;
 
-public class InitDataListener implements ServletContextListener {
+public class InitDataListener implements ServletContextListener
+{
 
     private static Logger log = LoggerFactory.getLogger(InitServiceI.class);
 
     private static ApplicationContext ctx = null;
 
-    public InitDataListener() {
+    public InitDataListener()
+    {
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent evt) {
+    public void contextDestroyed(ServletContextEvent evt)
+    {
         HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
-        try {
+        try
+        {
             hUtil.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         log.debug("Close the Rainbow-web");
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent evt) {
+    public void contextInitialized(ServletContextEvent evt)
+    {
         log.debug("Load data");
         ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
         InitServiceI initService = (InitServiceI) ctx
                 .getBean("demoInitService");
-        try {
+        try
+        {
             initService.init();
             // File file = new File(this.getClass().getClassLoader()
             // .getResource(("applicationContext.xml")).getFile());
             // SysConfig.Catalog_Project = file.getAbsolutePath().replace(
             // "applicationContext.xml", "");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }

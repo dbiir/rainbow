@@ -6,17 +6,20 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RwServer {
+public class RwServer
+{
 
     private static Logger log = LoggerFactory.getLogger(RwServer.class);
     private Server server;
     private static int port = 8080;
 
-    public void setPort(int port) {
+    public void setPort(int port)
+    {
         this.port = port;
     }
 
-    public void start() throws Exception {
+    public void start() throws Exception
+    {
         String relativelyPath = System.getProperty("user.dir");
 
         server = new Server(port);
@@ -32,7 +35,8 @@ public class RwServer {
         server.start();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception
+    {
         RwServer rwServer = new RwServer();
         rwServer.start();
     }

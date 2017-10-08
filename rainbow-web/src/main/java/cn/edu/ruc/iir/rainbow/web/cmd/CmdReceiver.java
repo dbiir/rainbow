@@ -24,73 +24,89 @@ import java.util.Properties;
  * @author: Tao
  * @date: Create in 2017-09-15 18:45
  **/
-public class CmdReceiver {
+public class CmdReceiver
+{
 
     private static CmdReceiver instance = new CmdReceiver();
     private Pipeline pipeline;
     private String targetPath;
 
-    public static CmdReceiver getInstance(Pipeline pipeline) {
+    public static CmdReceiver getInstance(Pipeline pipeline)
+    {
         instance.pipeline = pipeline;
         instance.targetPath = SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo();
         return instance;
     }
 
-    public void generateDDL(boolean ordered) {
+    public void generateDDL(boolean ordered)
+    {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_DDL);
         Properties params = new Properties();
         params.setProperty("file.format", pipeline.getFormat().toUpperCase());
-        if (!ordered) {
+        if (!ordered)
+        {
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo());
             params.setProperty("schema.file", targetPath + "/schema.txt");
             params.setProperty("ddl.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ddl.sql");
-        } else {
+        } else
+        {
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
             params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
             params.setProperty("ddl.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ordered_ddl.sql");
         }
-        try {
+        try
+        {
             invoker.executeCommands(params);
-            if (!ordered) {
+            if (!ordered)
+            {
                 params.setProperty("file.format", "TEXT");
                 params.setProperty("table.name", pipeline.getNo());
                 params.setProperty("ddl.file", targetPath + "/" + "text_ddl.sql");
                 invoker.executeCommands(params);
             }
-        } catch (InvokerException e) {
+        } catch (InvokerException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void generateLoad(boolean ordered) {
+    public void generateLoad(boolean ordered)
+    {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_LOAD);
         Properties params = new Properties();
         params.setProperty("overwrite", "true");
-        if (!ordered) {
+        if (!ordered)
+        {
             params.setProperty("schema.file", targetPath + "/schema.txt");
             params.setProperty("load.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_load.sql");
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo());
-        } else {
+        } else
+        {
             params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
             params.setProperty("load.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ordered_load.sql");
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
         }
-        try {
+        try
+        {
             invoker.executeCommands(params);
-        } catch (InvokerException e) {
+        } catch (InvokerException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void getColumnSize() {
+    public void getColumnSize()
+    {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GET_COLUMN_SIZE);
         Properties params = new Properties();
         params.setProperty("file.format", pipeline.getFormat().toUpperCase());
         params.setProperty("schema.file", targetPath + "/schema.txt");
         params.setProperty("hdfs.table.path", SysConfig.Catalog_Sampling + pipeline.getNo() + "/origin");
-        try {
+        try
+        {
             invoker.executeCommands(params);
-        } catch (InvokerException e) {
+        } catch (InvokerException e)
+        {
             e.printStackTrace();
         }
     }
@@ -110,7 +126,8 @@ public class CmdReceiver {
 //            e.printStackTrace();
 //        }
 //    }
-    public void ordering() {
+    public void ordering()
+    {
         Properties params = new Properties();
         params.setProperty("algorithm.name", "scoa.gs");
         params.setProperty("schema.file", targetPath + "/schema.txt");
@@ -121,19 +138,24 @@ public class CmdReceiver {
 
         String filePath = targetPath + "/ordered.txt";
         Command command = new CmdOrdering();
-        command.setReceiver(new Receiver() {
+        command.setReceiver(new Receiver()
+        {
             @Override
-            public void progress(double percentage) {
+            public void progress(double percentage)
+            {
                 String msg = "Layout Calculation : " + ((int) (percentage * 10000) / 100.0) + " %    ";
-                try {
+                try
+                {
                     FileUtil.writeFile(msg, filePath);
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void action(Properties results) {
+            public void action(Properties results)
+            {
                 System.out.println("Finish.");
             }
         });
@@ -141,7 +163,8 @@ public class CmdReceiver {
         command.execute(params);
     }
 
-    public void generateEstimation(boolean ordered) {
+    public void generateEstimation(boolean ordered)
+    {
 //        Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.PERFESTIMATION);
 //        Properties params = new Properties();
 //        params.setProperty("workload.file", targetPath + "/workload.txt");
@@ -159,24 +182,31 @@ public class CmdReceiver {
 //            e.printStackTrace();
 //        }
         String estimate;
-        if (!ordered) {
+        if (!ordered)
+        {
             estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration.csv");
-            try {
+            try
+            {
                 FileUtil.writeFile(estimate, targetPath + "/estimate_duration.csv");
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
-        } else {
+        } else
+        {
             estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration_ordered.csv");
-            try {
+            try
+            {
                 FileUtil.writeFile(estimate, targetPath + "/estimate_duration_ordered.csv");
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public void WorkloadVectorEvaluation() {
+    public void WorkloadVectorEvaluation()
+    {
 //        Properties params = new Properties();
 //        String method = ConfigFactory.Instance().getProperty("evaluation.method");
 //        params.setProperty("method", method);
@@ -194,22 +224,27 @@ public class CmdReceiver {
 //        }
         int num = 0;
         String filePath = SysConfig.Catalog_Project + "presto_duration.csv";
-        try (BufferedReader reader = InputFactory.Instance().getReader(filePath)) {
+        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+        {
             String line = reader.readLine();
             StringBuffer sb = new StringBuffer(line + "\n");
             FileUtil.writeFile(line, targetPath + "/presto_duration.csv");
             String s[];
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null)
+            {
                 s = line.split(",");
                 sb.append(line + "\n");
                 FileUtil.writeFile(sb.toString(), targetPath + "/presto_duration.csv");
-                try {
+                try
+                {
                     Thread.sleep((Long.parseLong(s[1]) + Long.parseLong(s[2])) / 20);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e)
+                {
                     e.printStackTrace();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }

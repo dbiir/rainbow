@@ -11,22 +11,27 @@ import cn.edu.ruc.iir.rainbow.web.service.RwMain;
  * @author: Tao
  * @date: Create in 2017-09-19 16:35
  **/
-public class DataSource {
+public class DataSource
+{
     private RwMain rwMain;
     private String sourceUrl;
     private String storePath;
 
-    public DataSource() {
+    public DataSource()
+    {
     }
 
 
-    public boolean getSampling(Pipeline pipeline) {
+    public boolean getSampling(Pipeline pipeline)
+    {
         return true;
     }
 
-    public void loadData(Pipeline pipeline) {
+    public void loadData(Pipeline pipeline)
+    {
     }
 
-    public void loadDataToExamination(Pipeline pipeline, boolean ordered) {
+    public void loadDataToExamination(Pipeline pipeline, boolean ordered)
+    {
     }
 }

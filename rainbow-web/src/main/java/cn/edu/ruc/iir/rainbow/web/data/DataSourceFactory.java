@@ -13,17 +13,21 @@ import org.apache.commons.logging.Log;
  * @author: Tao
  * @date: Create in 2017-09-19 16:59
  **/
-public class DataSourceFactory {
+public class DataSourceFactory
+{
 
 
     private static DataSourceFactory instance = null;
 
-    private DataSourceFactory() {
+    private DataSourceFactory()
+    {
 
     }
 
-    public static DataSourceFactory Instance() {
-        if (instance == null) {
+    public static DataSourceFactory Instance()
+    {
+        if (instance == null)
+        {
             instance = new DataSourceFactory();
         }
         return instance;
@@ -31,13 +35,16 @@ public class DataSourceFactory {
 
     private Log log = LogFactory.Instance().getLog();
 
-    public DataSource getDataSource(String dataName) throws ClassNotFoundException, DataSourceException {
+    public DataSource getDataSource(String dataName) throws ClassNotFoundException, DataSourceException
+    {
         String className = ConfigFactory.Instance().getProperty(dataName);
         Class<?> dataClass = Class.forName(className);
         DataSource dataSource = null;
-        try {
+        try
+        {
             dataSource = (DataSource) dataClass.newInstance();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("data construction error: ", e);
             throw new DataSourceException("data class does not have a non-param constructor.");
         }
