@@ -7,7 +7,8 @@ import cn.edu.ruc.iir.rainbow.web.hdfs.model.Process;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SysConfig {
+public class SysConfig
+{
     public static String Catalog_Project;
 
     public static final String Catalog_Cashe = "/rainbow-web/cashe/cashe.txt";

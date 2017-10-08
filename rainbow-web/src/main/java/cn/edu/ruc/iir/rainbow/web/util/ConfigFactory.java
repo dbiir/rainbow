@@ -13,24 +13,31 @@ import java.util.Properties;
  * @author: Tao
  * @date: Create in 2017-08-12 17:35
  **/
-public class ConfigFactory {
+public class ConfigFactory
+{
 
     private static ConfigFactory instance = null;
 
-    private ConfigFactory() {
+    private ConfigFactory()
+    {
         prop = new Properties();
         InputStream in = this.getClass().getResourceAsStream("/dbconfig.properties");
-        try {
-            if (in != null) {
+        try
+        {
+            if (in != null)
+            {
                 prop.load(in);
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public static ConfigFactory Instance() {
-        if (instance == null) {
+    public static ConfigFactory Instance()
+    {
+        if (instance == null)
+        {
             instance = new ConfigFactory();
         }
         return instance;
@@ -38,29 +45,38 @@ public class ConfigFactory {
 
     private Properties prop = null;
 
-    public void LoadProperties(String propFilePath) {
+    public void LoadProperties(String propFilePath)
+    {
         FileInputStream in = null;
-        try {
+        try
+        {
             in = new FileInputStream(propFilePath);
             this.prop.load(in);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
+        } finally
+        {
+            if (in != null)
+            {
+                try
+                {
                     in.close();
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    public void addProperty(String key, String value) {
+    public void addProperty(String key, String value)
+    {
         this.prop.setProperty(key, value);
     }
 
-    public String getProperty(String key) {
+    public String getProperty(String key)
+    {
         return this.prop.getProperty(key);
     }
 }

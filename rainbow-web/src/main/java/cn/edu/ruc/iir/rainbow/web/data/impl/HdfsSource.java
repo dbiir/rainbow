@@ -21,55 +21,68 @@ import java.util.List;
  * @author: Tao
  * @date: Create in 2017-09-19 16:38
  **/
-public class HdfsSource extends DataSource {
+public class HdfsSource extends DataSource
+{
 
     private RwMain rwMain;
 
-    public HdfsSource() {
+    public HdfsSource()
+    {
         rwMain = RwMain.Instance();
     }
 
-    public boolean getSampling(Pipeline pipeline) {
+    public boolean getSampling(Pipeline pipeline)
+    {
         HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
         int samplingSize = Integer.valueOf(ConfigFactory.Instance().getProperty("sampling.size"));
         List<String> listFile = null;
-        try {
+        try
+        {
             listFile = hUtil.listAll(pipeline.getUrl());
             listFile = hUtil.listAll(listFile.get(listFile.size() - 1));
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         boolean flag = false;
-        try {
-            if (!hUtil.isTableExists(SysConfig.Catalog_Sampling + pipeline.getNo() + "/copy/sample")) {
+        try
+        {
+            if (!hUtil.isTableExists(SysConfig.Catalog_Sampling + pipeline.getNo() + "/copy/sample"))
+            {
 //                flag = hUtil.copyContent(listFile.get(0), SysConfig.Catalog_Sampling + pipeline.getNo() + "/copy/sample", SysSettings.MB * samplingSize);
                 hUtil.copyFile(listFile.get(0), SysConfig.Catalog_Sampling + pipeline.getNo() + "/copy/sample", false);
                 flag = true;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return flag;
     }
 
-    public void loadData(Pipeline pipeline) {
+    public void loadData(Pipeline pipeline)
+    {
         HiveClient client = HiveClient.Instance("jdbc:hive2://10.77.40.236:10000/default", "presto", "");
         HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
-        try {
+        try
+        {
             List<String> listFile = hUtil.listAll(pipeline.getUrl());
             String statement = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/text_ddl.sql");
             String statement1 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/parquet_ddl.sql");
             String statement2 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/parquet_load.sql");
 
             String sql = null;
-            for (int i = listFile.size() - 1; i >= 0; i--) {
+            for (int i = listFile.size() - 1; i >= 0; i--)
+            {
                 client.drop("text");
                 client.drop(pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_" + i);
                 // check the state of the pipeline
-                if (pipeline.getState() == 2) {
+                if (pipeline.getState() == 2)
+                {
                     // stop
                     break;
-                } else {
+                } else
+                {
                     // accept, basic 0, 1, 3
                     sql = statement.replace("/rainbow/text", listFile.get(i));
                     client.execute(sql);
@@ -82,12 +95,14 @@ public class HdfsSource extends DataSource {
                 rwMain.getPipelineData();
                 pipeline = rwMain.getPipelineByNo(pipeline.getNo(), 0);
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void loadDataToExamination(Pipeline pipeline, boolean ordered) {
+    public void loadDataToExamination(Pipeline pipeline, boolean ordered)
+    {
 //        String method = ConfigFactory.Instance().getProperty("evaluation.method");
         HiveClient client = HiveClient.Instance("jdbc:hive2://10.77.40.236:10000/default", "presto", "");
         HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
@@ -97,12 +112,14 @@ public class HdfsSource extends DataSource {
         sql = statement.replace("/rainbow/text", SysConfig.Catalog_Sampling + pipeline.getNo() + "/copy");
         client.execute(sql);
         String table = "";
-        if (!ordered) {
+        if (!ordered)
+        {
             statement1 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/" + pipeline.getFormat().toLowerCase() + "_ddl.sql");
             statement2 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/" + pipeline.getFormat().toLowerCase() + "_load.sql");
             table = pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo();
             sql = statement1.replace("/rainbow/" + pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo(), SysConfig.Catalog_Sampling + pipeline.getNo() + "/origin") + getSqlParameter(pipeline);
-        } else {
+        } else
+        {
             statement1 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/" + pipeline.getFormat().toLowerCase() + "_ordered_ddl.sql");
             statement2 = FileUtil.readFile(SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo() + "/" + pipeline.getFormat().toLowerCase() + "_ordered_load.sql");
             table = pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered";
@@ -115,12 +132,15 @@ public class HdfsSource extends DataSource {
         client.drop("text");
     }
 
-    private String getSqlParameter(Pipeline pipeline) {
+    private String getSqlParameter(Pipeline pipeline)
+    {
         String sql = null;
-        if (pipeline.getFormat().toLowerCase().equals("parquet")) {
+        if (pipeline.getFormat().toLowerCase().equals("parquet"))
+        {
             sql = "TBLPROPERTIES (\"parquet.block.size\"=\"" + pipeline.getRowGroupSize() * SysSettings.MB + "\", ";
             sql += "\"parquet.compression\"=\"" + pipeline.getCompression() + "\")";
-        } else {
+        } else
+        {
             sql = "TBLPROPERTIES (\"orc.stripe.size\"=\"" + pipeline.getRowGroupSize() * SysSettings.MB + "\", ";
             sql += "\"orc.compress\"=\"" + pipeline.getCompression() + "\")";
         }

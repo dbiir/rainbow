@@ -10,7 +10,8 @@ import java.util.List;
  * @author: Tao
  * @date: 23:31 2017/9/12
  */
-public class Pipeline {
+public class Pipeline
+{
 
     private String no;
     private String caption;
@@ -28,11 +29,13 @@ public class Pipeline {
     private int state; // 0:remove   1: stop    2: remove      3: accept
     private int id;
 
-    public Pipeline() {
+    public Pipeline()
+    {
         super();
     }
 
-    public Pipeline(List<String> names) {
+    public Pipeline(List<String> names)
+    {
         this.no = names.get(0);
         this.caption = names.get(1);
         this.format = names.get(2).toUpperCase();
@@ -47,99 +50,123 @@ public class Pipeline {
         this.id = 0;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public int getState() {
+    public int getState()
+    {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(int state)
+    {
         this.state = state;
     }
 
-    public String getDataSource() {
+    public String getDataSource()
+    {
         return dataSource;
     }
 
-    public void setDataSource(String dataSource) {
+    public void setDataSource(String dataSource)
+    {
         this.dataSource = dataSource;
     }
 
-    public String getNo() {
+    public String getNo()
+    {
         return no;
     }
 
-    public void setNo(String no) {
+    public void setNo(String no)
+    {
         this.no = no;
     }
 
-    public String getCaption() {
+    public String getCaption()
+    {
         return caption;
     }
 
-    public void setCaption(String caption) {
+    public void setCaption(String caption)
+    {
         this.caption = caption;
     }
 
-    public String getFormat() {
+    public String getFormat()
+    {
         return format;
     }
 
-    public void setFormat(String format) {
+    public void setFormat(String format)
+    {
         this.format = format;
     }
 
-    public Integer getColumnOrder() {
+    public Integer getColumnOrder()
+    {
         return columnOrder;
     }
 
-    public void setColumnOrder(Integer columnOrder) {
+    public void setColumnOrder(Integer columnOrder)
+    {
         this.columnOrder = columnOrder;
     }
 
-    public Integer getRowGroupSize() {
+    public Integer getRowGroupSize()
+    {
         return rowGroupSize;
     }
 
-    public void setRowGroupSize(Integer rowGroupSize) {
+    public void setRowGroupSize(Integer rowGroupSize)
+    {
         this.rowGroupSize = rowGroupSize;
     }
 
-    public String getCompression() {
+    public String getCompression()
+    {
         return compression;
     }
 
-    public void setCompression(String compression) {
+    public void setCompression(String compression)
+    {
         this.compression = compression;
     }
 
-    public String getUrl() {
+    public String getUrl()
+    {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String url)
+    {
         this.url = url;
     }
 
-    public String getStorePath() {
+    public String getStorePath()
+    {
         return storePath;
     }
 
-    public void setStorePath(String storePath) {
+    public void setStorePath(String storePath)
+    {
         this.storePath = storePath;
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description)
+    {
         this.description = description;
     }
 }

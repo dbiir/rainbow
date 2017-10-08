@@ -8,32 +8,39 @@ package cn.edu.ruc.iir.rainbow.web.hdfs.model;
  * @author: Tao
  * @date: Create in 2017-09-17 10:38
  **/
-public class State {
+public class State
+{
 
     private String time;
     private String desc;
 
-    public State() {
+    public State()
+    {
     }
 
-    public State(String time, String desc) {
+    public State(String time, String desc)
+    {
         this.time = time;
         this.desc = desc;
     }
 
-    public String getTime() {
+    public String getTime()
+    {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(String time)
+    {
         this.time = time;
     }
 
-    public String getDesc() {
+    public String getDesc()
+    {
         return desc;
     }
 
-    public void setDesc(String desc) {
+    public void setDesc(String desc)
+    {
         this.desc = desc;
     }
 }

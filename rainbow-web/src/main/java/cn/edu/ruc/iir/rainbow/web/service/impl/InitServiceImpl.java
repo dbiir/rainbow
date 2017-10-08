@@ -15,39 +15,46 @@ import java.io.File;
 import java.io.IOException;
 
 @Service("demoInitService")
-public class InitServiceImpl implements InitServiceI {
+public class InitServiceImpl implements InitServiceI
+{
 
     @SuppressWarnings("unchecked")
-    synchronized public void init() throws IOException {
+    synchronized public void init() throws IOException
+    {
         String path = ConfigFactory.Instance().getProperty("pipline.path");
         SysConfig.Catalog_Project = path;
         String filePath = SysConfig.Catalog_Project + "cashe";
         File file = new File(filePath);
-        if (!file.exists()) {
+        if (!file.exists())
+        {
             file.mkdirs();
         }
         HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
         String aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/cashe.txt");
-        if (aJson == "" || aJson == null) {
+        if (aJson == "" || aJson == null)
+        {
 //            if (hUtil.isTableExists(SysConfig.Catalog_Cashe)) {
 //                aJson = hUtil.readContent(SysConfig.Catalog_Cashe);
 //                SysConfig.PipelineList = JSON.parseArray(aJson,
 //                        Pipeline.class);
 //            }
-        } else {
+        } else
+        {
             SysConfig.PipelineList = JSON.parseArray(aJson,
                     Pipeline.class);
         }
 
 
         aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/process.txt");
-        if (aJson == "" || aJson == null) {
+        if (aJson == "" || aJson == null)
+        {
 //            if (hUtil.isTableExists(SysConfig.Catalog_Cashe)) {
 //                aJson = hUtil.readContent(SysConfig.Catalog_Cashe);
 //                SysConfig.PipelineList = JSON.parseArray(aJson,
 //                        Pipeline.class);
 //            }
-        } else {
+        } else
+        {
             SysConfig.ProcessList = JSON.parseArray(aJson,
                     Process.class);
         }
@@ -57,6 +64,7 @@ public class InitServiceImpl implements InitServiceI {
      * exec after web stopped
      */
     @PreDestroy
-    public void applicationEnd() {
+    public void applicationEnd()
+    {
     }
 }
