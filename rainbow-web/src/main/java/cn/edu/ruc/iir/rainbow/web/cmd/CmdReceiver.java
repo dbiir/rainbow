@@ -7,6 +7,8 @@ import cn.edu.ruc.iir.rainbow.common.exception.InvokerException;
 import cn.edu.ruc.iir.rainbow.common.util.InputFactory;
 import cn.edu.ruc.iir.rainbow.cli.INVOKER;
 import cn.edu.ruc.iir.rainbow.cli.InvokerFactory;
+import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
+import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
 import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
 import cn.edu.ruc.iir.rainbow.web.hdfs.common.SysConfig;
 import cn.edu.ruc.iir.rainbow.web.hdfs.model.Pipeline;
@@ -249,4 +251,25 @@ public class CmdReceiver
         }
     }
 
+    public boolean doAPC(String id, String arg, String weight) {
+        boolean flag = false;
+        AccessPatternCache APC = new AccessPatternCache(4000, 0.1);
+        AccessPattern pattern = new AccessPattern(id, Double.valueOf(weight));
+        for (String column : arg.split(","))
+        {
+            pattern.addColumn(column);
+        }
+        if (APC.cache(pattern) && !SysConfig.APC_FLAG)
+        {
+            SysConfig.APC_FLAG = true;
+            try {
+                FileUtil.writeFile(id, SysConfig.Catalog_Project + "APC.txt", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            APC.saveAsWorkloadFile(targetPath + "/workload.txt");
+            flag = true;
+        }
+        return flag;
+    }
 }

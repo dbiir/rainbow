@@ -355,6 +355,9 @@ public class RwMain
             res = "{\"Res\":\"OK\"}";
             Thread t = new Thread(() -> changeState(pno, 1));
             t.start();
+
+            Thread t1 = new Thread(() -> getEstimation(arg, pno, id, weight, false));
+            t1.start();
         } catch (IOException e)
         {
             res = "{\"Res\":\"Error\"}";
@@ -409,6 +412,20 @@ public class RwMain
         }
     }
 
+    public void getEstimation(String arg, String pno, String id, String weight, boolean ordered)
+    {
+        Pipeline pipeline = getPipelineByNo(pno, 0);
+        CmdReceiver instance = CmdReceiver.getInstance(pipeline);
+        instance.generateEstimation(ordered);
+        if (ordered)
+        {
+        } else
+        {
+            boolean flag = instance.doAPC(id, arg, weight);
+            if(flag)
+                beginOptimizing(pipeline);
+        }
+    }
     private Pipeline updatePipelineByGs(Pipeline p)
     {
         String filePath = SysConfig.Catalog_Project + "pipeline/" + p.getNo() + "/schema_ordered.txt.gs";
@@ -466,6 +483,7 @@ public class RwMain
         CmdReceiver instance = CmdReceiver.getInstance(pipeline);
         instance.getColumnSize();
         instance.ordering();
+        SysConfig.APC_FLAG = false;
 
         //  ordered
         instance.generateDDL(true);

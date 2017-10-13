@@ -2,11 +2,13 @@ package cn.edu.ruc.iir.rainbow.common;
 
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 
 public class TestAPC
@@ -15,7 +17,7 @@ public class TestAPC
     public void test () throws IOException, InterruptedException
     {
         BufferedReader reader = new BufferedReader(new FileReader(
-                "/home/hank/dev/idea-projects/rainbow/rainbow-layout/src/test/resources/workload.txt"));
+                "H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt"));
         String line = null;
         int i = 0, j = 0;
         Random random = new Random(System.currentTimeMillis());
@@ -33,9 +35,11 @@ public class TestAPC
 
             if (APC.cache(pattern))
             {
+                System.out.println(DateUtil.formatDate(new Date()));
                 System.out.println(i + ", trigger layout optimization.");
                 j++;
-                APC.saveAsWorkloadFile("/home/hank/Desktop/workload_"+j+".txt");
+                APC.saveAsWorkloadFile("H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload_"+j+".txt");
+                System.out.println(DateUtil.formatDate(new Date()));
             }
             Thread.sleep(random.nextInt(20));
         }
