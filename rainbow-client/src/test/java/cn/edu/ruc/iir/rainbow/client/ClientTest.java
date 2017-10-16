@@ -2,8 +2,8 @@ package cn.edu.ruc.iir.rainbow.client;
 
 import cn.edu.ruc.iir.rainbow.client.util.HttpSettings;
 import cn.edu.ruc.iir.rainbow.client.util.HttpUtil;
-import cn.edu.ruc.iir.rainbow.web.hdfs.common.SysConfig;
-import org.junit.Test;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -38,11 +38,12 @@ public class ClientTest {
 
     @Test
     public void APCTest() {
-        String targetPath = SysConfig.Catalog_Project + "pipeline/" + pno;
+        String path = ConfigFactory.Instance().getProperty("pipline.path");
+        String targetPath = path + "pipeline/" + pno;
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(
-                    SysConfig.Catalog_Project + "/workload.txt"));
+                    path + "/workload.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

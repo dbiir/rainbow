@@ -75,7 +75,7 @@ public class UploadHandleServlet extends HttpServlet
         try
         {
             in = item.getInputStream();
-            if (this.fileList.size() == 10)
+            if (this.fileList.size() == 12)
             {
                 realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + fileList.get(0).getString("UTF-8");
                 File file = new File(realSavePath);

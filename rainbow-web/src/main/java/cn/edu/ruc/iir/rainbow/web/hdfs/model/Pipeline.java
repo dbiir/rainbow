@@ -15,6 +15,9 @@ public class Pipeline
 
     private String no;
     private String caption;
+    private long lifeTime;
+    private double threshold;
+
     private String format;
 
     private Integer columnOrder;
@@ -38,16 +41,34 @@ public class Pipeline
     {
         this.no = names.get(0);
         this.caption = names.get(1);
-        this.format = names.get(2).toUpperCase();
+        this.lifeTime = Long.valueOf(names.get(2));
+        this.threshold = Double.valueOf(names.get(3));
+        this.format = names.get(4).toUpperCase();
         this.columnOrder = 0;
-        this.rowGroupSize = Integer.valueOf(names.get(4));
-        this.compression = names.get(5);
-        this.dataSource = names.get(6);
-        this.url = names.get(7);
-        this.storePath = names.get(8);
-        this.description = names.get(9);
+        this.rowGroupSize = Integer.valueOf(names.get(6));
+        this.compression = names.get(7);
+        this.dataSource = names.get(8);
+        this.url = names.get(9);
+        this.storePath = names.get(10);
+        this.description = names.get(11);
         this.state = 0;
         this.id = 0;
+    }
+
+    public long getLifeTime() {
+        return lifeTime;
+    }
+
+    public void setLifeTime(long lifeTime) {
+        this.lifeTime = lifeTime;
+    }
+
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
     public int getId()

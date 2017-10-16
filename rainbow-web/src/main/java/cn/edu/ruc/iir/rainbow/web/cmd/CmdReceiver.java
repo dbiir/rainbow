@@ -1,20 +1,20 @@
 package cn.edu.ruc.iir.rainbow.web.cmd;
 
+import cn.edu.ruc.iir.rainbow.cli.INVOKER;
+import cn.edu.ruc.iir.rainbow.cli.InvokerFactory;
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Invoker;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.InvokerException;
-import cn.edu.ruc.iir.rainbow.common.util.InputFactory;
-import cn.edu.ruc.iir.rainbow.cli.INVOKER;
-import cn.edu.ruc.iir.rainbow.cli.InvokerFactory;
+import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
+import cn.edu.ruc.iir.rainbow.eva.invoker.InvokerWorkloadVectorEvaluation;
 import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
 import cn.edu.ruc.iir.rainbow.web.hdfs.common.SysConfig;
 import cn.edu.ruc.iir.rainbow.web.hdfs.model.Pipeline;
 import cn.edu.ruc.iir.rainbow.web.util.FileUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -209,51 +209,51 @@ public class CmdReceiver
 
     public void WorkloadVectorEvaluation()
     {
-//        Properties params = new Properties();
-//        String method = ConfigFactory.Instance().getProperty("evaluation.method");
-//        params.setProperty("method", method);
-//        params.setProperty("format", pipeline.getFormat().toUpperCase());
-//        params.setProperty("table.dirs", SysConfig.Catalog_Sampling + pipeline.getNo() + "/origin" + "," + SysConfig.Catalog_Sampling + pipeline.getNo() + "/ordered");
-//        params.setProperty("table.names", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "," + pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
-//        params.setProperty("workload.file", targetPath + "/workload.txt");
-//        params.setProperty("log.dir", targetPath);
-//        params.setProperty("drop.cache", "false");
-//        Invoker invoker = new InvokerWorkloadVectorEvaluation();
-//        try {
-//            invoker.executeCommands(params);
-//        } catch (InvokerException e) {
-//            e.printStackTrace();
-//        }
-        int num = 0;
-        String filePath = SysConfig.Catalog_Project + "presto_duration.csv";
-        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
-        {
-            String line = reader.readLine();
-            StringBuffer sb = new StringBuffer(line + "\n");
-            FileUtil.writeFile(line, targetPath + "/presto_duration.csv");
-            String s[];
-            while ((line = reader.readLine()) != null)
-            {
-                s = line.split(",");
-                sb.append(line + "\n");
-                FileUtil.writeFile(sb.toString(), targetPath + "/presto_duration.csv");
-                try
-                {
-                    Thread.sleep((Long.parseLong(s[1]) + Long.parseLong(s[2])) / 20);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e)
-        {
+        Properties params = new Properties();
+        String method = ConfigFactory.Instance().getProperty("evaluation.method");
+        params.setProperty("method", method);
+        params.setProperty("format", pipeline.getFormat().toUpperCase());
+        params.setProperty("table.dirs", SysConfig.Catalog_Sampling + pipeline.getNo() + "/origin" + "," + SysConfig.Catalog_Sampling + pipeline.getNo() + "/ordered");
+        params.setProperty("table.names", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "," + pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
+        params.setProperty("workload.file", targetPath + "/workload.txt");
+        params.setProperty("log.dir", targetPath);
+        params.setProperty("drop.cache", "false");
+        Invoker invoker = new InvokerWorkloadVectorEvaluation();
+        try {
+            invoker.executeCommands(params);
+        } catch (InvokerException e) {
             e.printStackTrace();
         }
+//        int num = 0;
+//        String filePath = SysConfig.Catalog_Project + "presto_duration.csv";
+//        try (BufferedReader reader = InputFactory.Instance().getReader(filePath))
+//        {
+//            String line = reader.readLine();
+//            StringBuffer sb = new StringBuffer(line + "\n");
+//            FileUtil.writeFile(line, targetPath + "/presto_duration.csv");
+//            String s[];
+//            while ((line = reader.readLine()) != null)
+//            {
+//                s = line.split(",");
+//                sb.append(line + "\n");
+//                FileUtil.writeFile(sb.toString(), targetPath + "/presto_duration.csv");
+//                try
+//                {
+//                    Thread.sleep((Long.parseLong(s[1]) + Long.parseLong(s[2])) / 20);
+//                } catch (InterruptedException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 
     public boolean doAPC(String id, String arg, String weight) {
         boolean flag = false;
-        AccessPatternCache APC = new AccessPatternCache(4000, 0.1);
+        AccessPatternCache APC = new AccessPatternCache(pipeline.getLifeTime(), pipeline.getThreshold()); // 4000, 0.1
         AccessPattern pattern = new AccessPattern(id, Double.valueOf(weight));
         for (String column : arg.split(","))
         {
