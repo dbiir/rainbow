@@ -19,6 +19,7 @@ public class SysConfig
     public static List<Pipeline> PipelineList = new ArrayList<Pipeline>(); // Pipeline lists
     public static List<Process> ProcessList = new ArrayList<Process>(); // Process lists
     public static List<Layout> PipelineLayout = new ArrayList<Layout>(); // Layout lists
+    public static List<Layout> CurLayout = new ArrayList<Layout>(); // Current Layout list
     public static String[] PipelineState = {"Pipeline Created", "Data Loading Started", "Sampling Started", "Sampling Finished", "Workload Uploading Started", "Workload Uploading Finished", "Optimization Started", "Optimization Finished", "Evaluation Started", "Evaluation Finished", "Accepting Optimized Strategy", "Stopped", "Removed"};
 
     public static boolean APC_FLAG = false;

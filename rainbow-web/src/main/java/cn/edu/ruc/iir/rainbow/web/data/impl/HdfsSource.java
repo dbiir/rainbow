@@ -39,7 +39,8 @@ public class HdfsSource extends DataSource
         try
         {
             listFile = hUtil.listAll(pipeline.getUrl());
-            listFile = hUtil.listAll(listFile.get(listFile.size() - 1));
+            listFile = hUtil.listAll(listFile.get(0));
+//            listFile = hUtil.listAll(listFile.get(listFile.size() - 1));
         } catch (IOException e)
         {
             e.printStackTrace();

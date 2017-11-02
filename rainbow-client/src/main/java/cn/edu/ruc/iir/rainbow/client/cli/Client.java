@@ -57,7 +57,7 @@ public class Client {
                 double weight = Double.parseDouble(tokens[1]);
                 String aPostData = "query=" + tokens[2] + "&pno=" + pno + "&id=" + tokens[0] + "&weight=" + weight;
                 String res = HttpUtil.acHttpPost(HttpSettings.WORKLOAD_POST_URL, aPostData).toString();
-                Thread.sleep(random.nextInt(2000));
+                Thread.sleep(random.nextInt(20));
             }
         } catch (IOException e) {
             e.printStackTrace();

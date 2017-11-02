@@ -38,6 +38,8 @@ public class InvokerFactory
                 return new InvokerBuildIndex();
             case REDIRECT:
                 return new InvokerRedirect();
+            case PERFESTIMATION:
+                return new InvokerPERFESTIMATION();
             default:
                 return null;
         }

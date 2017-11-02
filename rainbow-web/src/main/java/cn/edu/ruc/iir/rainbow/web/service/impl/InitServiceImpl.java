@@ -2,6 +2,7 @@ package cn.edu.ruc.iir.rainbow.web.service.impl;
 
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
 import cn.edu.ruc.iir.rainbow.web.hdfs.common.SysConfig;
+import cn.edu.ruc.iir.rainbow.web.hdfs.model.Layout;
 import cn.edu.ruc.iir.rainbow.web.hdfs.model.Pipeline;
 import cn.edu.ruc.iir.rainbow.web.hdfs.model.Process;
 import cn.edu.ruc.iir.rainbow.web.service.InitServiceI;
@@ -44,7 +45,6 @@ public class InitServiceImpl implements InitServiceI
                     Pipeline.class);
         }
 
-
         aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/process.txt");
         if (aJson == "" || aJson == null)
         {
@@ -57,6 +57,15 @@ public class InitServiceImpl implements InitServiceI
         {
             SysConfig.ProcessList = JSON.parseArray(aJson,
                     Process.class);
+        }
+
+        aJson = FileUtil.readFile(SysConfig.Catalog_Project + "cashe/curLayout.txt");
+        if (aJson == "" || aJson == null)
+        {
+        } else
+        {
+            SysConfig.CurLayout = JSON.parseArray(aJson,
+                    Layout.class);
         }
     }
 

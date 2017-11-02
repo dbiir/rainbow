@@ -3,7 +3,7 @@ package cn.edu.ruc.iir.rainbow.common;
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
 import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
 import org.apache.commons.httpclient.util.DateUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,7 +21,8 @@ public class TestAPC
         String line = null;
         int i = 0, j = 0;
         Random random = new Random(System.currentTimeMillis());
-        AccessPatternCache APC = new AccessPatternCache(4000, 0.1);
+        AccessPatternCache APC = new AccessPatternCache(400000, 0.1);
+        System.out.println(DateUtil.formatDate(new Date()));
         while ((line = reader.readLine()) != null)
         {
             i++;
@@ -41,7 +42,7 @@ public class TestAPC
                 APC.saveAsWorkloadFile("H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload_"+j+".txt");
                 System.out.println(DateUtil.formatDate(new Date()));
             }
-            Thread.sleep(random.nextInt(20));
+            Thread.sleep(random.nextInt(1000));
         }
     }
 }

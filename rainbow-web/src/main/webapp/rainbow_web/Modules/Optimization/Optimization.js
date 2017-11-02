@@ -76,6 +76,7 @@ var Optimization = {
                     me.Datas.CurPipeline = Pipeline.Datas.Pipelines[me.Datas.LeftIndex];
                     me.ClearDisplay();
                     me.ShowProsess();
+                    me.ShowLayout();
                     me.RefreshLayoutInfo();
                     me.ShowEvaluation();
                     me.ShowEstimation();
@@ -249,6 +250,13 @@ var Optimization = {
             tLayout = setInterval(function () {
                 me.RefreshLayoutInfo();
             }, 10 * 1000);
+        }
+        catch (E) {; }
+    },
+    ShowLayout: function () {
+        var me = Optimization;
+        try {
+
         }
         catch (E) {; }
     },

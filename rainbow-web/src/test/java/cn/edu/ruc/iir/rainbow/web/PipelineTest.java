@@ -105,8 +105,8 @@ public class PipelineTest {
     public void CreateLayoutTest() {
         getDefaultInfo();
         Pipeline pipline = rwMain.getPipelineByNo(pno, 0);
-        rwMain.processLayout(pipline, SysConfig.PipelineState[0]);
-        rwMain.processLayout(pipline, SysConfig.PipelineState[6]);
+        rwMain.processLayout(pipline, SysConfig.PipelineState[0], false);
+        rwMain.processLayout(pipline, SysConfig.PipelineState[6], false);
     }
 
     @Test

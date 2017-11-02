@@ -63,21 +63,35 @@ public class RwMain
         UploadHandleServlet uploadHandler = new UploadHandleServlet();
         List<String> names = uploadHandler.upload(request, response);
         Pipeline pipeline = new Pipeline(names);
-        processLayout(pipeline, SysConfig.PipelineState[0]);
+        processLayout(pipeline, SysConfig.PipelineState[0], true);
         Thread t = new Thread(() -> processPipeline(pipeline));
         t.start();
         Thread t2 = new Thread(() -> beginSampling(pipeline));
         t2.start();
     }
 
-    public void processLayout(Pipeline pipeline, String state)
+    public void processLayout(Pipeline pipeline, String state, boolean flag)
     {
         // add state
         String time = DateUtil.formatTime(new Date());
         savePipelineState(pipeline, state, time);
         List<Layout> layouts = getLayoutInfo(pipeline);
-        Layout l = new Layout(pipeline, state, time);
-        layouts.add(l);
+        if(flag){
+            Layout l = new Layout(pipeline, state, time);
+            SysConfig.CurLayout.add(l);
+//            layouts.add(l);   // flag is true -> curLayout.txt; false -> layout.txt
+            String curLayoutList = JSONArray.toJSONString(SysConfig.CurLayout);
+            try
+            {
+                FileUtil.writeFile(curLayoutList, SysConfig.Catalog_Project + "cashe/curLayout.txt");
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }else{
+            Layout l = new Layout(pipeline, state, time);
+            layouts.add(l);
+        }
         String aJson = JSONArray.toJSONString(layouts);
         try
         {
@@ -159,7 +173,7 @@ public class RwMain
         return JSON.toJSONString(SysConfig.PipelineList);
     }
 
-    private void savePipelineState(Pipeline pipeline, String state)
+    public void savePipelineState(Pipeline pipeline, String state)
     {
         String time = DateUtil.formatTime(new Date());
         State s = new State(time, state);
@@ -172,8 +186,8 @@ public class RwMain
             List<State> PipelineState = new ArrayList<>();
             PipelineState.add(s);
             p = new Process(pipeline.getNo(), PipelineState);
+            SysConfig.ProcessList.add(p);
         }
-        SysConfig.ProcessList.add(p);
         String processListJson = JSONArray.toJSONString(SysConfig.ProcessList);
         try
         {
@@ -196,8 +210,8 @@ public class RwMain
             List<State> PipelineState = new ArrayList<>();
             PipelineState.add(s);
             p = new Process(pipeline.getNo(), PipelineState);
+            SysConfig.ProcessList.add(p);
         }
-        SysConfig.ProcessList.add(p);
         String processListJson = JSONArray.toJSONString(SysConfig.ProcessList);
         try
         {
@@ -220,18 +234,33 @@ public class RwMain
             }
             i++;
         }
+        i = 0;
+        for (Process p : SysConfig.ProcessList)
+        {
+            if (p.getPipelineNo().equals(no))
+            {
+                SysConfig.ProcessList.remove(i);
+                break;
+            }
+            i++;
+        }
         String path = SysConfig.Catalog_Project + "pipeline/" + no;
         FileUtil.delDirectory(path);
-        Thread t = new Thread(() -> updatePipelineList());
+        Thread t = new Thread(() -> updatePipelineList(true));
         t.start();
     }
 
-    private void updatePipelineList()
+    private void updatePipelineList(boolean flag)
     {
         String aJson = JSONArray.toJSONString(SysConfig.PipelineList);
         try
         {
             FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/cashe.txt");
+            // remove process
+            if(flag){
+                aJson = JSONArray.toJSONString(SysConfig.ProcessList);
+                FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/process.txt");
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -248,7 +277,7 @@ public class RwMain
                 break;
             }
         }
-        updatePipelineList();
+        updatePipelineList(false);
     }
 
     public Process searchProcessByPno(String pno)
@@ -313,6 +342,10 @@ public class RwMain
             {
                 ds.loadDataToExamination(pipeline, false);
                 savePipelineState(pipeline, SysConfig.PipelineState[3]);
+            }if (sample && !ds.getSampling(pipeline))
+            {
+//                ds.loadDataToExamination(pipeline, false);
+                savePipelineState(pipeline, SysConfig.PipelineState[3]);
             } else
             {
                 ds.loadDataToExamination(pipeline, true);
@@ -347,18 +380,18 @@ public class RwMain
     public String clientUpload(String arg, String pno, String id, String weight)
     {
         String res = "";
-        String realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + pno + "/" + "\\workload.txt";
+        String realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + pno + "/" + "workload.txt";
         String line = id + "\t" + weight + "\t" + arg + "\r\n";
         try
         {
-            FileUtil.writeFile(line, realSavePath, true);
+//            FileUtil.writeFile(line, realSavePath, true);
             res = "{\"Res\":\"OK\"}";
             Thread t = new Thread(() -> changeState(pno, 1));
             t.start();
 
             Thread t1 = new Thread(() -> getEstimation(arg, pno, id, weight, false));
             t1.start();
-        } catch (IOException e)
+        } catch (Exception e)
         {
             res = "{\"Res\":\"Error\"}";
             e.printStackTrace();
@@ -404,7 +437,7 @@ public class RwMain
         if (ordered)
         {
             pipeline = updatePipelineByGs(pipeline);
-            processLayout(pipeline, SysConfig.PipelineState[7]);
+            processLayout(pipeline, SysConfig.PipelineState[7], false);
         } else
         {
             savePipelineState(pipeline, SysConfig.PipelineState[5]);
@@ -416,14 +449,15 @@ public class RwMain
     {
         Pipeline pipeline = getPipelineByNo(pno, 0);
         CmdReceiver instance = CmdReceiver.getInstance(pipeline);
-        instance.generateEstimation(ordered);
         if (ordered)
         {
         } else
         {
             boolean flag = instance.doAPC(id, arg, weight);
-            if(flag)
+            if(flag){
+                instance.generateEstimation(ordered);
                 beginOptimizing(pipeline);
+            }
         }
     }
     private Pipeline updatePipelineByGs(Pipeline p)
@@ -473,8 +507,32 @@ public class RwMain
         pipeline = updatePipelineByGs(pipeline);
         // Accept Optimization (change the state)
         Pipeline finalPipeline = pipeline;
-        Thread t = new Thread(() -> processLayout(finalPipeline, SysConfig.PipelineState[10]));
+        Thread t = new Thread(() -> processLayout(finalPipeline, SysConfig.PipelineState[10], false));
         t.start();
+        Thread t1 = new Thread(() -> updateLayout(finalPipeline));
+        t1.start();
+    }
+
+    private void updateLayout(Pipeline finalPipeline) {
+        for(Layout layout: SysConfig.CurLayout){
+            if (layout.getNo().equals(finalPipeline.getNo())){
+                String time = DateUtil.formatTime(new Date());
+                layout = new Layout(finalPipeline, time);
+                break;
+            }
+        }
+        saveCurLayout();
+    }
+
+    private void saveCurLayout() {
+        String aJson = JSONArray.toJSONString(SysConfig.CurLayout);
+        try
+        {
+            FileUtil.writeFile(aJson, SysConfig.Catalog_Project + "cashe/curLayout.txt");
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void getOptimization(Pipeline pipeline)
@@ -566,6 +624,21 @@ public class RwMain
         return JSON.toJSONString(SysConfig.PipelineLayout);
     }
 
+    public String getCurrentLayout(String arg)
+    {
+        Layout layout = null;
+        boolean flag = false;
+        for (Layout l : SysConfig.CurLayout){
+            if(l.getNo().equals(arg)){
+                layout = l;
+                flag = true;
+            }
+        }
+        if(!flag){
+            layout = new Layout();
+        }
+        return JSON.toJSONString(layout);
+    }
     /**
      * Evaluation
      */

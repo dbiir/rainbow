@@ -26,89 +26,73 @@ import java.util.Properties;
  * @author: Tao
  * @date: Create in 2017-09-15 18:45
  **/
-public class CmdReceiver
-{
+public class CmdReceiver {
 
     private static CmdReceiver instance = new CmdReceiver();
     private Pipeline pipeline;
     private String targetPath;
 
-    public static CmdReceiver getInstance(Pipeline pipeline)
-    {
+    public static CmdReceiver getInstance(Pipeline pipeline) {
         instance.pipeline = pipeline;
         instance.targetPath = SysConfig.Catalog_Project + "pipeline/" + pipeline.getNo();
         return instance;
     }
 
-    public void generateDDL(boolean ordered)
-    {
+    public void generateDDL(boolean ordered) {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_DDL);
         Properties params = new Properties();
         params.setProperty("file.format", pipeline.getFormat().toUpperCase());
-        if (!ordered)
-        {
+        if (!ordered) {
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo());
             params.setProperty("schema.file", targetPath + "/schema.txt");
             params.setProperty("ddl.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ddl.sql");
-        } else
-        {
+        } else {
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
             params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
             params.setProperty("ddl.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ordered_ddl.sql");
         }
-        try
-        {
+        try {
             invoker.executeCommands(params);
-            if (!ordered)
-            {
+            if (!ordered) {
                 params.setProperty("file.format", "TEXT");
                 params.setProperty("table.name", pipeline.getNo());
                 params.setProperty("ddl.file", targetPath + "/" + "text_ddl.sql");
                 invoker.executeCommands(params);
             }
-        } catch (InvokerException e)
-        {
+        } catch (InvokerException e) {
             e.printStackTrace();
         }
     }
 
-    public void generateLoad(boolean ordered)
-    {
+    public void generateLoad(boolean ordered) {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GENERATE_LOAD);
         Properties params = new Properties();
         params.setProperty("overwrite", "true");
-        if (!ordered)
-        {
+        if (!ordered) {
             params.setProperty("schema.file", targetPath + "/schema.txt");
             params.setProperty("load.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_load.sql");
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo());
-        } else
-        {
+        } else {
             params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
             params.setProperty("load.file", targetPath + "/" + pipeline.getFormat().toLowerCase() + "_ordered_load.sql");
             params.setProperty("table.name", pipeline.getFormat().toLowerCase() + "_" + pipeline.getNo() + "_ordered");
         }
-        try
-        {
+        try {
             invoker.executeCommands(params);
-        } catch (InvokerException e)
-        {
+        } catch (InvokerException e) {
             e.printStackTrace();
         }
     }
 
-    public void getColumnSize()
-    {
+    public void getColumnSize() {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.GET_COLUMN_SIZE);
         Properties params = new Properties();
         params.setProperty("file.format", pipeline.getFormat().toUpperCase());
         params.setProperty("schema.file", targetPath + "/schema.txt");
         params.setProperty("hdfs.table.path", SysConfig.Catalog_Sampling + pipeline.getNo() + "/origin");
-        try
-        {
+        try {
             invoker.executeCommands(params);
-        } catch (InvokerException e)
-        {
+        } catch (InvokerException e) {
             e.printStackTrace();
         }
     }
@@ -128,36 +112,32 @@ public class CmdReceiver
 //            e.printStackTrace();
 //        }
 //    }
-    public void ordering()
-    {
+    public void ordering() {
         Properties params = new Properties();
         params.setProperty("algorithm.name", "scoa.gs");
         params.setProperty("schema.file", targetPath + "/schema.txt");
         params.setProperty("ordered.schema.file", targetPath + "/schema_ordered.txt");
         params.setProperty("workload.file", targetPath + "/workload.txt");
         params.setProperty("seek.cost.function", "power");
-        params.setProperty("computation.budget", "1000");
+        params.setProperty("computation.budget", "100");
+        params.setProperty("num.row.group", "100");
+        params.setProperty("row.group.size", String.valueOf(pipeline.getRowGroupSize() * 1024 * 1024));  // "134217728" -> 128
 
         String filePath = targetPath + "/ordered.txt";
         Command command = new CmdOrdering();
-        command.setReceiver(new Receiver()
-        {
+        command.setReceiver(new Receiver() {
             @Override
-            public void progress(double percentage)
-            {
+            public void progress(double percentage) {
                 String msg = "Layout Calculation : " + ((int) (percentage * 10000) / 100.0) + " %    ";
-                try
-                {
+                try {
                     FileUtil.writeFile(msg, filePath);
-                } catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void action(Properties results)
-            {
+            public void action(Properties results) {
                 System.out.println("Finish.");
             }
         });
@@ -165,50 +145,49 @@ public class CmdReceiver
         command.execute(params);
     }
 
-    public void generateEstimation(boolean ordered)
-    {
-//        Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.PERFESTIMATION);
-//        Properties params = new Properties();
-//        params.setProperty("workload.file", targetPath + "/workload.txt");
-//        if (!ordered) {
-//            params.setProperty("schema.file", targetPath + "/schema.txt");
-//            params.setProperty("log.file", targetPath + "/estimate_duration.csv");
-//        } else {
-//            params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
-//            params.setProperty("log.file", targetPath + "/estimate_duration_ordered.csv");
-//        }
-//        params.setProperty("seek.cost.function", "power");
-//        try {
-//            invoker.executeCommands(params);
-//        } catch (InvokerException e) {
-//            e.printStackTrace();
-//        }
-        String estimate;
-        if (!ordered)
-        {
-            estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration.csv");
-            try
-            {
-                FileUtil.writeFile(estimate, targetPath + "/estimate_duration.csv");
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        } else
-        {
-            estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration_ordered.csv");
-            try
-            {
-                FileUtil.writeFile(estimate, targetPath + "/estimate_duration_ordered.csv");
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+    public void generateEstimation(boolean ordered) {
+        Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.PERFESTIMATION);
+        Properties params = new Properties();
+        params.setProperty("workload.file", targetPath + "/workload.txt");
+        if (!ordered) {
+            params.setProperty("schema.file", targetPath + "/schema.txt");
+            params.setProperty("log.file", targetPath + "/estimate_duration.csv");
+        } else {
+            params.setProperty("schema.file", targetPath + "/schema_ordered.txt");
+            params.setProperty("log.file", targetPath + "/estimate_duration_ordered.csv");
         }
+        params.setProperty("num.row.group", "100");
+        params.setProperty("seek.cost.function", "power");
+        try {
+            invoker.executeCommands(params);
+        } catch (InvokerException e) {
+            e.printStackTrace();
+        }
+//        String estimate;
+//        if (!ordered)
+//        {
+//            estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration.csv");
+//            try
+//            {
+//                FileUtil.writeFile(estimate, targetPath + "/estimate_duration.csv");
+//            } catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        } else
+//        {
+//            estimate = FileUtil.readFile(SysConfig.Catalog_Project + "estimate_duration_ordered.csv");
+//            try
+//            {
+//                FileUtil.writeFile(estimate, targetPath + "/estimate_duration_ordered.csv");
+//            } catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
-    public void WorkloadVectorEvaluation()
-    {
+    public void WorkloadVectorEvaluation() {
         Properties params = new Properties();
         String method = ConfigFactory.Instance().getProperty("evaluation.method");
         params.setProperty("method", method);
@@ -255,12 +234,10 @@ public class CmdReceiver
         boolean flag = false;
         AccessPatternCache APC = new AccessPatternCache(pipeline.getLifeTime(), pipeline.getThreshold()); // 4000, 0.1
         AccessPattern pattern = new AccessPattern(id, Double.valueOf(weight));
-        for (String column : arg.split(","))
-        {
+        for (String column : arg.split(",")) {
             pattern.addColumn(column);
         }
-        if (APC.cache(pattern) && !SysConfig.APC_FLAG)
-        {
+        if (APC.cache(pattern) && !SysConfig.APC_FLAG) {
             SysConfig.APC_FLAG = true;
             try {
                 FileUtil.writeFile(id, SysConfig.Catalog_Project + "APC.txt", true);
