@@ -59,11 +59,11 @@ public class HiveClient {
         return res;
     }
 
-    public int IsTableExist(String statement) {
+    public int IsTableExist(String table) {
         int num = -1;
         ResultSet res = null;
         try {
-            res = instance.select(statement);
+            res = instance.select("select count(*) from " + table);
             if (res != null)
                 while (res.next()) {
                     num = Integer.valueOf(res.getString(1));

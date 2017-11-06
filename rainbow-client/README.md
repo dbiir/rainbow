@@ -32,7 +32,7 @@ $ java -jar target/rainbow-client-xxx-full.jar --pno=dbced032765f68732a5caa949fb
 
 For example, to use the `Client Interface` to upload the workload regularly:
 ```bash
-$ java -cp target/rainbow-client-xxx-full.jar cn.edu.ruc.iir.rainbow.client.cli.Client --pno=8d4a06c02b8fad3dca635cb67c60d77f --d=H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt
+$ java -cp target/rainbow-client-xxx-full.jar cn.edu.ruc.iir.rainbow.client.cli.Client --pno=14ba30d7abdbe13ab2c886f18c0f5555 --d=H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt
 ```
 
 

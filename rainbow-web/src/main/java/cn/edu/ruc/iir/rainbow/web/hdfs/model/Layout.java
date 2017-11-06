@@ -46,13 +46,6 @@ public class Layout
         this.time = time;
     }
 
-    public Layout(Pipeline pipline, String time)
-    {
-        this.columnOrder = pipline.getColumnOrder();
-        this.rowGroupSize = pipline.getRowGroupSize();
-        this.time = time;
-    }
-
     public String getTime()
     {
         return time;

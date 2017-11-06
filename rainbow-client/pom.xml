@@ -14,7 +14,7 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>cn.edu.ruc.iir.rainbow.client.cli.Main</mainClass>
+        <mainClass>cn.edu.ruc.iir.rainbow.client.cli.Client</mainClass>
     </properties>
 
     <dependencies>

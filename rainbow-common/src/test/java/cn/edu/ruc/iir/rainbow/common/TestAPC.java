@@ -21,7 +21,7 @@ public class TestAPC
         String line = null;
         int i = 0, j = 0;
         Random random = new Random(System.currentTimeMillis());
-        AccessPatternCache APC = new AccessPatternCache(400000, 0.1);
+        AccessPatternCache APC = new AccessPatternCache(100000, 0.1);
         System.out.println(DateUtil.formatDate(new Date()));
         while ((line = reader.readLine()) != null)
         {
@@ -42,7 +42,7 @@ public class TestAPC
                 APC.saveAsWorkloadFile("H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload_"+j+".txt");
                 System.out.println(DateUtil.formatDate(new Date()));
             }
-            Thread.sleep(random.nextInt(1000));
+            Thread.sleep(random.nextInt(500));
         }
     }
 }

@@ -21,20 +21,7 @@ import java.util.Random;
  **/
 public class ClientTest {
 
-    @Test
-    public void UploadTest() {
-        try {
-            String pno = "";
-            String id = "";
-            String weight = "";
-            String query = "";
-            System.out.println("Please input the piplineNo, queryID, weight & columns.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    String pno = "44ba30d7abdbe13ab2c886f18c0f5556";
+    String pno = "14ba30d7abdbe13ab2c886f18c0f5555";
 
     @Test
     public void APCTest() {
@@ -43,19 +30,21 @@ public class ClientTest {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(
-                    path + "/workload.txt"));
+                    path + "workload.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         String line = null;
         Random random = new Random(System.currentTimeMillis());
         try {
+            int i = 0;
             while ((line = reader.readLine()) != null) {
+                i++;
                 String[] tokens = line.split("\t");
                 double weight = Double.parseDouble(tokens[1]);
                 String aPostData = "query=" + tokens[2] + "&pno=" + pno + "&id=" + tokens[0] + "&weight=" + weight;
                 String res = HttpUtil.acHttpPost(HttpSettings.WORKLOAD_POST_URL, aPostData).toString();
-                Thread.sleep(random.nextInt(2000));
+                Thread.sleep(random.nextInt(500));
             }
         } catch (IOException e) {
             e.printStackTrace();

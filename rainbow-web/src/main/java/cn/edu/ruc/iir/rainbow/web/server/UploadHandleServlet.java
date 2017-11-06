@@ -83,13 +83,15 @@ public class UploadHandleServlet extends HttpServlet
                 {
                     file.mkdirs();
                 }
+                // first pipeline schema -> 0_schema.txt
                 out = new FileOutputStream(
-                        realSavePath + "\\schema.txt", true);
+                        realSavePath + "\\0_schema.txt", true);
             } else if (this.fileList.size() == 2)
             {
                 realSavePath = SysConfig.Catalog_Project + "\\pipeline\\" + fileList.get(1).getString("UTF-8");
                 File file = new File(realSavePath + "\\workload.txt");
-                out = new FileOutputStream(file, true);
+                out = new FileOutputStream(file);
+//                out = new FileOutputStream(file, true);
             }
         } catch (IOException e)
         {

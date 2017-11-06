@@ -95,7 +95,6 @@
     <script>
         function doFunction() {
             try {
-
             }
             catch (e) {; }
         }
@@ -173,17 +172,18 @@
                             <div class="row divRowItem">
                                 <div class="col-lg-6 col-md-6 col-sm-12 divItem clearfix">
                                     <div class="divLab">No</div>
-                                    <input id="txtNo" name="no" readonly=readonly />
+                                    <!--<input id="txtNo" name="no" readonly=readonly />-->
+                                    <input id="txtNo" name="no" />
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 divItem clearfix">
                                     <div class="divLab">Caption</div>
-                                    <input id="txtCaption" name="caption" />
+                                    <input id="txtCaption" name="caption" value="Demo"/>
                                 </div>
                             </div>
                             <div class="row divRowItem">
                                 <div class="col-lg-6 col-md-6 col-sm-12 divItem clearfix">
                                     <div class="divLab">LifeTime</div>
-                                    <input id="txtTime" name="lifeTime" value="4000(ms)" />
+                                    <input id="txtTime" name="lifeTime" value="100000" placeholder="(ms)" />
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 divItem clearfix">
                                     <div class="divLab">Threshold</div>
