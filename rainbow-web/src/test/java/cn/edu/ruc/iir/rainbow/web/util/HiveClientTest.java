@@ -46,4 +46,11 @@ public class HiveClientTest {
         }
     }
 
+    @Test
+    public void IsTableExistTest() {
+        HiveClient client = HiveClient.Instance("jdbc:hive2://10.77.40.236:10000/default", "presto", "");
+        int count = client.IsTableExist("select count(*) from text1");
+        System.out.println(count);
+    }
+
 }

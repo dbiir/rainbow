@@ -3,7 +3,7 @@ package cn.edu.ruc.iir.rainbow.layout;
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.layout.cmd.CmdOrdering;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
@@ -18,7 +18,7 @@ public class TestCmdOrdering
         params.setProperty("workload.file", TestScoaGS.class.getResource("/workload.txt").getFile());
         params.setProperty("ordered.schema.file", TestScoaGS.class.getResource("/").getFile() + "ordered_schema.txt");
         params.setProperty("seek.cost.function", "power");
-        params.setProperty("computation.budget", "200");
+        params.setProperty("computation.budget", "100");
         params.setProperty("num.row.group", "100");
         params.setProperty("row.group.size", "134217728");
 

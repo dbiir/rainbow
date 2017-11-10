@@ -90,6 +90,7 @@ var Pipeline = {
                     $("#txtDesc").val(aInfo.description);
                 } else {
                     var no = hhls.getGuid();
+                    no = "44ba30d7abdbe13ab2c886f18c0f5555";
                     $("#txtNo").val(no);
                     //var store = $("#txtStore").val() + no.substr(0, 5) + "/";
                     var store = "/rainbow-web/common/" + no.substr(0, 5) + "/";

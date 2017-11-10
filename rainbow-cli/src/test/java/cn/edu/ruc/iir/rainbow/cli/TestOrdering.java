@@ -2,7 +2,7 @@ package cn.edu.ruc.iir.rainbow.cli;
 
 import cn.edu.ruc.iir.rainbow.common.cmd.Invoker;
 import cn.edu.ruc.iir.rainbow.common.exception.InvokerException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
@@ -20,12 +20,12 @@ public class TestOrdering {
     public void test() {
         Invoker invoker = InvokerFactory.Instance().getInvoker(INVOKER.ORDERING);
         Properties params = new Properties();
-        params.setProperty("algorithm.name", "scoa");
-        params.setProperty("workload.file", "G:\\DBIIR\\rainbow\\rainbow-benchmark\\dataset\\workload.txt");
-        params.setProperty("schema.file", "G:\\DBIIR\\rainbow\\rainbow-benchmark\\dataset\\schema.txt");
-        params.setProperty("ordered.schema.file", "G:\\DBIIR\\rainbow\\rainbow-cli\\src\\test\\java\\dataset\\schema_ordered.txt");
+        params.setProperty("algorithm.name", "scoa.gs");
+        params.setProperty("workload.file", "H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt");
+        params.setProperty("schema.file", "H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\schema.txt");
+        params.setProperty("ordered.schema.file", "H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\schema_ordered.txt");
         params.setProperty("seek.cost.function", "power");
-        params.setProperty("computation.budget", "200");
+        params.setProperty("computation.budget", "100");
         try {
             invoker.executeCommands(params);
         } catch (InvokerException e) {

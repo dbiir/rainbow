@@ -18,10 +18,11 @@ public class PrestoEvaluator
         {
             e.printStackTrace();
         }
+        String sql = "";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcProperties))
         {
             Statement statement = connection.createStatement();
-            String sql = "select " + columns + " from " + tableName + " order by " + orderByColumn + " limit 10";
+            sql = "select " + columns + " from " + tableName + " order by " + orderByColumn + " limit 10";
             long start = System.currentTimeMillis();
             ResultSet resultSet = statement.executeQuery(sql);
             resultSet.next();
@@ -31,6 +32,7 @@ public class PrestoEvaluator
         } catch (SQLException e)
         {
             e.printStackTrace();
+            System.out.println("SQL: " + sql);
         }
 
         return stageMetrics;

@@ -30,6 +30,11 @@ For example, to upload a workload with the piplineNo `dbced032765f68732a5caa949f
 $ java -jar target/rainbow-client-xxx-full.jar --pno=dbced032765f68732a5caa949fb4a1df --i=qwerasdf --w=1 --c=Column_1,Column_2,Column_5,Column_9
 ```
 
+For example, to use the `Client Interface` to upload the workload regularly:
+```bash
+$ java -cp target/rainbow-client-xxx-full.jar cn.edu.ruc.iir.rainbow.client.cli.Client --pno=14ba30d7abdbe13ab2c886f18c0f5555 --d=H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt
+```
+
 
 ## Where is the Data
 

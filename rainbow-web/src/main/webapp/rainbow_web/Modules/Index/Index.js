@@ -33,6 +33,8 @@ var Index = {
         // Layout Strategy
         accept: "http://127.0.0.1:8080/rw/accept",
         getLayout: "http://127.0.0.1:8080/rw/getLayout",
+        getOrderedLayout: "http://127.0.0.1:8080/rw/getOrderedLayout",
+        getCurrentLayout: "http://127.0.0.1:8080/rw/getCurrentLayout",
         optimization: "http://127.0.0.1:8080/rw/optimization",
         getEstimate_Sta: "http://127.0.0.1:8080/rw/getEstimate_Sta",
         getOrdered: "http://127.0.0.1:8080/rw/getOrdered",
@@ -43,7 +45,7 @@ var Index = {
         // Pipeline Process Timeline
         getProcessState: "http://127.0.0.1:8080/rw/getProcessState",
     },
-    Tpls: { 
+    Tpls: {
     },
     Load: function () {
         var me = Index;
@@ -78,7 +80,7 @@ var Index = {
     },
     OnClickMenuItem: function (aIndex) {
         var me = Index;
-        try { 
+        try {
             me.Datas.ModuleIndex = aIndex;
             me.Refresh();
         }
@@ -90,9 +92,9 @@ var Index = {
 
 
 var Init = {
-    Datas: {  
+    Datas: {
     },
-    Path: { 
+    Path: {
     },
     //Toast Style
     Utility: {
@@ -192,6 +194,11 @@ var Init = {
             });
         }
         catch (e) {; }
-    }, 
+    },
+    CompareDate: function (d1, d2) {
+        var m1 = new Date(d1.replace(/-/g, "\/"));
+        var m2 = new Date(d2.replace(/-/g, "\/"));
+        return m1 < m2;
+    }
 
 }

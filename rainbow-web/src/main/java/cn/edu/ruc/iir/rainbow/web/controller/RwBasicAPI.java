@@ -138,6 +138,20 @@ public class RwBasicAPI
         return rwMain.getLayout(arg);
     }
 
+    @RequestMapping(value = "/getCurrentLayout", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCurrentLayout(@RequestParam(value = "pno") String arg)
+    {
+        return rwMain.getCurrentLayout(arg);
+    }
+
+    @RequestMapping(value = "/getOrderedLayout", method = RequestMethod.GET)
+    @ResponseBody
+    public String getOrderedLayout(@RequestParam(value = "pno") String arg)
+    {
+        return rwMain.getOrderedLayout(arg);
+    }
+
     /**
      * Evaluation
      */

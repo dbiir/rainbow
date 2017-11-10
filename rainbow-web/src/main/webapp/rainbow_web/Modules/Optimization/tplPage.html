@@ -4,7 +4,7 @@
             <i class="fa fa-list"></i> All Pipelines
         </div>
         <div class="divLeftPanBody">
-            <ul class="ulMainMenus clearfix">
+            <ul class="ulMainMenus clearfix" style="border-left: 1px solid #ddd;border-right: 1px solid #ddd;">
                 <%
                 var curPipeline;
                 for( var i=0;i< tplData.length; i++){ var aItem=tplData[i];
@@ -129,23 +129,15 @@
                                         padding: 3px;
                                     }
                             </style>
-                            <ul class="ulMainMenus Previouss clearfix">
-                                <li class="Previous" style="list-style:none; font-size:14px;font-weight:bold;color:#33D4D6">[ Current Layout ]</li>
-                                <!--<li>no: <%=curPipeline.no%></li>
-                                <li>format: <%=curPipeline.format%></li>
-                                <li>Column Order: <span class="text-red">no</span></li>
-                                <li>Row Group Size: <%=curPipeline.rowGroupSize%></li>
-                                <li>Compression CodeC: <%=curPipeline.compression%></li>-->
+                            <ul class="ulMainMenus Currents clearfix">
+                                <li class="Current" style="list-style:none; font-size:14px;font-weight:bold;color:#33D4D6">[ Current Layout ]</li>
+                                
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-6">
-                            <ul class="ulMainMenus Currents clearfix">
-                                <li class="Current" style="list-style:none; font-size:14px;font-weight:bold;color:#A483E5">[ Optimized Layout ]</li>
-                                <!--<li>no: <%=curPipeline.no%></li>
-                                <li>format: <%=curPipeline.format%></li>
-                                <li>Column Order: <span class="text-red">yes</span></li>
-                                <li>Row Group Size: <%=curPipeline.rowGroupSize%></li>
-                                <li>Compression CodeC: <%=curPipeline.compression%></li>-->
+                            <ul class="ulMainMenus Optimizeds clearfix">
+                                <li class="Optimized" style="list-style:none; font-size:14px;font-weight:bold;color:#A483E5">[ Optimized Layout ]</li>
+                                
                             </ul>
                         </div>
                     </div>

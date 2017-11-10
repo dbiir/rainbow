@@ -1,7 +1,10 @@
 package cn.edu.ruc.iir.rainbow.web;
 
+import cn.edu.ruc.iir.rainbow.benchmark.util.DateUtil;
 import cn.edu.ruc.iir.rainbow.benchmark.util.SysSettings;
 import cn.edu.ruc.iir.rainbow.common.util.ConfigFactory;
+import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
+import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
 import cn.edu.ruc.iir.rainbow.web.cmd.CmdReceiver;
 import cn.edu.ruc.iir.rainbow.web.hdfs.common.SysConfig;
 import cn.edu.ruc.iir.rainbow.web.hdfs.model.Pipeline;
@@ -14,8 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @version V1.0
@@ -30,7 +37,7 @@ public class PipelineTest {
     private RwMain rwMain = RwMain.Instance();
 
     private static Logger log = LoggerFactory.getLogger(PipelineTest.class);
-    HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
+    //    HdfsUtil hUtil = HdfsUtil.getHdfsUtil();
     String filePath = "/msra/text";
     String pno = "21dd00707735da8664e0ae471fab1e30";
 
@@ -98,8 +105,8 @@ public class PipelineTest {
     public void CreateLayoutTest() {
         getDefaultInfo();
         Pipeline pipline = rwMain.getPipelineByNo(pno, 0);
-        rwMain.processLayout(pipline, SysConfig.PipelineState[0]);
-        rwMain.processLayout(pipline, SysConfig.PipelineState[6]);
+        rwMain.processLayout(pipline, SysConfig.PipelineState[0], false, false);
+        rwMain.processLayout(pipline, SysConfig.PipelineState[6], false, false);
     }
 
     @Test
@@ -178,4 +185,33 @@ public class PipelineTest {
         CmdReceiver instance = CmdReceiver.getInstance(p);
         instance.WorkloadVectorEvaluation();
     }
+
+    @Test
+    public void test() throws IOException, InterruptedException {
+        BufferedReader reader = new BufferedReader(new FileReader(
+                "H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload.txt"));
+        String line = null;
+        int i = 0, j = 0;
+        Random random = new Random(System.currentTimeMillis());
+        AccessPatternCache APC = new AccessPatternCache(4000, 0.1);
+        while ((line = reader.readLine()) != null) {
+            i++;
+            String[] tokens = line.split("\t");
+            double weight = Double.parseDouble(tokens[1]);
+            AccessPattern pattern = new AccessPattern(tokens[0], weight);
+            for (String column : tokens[2].split(",")) {
+                pattern.addColumn(column);
+            }
+
+            if (APC.cache(pattern)) {
+                System.out.println(DateUtil.formatTime(new Date()));
+                System.out.println(i + ", trigger layout optimization.");
+                j++;
+                APC.saveAsWorkloadFile("H:\\SelfLearning\\SAI\\DBIIR\\rainbows\\workload_" + j + ".txt");
+                System.out.println(DateUtil.formatTime(new Date()));
+            }
+            Thread.sleep(random.nextInt(20));
+        }
+    }
+
 }

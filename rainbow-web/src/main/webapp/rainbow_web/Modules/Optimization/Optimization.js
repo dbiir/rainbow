@@ -21,7 +21,8 @@ var Optimization = {
         Process: [],
         CurState: [],
         CurPipeline: [],
-        CurLayout: [],
+        OrderedLayout: [],
+        CurrentLayout: [],
         Statistic: [],
         Estimate_Sta: [],
         clickDiv: '<div id="divMenu" style="position:fixed;" onMouseLeave ="Optimization.doClickDiv(0)"> '
@@ -75,16 +76,18 @@ var Optimization = {
                 if (Pipeline.Datas.Pipelines.length > 0) {
                     me.Datas.CurPipeline = Pipeline.Datas.Pipelines[me.Datas.LeftIndex];
                     me.ClearDisplay();
-                    me.ShowProsess();
-                    me.RefreshLayoutInfo();
-                    me.ShowEvaluation();
-                    me.ShowEstimation();
-
                     me.ShowOrdered();
+                    me.ShowCurrentLayout();
+                    me.ShowOrderedLayoutInfo();
+                    me.ShowEstimation();
+                    me.ShowEvaluation();
+                    me.ShowProsess();
+
+                    me.RefreshOrdered();
                     me.RefreshProcess();
                     me.RefreshLayout();
-                    me.RefreshEvaluationDisplay();
-                    me.RefreshEstimateDisplay();
+                    me.RefreshEvaluation();
+                    me.RefreshEstimate();
                 } else {
                     var aHtml = '<div class="divPan "><div class="divPanBody" style="padding:0"><div style="color:#ff0000;padding: 20px;"><i class="fa fa-warning"></i> No Pipeline Record !</div></div></div>';
                     hhls.fillElement(".divMain", aHtml);
@@ -106,10 +109,11 @@ var Optimization = {
 
             hhls.fillElement(".tBodyProcess", '<div style="padding:15px;">Loading...</div>');
 
+            clearTimeout(tOrdered);
+            clearTimeout(tSampling);
             clearTimeout(tEstimation);
             clearTimeout(tEvaluation);
             clearTimeout(tProsess);
-            clearTimeout(tLayout);
         }
         catch (E) {; }
     },
@@ -128,6 +132,9 @@ var Optimization = {
     doUpload: function (e) {
         var me = Optimization;
         try {
+            $(".Ordered").removeClass("text-green").addClass("text-red");
+            hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Started');
+
             var formData = new FormData($("#evaluateForm")[0]);
             if (formData.get("workload").name == "") {
                 //alert("Please select corresponding workload file!");
@@ -195,6 +202,8 @@ var Optimization = {
             $.post(Index.Action.accept, { pno: me.Datas.CurPipeline.no }, function (data, status) {
                 //alert("Accept Optimization " + status);
                 Init.Web_Toast("Accept Optimization " + status, 1);
+                clearTimeout(tEvaluation);
+                me.ShowCurrentLayout();
             });
         }
         catch (E) {; }
@@ -206,11 +215,11 @@ var Optimization = {
                 //alert("Optimization Optimization " + status);
                 Init.Web_Toast("Optimization Optimization " + status, 1);
                 tLayout = setInterval(function () {
-                    me.RefreshLayoutInfo();
+                    me.ShowOrderedLayoutInfo();
                 }, 10 * 1000);
 
                 tOrdered = setInterval(function () {
-                    me.RefreshOrdered();
+                    me.ShowOrdered();
                 }, 10 * 1000);
             });
         }
@@ -228,16 +237,29 @@ var Optimization = {
     ShowOrdered: function () {
         var me = Optimization;
         try {
-
             $.get(Index.Action.getOrdered, { pno: me.Datas.CurPipeline.no }, function (data) {
-                if (data.indexOf("99") > 0) {
-                    hhls.fillElement(".Ordered", data);
-                    clearTimeout(tOrdered);
-                    hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Finished');
-                    $(".Ordered").removeClass("text-red").addClass("text-green");
+                if (data != "") {
+                    var paddleft = data.replace(/[^0-9]/ig, "");
+                    if (paddleft != "") {
+                        var num = parseInt(paddleft) / 10;
+                        if (num >= 97) {  // data.indexOf("98")
+                            hhls.fillElement(".Ordered", data);
+                            clearTimeout(tOrdered);
+                            hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Finished');
+                            $(".Ordered").removeClass("text-red").addClass("text-green");
+                            me.RefreshLayout();
+                            clearTimeout(tEstimation);
+                        } else {
+                            me.ShowEstimation();
+                            hhls.fillElement(".Ordered", data);
+                            $(".Ordered").removeClass("text-green").addClass("text-red");
+                        }
+                    } else {
+                            $(".Ordered").removeClass("text-green").addClass("text-red");
+                            hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Started');
+                    }
                 } else {
-                    hhls.fillElement(".Ordered", data);
-                    $(".Ordered").removeClass("text-green").addClass("text-red");
+                    hhls.fillElement(".Ordered", '');
                 }
             });
         }
@@ -247,63 +269,75 @@ var Optimization = {
         var me = Optimization;
         try {
             tLayout = setInterval(function () {
-                me.RefreshLayoutInfo();
+                me.ShowOrderedLayoutInfo();
             }, 10 * 1000);
         }
         catch (E) {; }
     },
-    RefreshLayoutInfo: function () {
+    ShowCurrentLayout: function () {
         var me = Optimization;
         try {
-            var aItem = "";
             var aHtml = "";
-            $.get(Index.Action.getLayout, { pno: me.Datas.CurPipeline.no }, function (data) {
-                me.Datas.CurLayout = hhls.getJsonObj(data);
-                hhls.fillElement(".Previouss", '<li class="Previous" style="list-style:none; font-size:14px;font-weight:bold;color:#33D4D6">[ Current Layout ]</li>');
-                hhls.fillElement(".Currents", '<li class="Current" style="list-style:none; font-size:14px;font-weight:bold;color:#A483E5">[ Optimized Layout ]</li>');
-                if (me.Datas.CurLayout.length >= 2) {
-                    for (var i = me.Datas.CurLayout.length - 2; i < me.Datas.CurLayout.length; i++) {
-                        aItem = me.Datas.CurLayout[i];
-                        if (aItem.columnOrder == 0) {
-                            aHtml = me.GetLayouInfo(aItem, " No");
-                        } else {
-                            aHtml = me.GetLayouInfo(aItem, " YES");
-                        }
-                        if (i == me.Datas.CurLayout.length - 2) {
-                            $(".Previous").after(aHtml);
-                        } else {
-                            $(".Current").after(aHtml);
-                        }
-                    }
-                } else if (me.Datas.CurLayout.length == 1) {
-                    aItem = me.Datas.CurLayout[0];
-                    if (aItem.columnOrder == 0) {
-                        aHtml = me.GetLayouInfo(aItem, " NO");
-                    } else {
-                        aHtml = me.GetLayouInfo(aItem, " YES");
-                    }
-                    $(".Previous").after(aHtml);
+            var aItem = "";
+            $.get(Index.Action.getCurrentLayout, { pno: me.Datas.CurPipeline.no }, function (data) {
+                me.Datas.CurrentLayout = hhls.getJsonObj(data);
+                hhls.fillElement(".Currents", '<li class="Current" style="list-style:none; font-size:14px;font-weight:bold;color:#33D4D6">[ Current Layout ]</li>');
+                aItem = me.Datas.CurrentLayout;
+                if (aItem.columnOrder == "0") {
+                    aHtml = me.GetLayouInfo(aItem, " NO", "Current");
                 } else {
-
+                    aHtml = me.GetLayouInfo(aItem, " YES", "Current");
                 }
-                clearTimeout(tLayout);
+                $(".Current").after(aHtml);
             });
         }
         catch (E) {; }
     },
-    GetLayouInfo: function (aItem, flag) {
+    ShowOrderedLayoutInfo: function () {
+        var me = Optimization;
+        try {
+            var aItemLists = "";
+            var aItem = "";
+            var aHtml = "";
+            $.get(Index.Action.getOrderedLayout, { pno: me.Datas.CurPipeline.no }, function (data) {
+                me.Datas.OrderedLayout = hhls.getJsonObj(data);
+                hhls.fillElement(".Optimizeds", '<li class="Optimized" style="list-style:none; font-size:14px;font-weight:bold;color:#A483E5">[ Optimized Layout ]</li>');
+                if (me.Datas.OrderedLayout.count > 0){
+                aItemLists = me.Datas.OrderedLayout.layouts;
+                if (aItemLists.length > 1) {
+                    aItem = aItemLists[aItemLists.length - 1];
+                    if (Init.CompareDate(me.Datas.CurrentLayout.time, aItem.time)) {
+                        if (aItem.columnOrder == "0") {
+                            aHtml = me.GetLayouInfo(aItem, " No", "Optimized");
+                        } else {
+                            aHtml = me.GetLayouInfo(aItem, " YES", "Optimized");
+                        }
+                        $(".Optimized").after(aHtml);
+                        clearTimeout(tLayout);
+                    }
+                }
+                }
+            });
+        }
+        catch (E) {; }
+    },
+    GetLayouInfo: function (aItem, flag, type) {
         var me = Optimization;
         try {
             var aHtml = '<li>Format: ' + aItem.format + '</li>'
                                             //+ '<li>Column Order: <span class="text-red"> ' + flag + '</span></li>'
                                             + '<li>Column Order:' + flag + '</li>'
                                             + '<li>Row Group Size: ' + aItem.rowGroupSize + ' (MB)</li>'
-                                            + '<li>Compression CodeC: ' + aItem.compression + '</li>';
+                                            + '<li>Compression CodeC: ' + aItem.compression + '</li>'
+                                            + '<li>Time: ' + aItem.time + '</li>';
+            if (type == "Optimized") {
+                aHtml += '<li>Optimized Count: ' + me.Datas.OrderedLayout.count + '</li>';
+            }
             return aHtml;
         }
         catch (E) {; }
     },
-    RefreshEstimateDisplay: function () {
+    RefreshEstimate: function () {
         var me = Optimization;
         try {
             tEstimation = setInterval(function () {
@@ -322,8 +356,9 @@ var Optimization = {
                 aOption.series = [];
                 aOption.title.text = 'Estimated Performance';
                 me.Datas.Estimate_Sta = hhls.getJsonObj(data);
+                var aItem = "";
                 for (var i in me.Datas.Estimate_Sta) {
-                    var aItem = me.Datas.Estimate_Sta[i];
+                    aItem = me.Datas.Estimate_Sta[i];
                     aOption.legend.data.push(aItem.name);
                     var aInfo = {
                         name: '',
@@ -346,9 +381,9 @@ var Optimization = {
                     aInfo.data = aItem.list;
                     aOption.series.push(aInfo);
                 }
-                if (me.Datas.Estimate_Sta.length > 0) {
+                if (me.Datas.Estimate_Sta.length > 0 && aItem.list.length > 0) {
                     me.doDrawEstimate_Sta(aOption);
-                    clearTimeout(tEstimation);
+                    //clearTimeout(tEstimation);
                 }
                 else {
                     hhls.fillElement(".tFooterDisplay", '<div style="color:#ff0000;padding: 20px;"><i class="fa fa-warning"></i> No Estimation Display !</div>');
@@ -384,7 +419,7 @@ var Optimization = {
         }
         catch (E) {; }
     },
-    RefreshEvaluationDisplay: function () {
+    RefreshEvaluation: function () {
         var me = Optimization;
         try {
             tEvaluation = setInterval(function () {
@@ -403,8 +438,9 @@ var Optimization = {
                 aOption.series = [];
                 aOption.title.text = 'Validated Performance';
                 me.Datas.Statistic = hhls.getJsonObj(data);
+                var aItem = "";
                 for (var i in me.Datas.Statistic) {
-                    var aItem = me.Datas.Statistic[i];
+                    aItem = me.Datas.Statistic[i];
                     aOption.legend.data.push(aItem.name);
                     var aInfo = {
                         name: '',
@@ -427,7 +463,7 @@ var Optimization = {
                     aInfo.data = aItem.list;
                     aOption.series.push(aInfo);
                 }
-                if (me.Datas.Statistic.length > 0)
+                if (me.Datas.Statistic.length > 0 && aItem.list.length > 0)
                     me.doDraw(aOption);
                 else {
                     hhls.fillElement(".tBodyDisplay", '<div style="color:#ff0000;padding: 20px;"><i class="fa fa-warning"></i> No Evaluation Display !</div>');
@@ -476,8 +512,10 @@ var Optimization = {
     doEvaluate: function () {
         var me = Optimization;
         try {
+            clearTimeout(tEstimation);
             $.post(Index.Action.startEvaluation, { pno: me.Datas.CurPipeline.no }, function (data, status) {
-
+                Init.Web_Toast("Start to Validate...", 1);
+                me.RefreshEvaluation();
             });
         }
         catch (E) {; }
@@ -510,21 +548,36 @@ var Optimization = {
                 hhls.fillElement(".tBodyProcess", aHtml);
                 // set execute once later
                 var flag = false;
+                var aItem = "";
                 for (var i in me.Datas.CurState) {
-                    var aItem = me.Datas.CurState[i];
+                    aItem = me.Datas.CurState[i];
                     if (aItem.desc == "Sampling Finished") {
                         hhls.fillElement(".Sampling", '<i class="fa fa-flag"></i> Sampling Finished');
                         $(".Sampling").removeClass("text-danger").addClass("text-success");
                         flag = true;
-                    }
-                    if (aItem.desc == "Optimization Finished") {
-                        hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Finished');
-                        $(".Ordered").removeClass("text-red").addClass("text-green");
                         break;
                     }
-                    if (aItem.desc == "Optimization Started") {
-                        me.RefreshOrdered();
-                    }
+                    //if (aItem.desc == "Optimization Finished") {
+                    //    hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Finished');
+                    //    $(".Ordered").removeClass("text-red").addClass("text-green");
+                    //    break;
+                    //}
+                    //if (aItem.desc == "Optimization Started") {
+                    //    $(".Ordered").removeClass("text-green").addClass("text-red");
+                    //    hhls.fillElement(".Ordered", '<i class="fa fa-flag"></i> Optimization Started');
+                    //    break;
+                    //}
+                }
+                if (aItem.desc == "Optimization Finished") {
+                    //clearTimeout(tOrdered);
+                    me.ShowEstimation();
+                    clearTimeout(tEstimation);
+                } else if (aItem.desc == "Optimization Started") {
+                    me.ShowOrdered();
+                    me.ShowEstimation();
+                } else if (aItem.desc == "Evaluation Started") {
+                    me.ShowOrdered();
+                    //me.ShowEvaluation();
                 }
                 if (!flag) {
                     hhls.fillElement(".Sampling", '<i class="fa fa-flag"></i> Sampling Started');
