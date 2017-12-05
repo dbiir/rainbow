@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link href='resources/css/googleapis/first.css?family=Roboto+Condensed:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='resources/css/googleapis/second.css?family=Cabin+Condensed:400,500,700' rel='stylesheet' type='text/css'>
+    <title>Rainbow</title>
+    <!-- Bootstrap core CSS -->
+    <link href="resources/css/googleapis/third.css?family=Alegreya+Sans" rel="stylesheet">
+    <link href='resources/css/googleapis/four.css?family=Lato' rel='stylesheet' type='text/css'>
+    <link href='resources/css/googleapis/five.css?family=Alegreya' rel='stylesheet' type='text/css'>
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="resources/css/style.css" rel="stylesheet">
+    <link href="resources/css/offcanvas.css" rel="stylesheet">
+    <style>
+        .carousel {
+            background: #2f4350;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .carousel-inner > .item > img,
+        .carousel-inner > .item > a > img {
+            width: 60%;
+            height: 400px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript" src="resources/json/papers.json"></script>
+<script type="text/javascript" src="resources/js/display_papers.js"></script>
+<script src="resources/css/googleapis/jquery.min.js"></script>
+<script src="resources/js/bootstrap.js"></script>
+
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container" >
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html#">Rainbow</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html#">Home</a>
+                </li>
+                <li><a href="index.html#about">About</a>
+                </li>
+                <li><a href="index.html#features">Key Features</a>
+                </li>
+                <li><a href="index.html#papers">Papers</a>
+                </li>
+                <li><a href="index.html#contact">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <!--<div class="col-12 col-sm-9"> -->
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-3">
+                <img src="resources/images/rainbow01cropped.png" class="img-responsive img"
+                     style="margin-bottom: 10pt; margin-top:10pt;">
+            </div>
+            <div class="col-md-9">
+                <h2>
+                    <font color="#3c8dbc" style="margin-top: 20pt;">A System about Adaptive Layout Optimization for
+                        Wide Tables.</font>
+                </h2>
+            </div>
+        </div>
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <img class="img-responsive" src="resources/images/screenshot-architecture.png">
+                </div>
+                <div class="item">
+                    <img class="img-responsive" src="resources/images/screenshot-pipelinelist.png">
+                </div>
+                <div class="item">
+                    <img class="img-responsive" src="resources/images/screenshot-optimization.png">
+                </div>
+                <div class="item">
+                    <img class="img-responsive" src="resources/images/screenshot-timeline.png">
+                </div>
+            </div>
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+    <div class="about-area"></div>
+    <a name="about"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-title text-center">
+                <h2> Why Rainbow? </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title-para">
+                <h5> In many industrial and academic data analytical applications, huge amount of structured data is
+                    stored as wide two-dimension tables in columnar file formats on HDFS. Popular columnar file formats,
+                    including RC File, ORC, Parquet and Carbondata, are widely supported in data analytical systems over
+                    HDFS such as Hive, Spark, Presto and Impala. </h5>
+                <h5>
+                    These file formats partition the data into row groups and place data inside a row group in columnar
+                    manner. A row group is stored in an HDFS block. This is an efficient way for that it introduces most
+                    advantages of column store into Hadoop ecosystem without affecting parallelism, scalability and
+                    fault-tolerance.
+                </h5>
+                <h5>
+                    With these file formats, tables on HDFS are becoming very wide, from a few hundred columns to tens
+                    of thousands. Wide Table has some important advantages:
+                    <ul>
+                        <li>Join Cost Saving: distributed joins are very expensive in HDFS environment. With wide
+                            tables, distributed joins are no longer needed.
+                        </li>
+                        <li>Easy Schema Modification: new workloads and new schema requirements are emerging everyday.
+                            Adding new fields to a wide table is much easier than redesigning the schema following
+                            normal forms.
+                        </li>
+                        <li>Application Friendly: new data features can be added to the table as a set of new fields
+                            without interrupting or modifying running applications.
+                        </li>
+                    </ul>
+                </h5>
+                <h5>
+                    Although everything looks good having the wide tables stored as columnar formats on HDFS, the I/O
+                    efficiency and query performance are far from optimal.
+                </h5>
+                <h5>
+                    In an experimental example, given a 400GB, 1187-column table stored as Parquet in a single node
+                    HDFS. The read bandwidth of HDFS is 100MB/s. A query took 907 seconds to read 8 columns (0.3% data,
+                    i.e. 1.2GB) from the table. While ideally, it should take only 12 seconds.
+                </h5>
+                <h5>
+                    Such a huge gap between ideal and reality is caused by disk seeks. The columns read by a query may
+                    not be continuous on disk so that seek cost becomes the major part of I/O cost.
+                </h5>
+                <h5>
+                    <b>Rainbow</b> is an ETL tool which ADAPTIVELY improve the I/O performance HDFS column stores by
+                    reducing the disk seek costs. User can interact with Rainbow to monitor the optimization process in
+                    an ETL pipeline.
+                </h5>
+                <br/><br/>
+                <div class="footer-des">
+                    <h5>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/6qaJBPZiHSA" frameborder="0"
+                                allowfullscreen></iframe>
+                    </h5>
+                </div>
+            </div>
+            <a name="about"></a>
+        </div>
+    </div>
+    <a name="features"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-title text-center">
+                <h2> Key Features </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title-para">
+                <h5>
+                    <b> Rainbow </b> enables users to improve the I/O performance of wide tables stored in
+                    columnar formats on HDFS. Here are the key features of Rainbow:
+                </h5>
+                <h5>
+                    <ul>
+                        <li><b> Interactive Pipeline Creation Interface. </b>
+                            Rainbow users can directly Rainbow users can directly create a pipeline.
+                        <li><b> Understandable Visual Comparison Interface. </b> With estimated performance and
+                            validated performance, the web page shows clearly the different effects of current and
+                            optimized layout strategy.
+                        <li><b> Adaptively Optimizations. </b> In addition to changing layout strategy for
+                            current layout, rainbow runs a host of parallel optimization to change the layout
+                            adaptively for giving workloads the user is currently uploading and presents them as
+                            optimization layouts.
+                        </li>
+                    </ul>
+                    Rainbow generalizes and extends our prior and technical <b>experiment</b> (see papers).
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-title text-center">
+                <h2> Recent Releases</h2>
+                <div class="title-para">
+                    <h5>
+                        <ul>
+                            <li> May 14, 2017: Our full paper on rainbow has been accepted at SIGMOD 2017. Pre-camera
+                                ready version <a href="https://dl.acm.org/citation.cfm?id=3035930">here</a>.
+
+                        </ul>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a name="papers"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-title text-center">
+                <h2> Papers </h2>
+            </div>
+        </div>
+    </div>
+    <a name="selected"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-des">
+                <script type="text/javascript">
+                    display_papers(["columnordering"], true, 10);
+                </script>
+            </div>
+        </div>
+    </div>
+    <a name="contact"></a>
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="all-title text-center">
+                <h2> Contact Us </h2>
+            </div>
+            <div class="all-des">
+                <h5> For feedback and questions, feel free to email us:
+                </h5>
+                <h5>
+                    <ul>
+                        <li><a href="http://iir.ruc.edu.cn/~bianh/">Haoqiong Bian</a> bianhaoqiong@gmail.com</li>
+                        <li><a href="http://iir.ruc.edu.cn/~guodong/index.html">Guodong Jin</a> jelly.guodong.jin@gmail.com</li>
+                        <li><b>Youxian Tao</b> taoyouxian@edu.ruc.cn</li>
+                    </ul>
+                </h5>
+                <h5>Welcome to contribute and submit pull requests :) (<a href="https://github.com/dbiir/rainbow">View on GitHub</a>)</h5>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <p>&nbsp; &nbsp; &copy; DBIIR 2017</p>
+        </div>
+        <div class="col-md-8" align="right">
+        </div>
+    </div>
+</div>
+<!--/row-->
+</div>
+<!--/.container-->
+<!-- Bootstrap core JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="resources/js/jQuery-2.1.3.min.js"></script>
+<script src="resources/js/bootstrap.min.js"></script>
+</body>
+</html>
