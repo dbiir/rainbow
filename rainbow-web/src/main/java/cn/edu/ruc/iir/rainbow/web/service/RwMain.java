@@ -352,7 +352,7 @@ public class RwMain {
                 savePipelineState(pipeline, SysConfig.PipelineState[3]);
             } else if (sample) {
 //                ds.loadDataToExamination(pipeline, false);
-                Thread.sleep(20 * 1000);
+                Thread.sleep(30 * 1000);
                 savePipelineState(pipeline, SysConfig.PipelineState[3]);
             } else {
                 ds.loadDataToExamination(pipeline, true);

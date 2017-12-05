@@ -1,0 +1,10 @@
+entities={
+     "columnordering": {
+        "title": "Wide Table Layout Optimization based on Column Ordering and Duplication",
+        "link": "https://dl.acm.org/citation.cfm?id=3035930",
+        "authors": "Haoqiong Bian, Ying Yan, Wenbo Tao, Liang Jeff Chen, Yueguo Chen, Xiaoyong Du, Thomas Moscibroda",
+        "type":"SIGMOD", 
+        "location": "Chicago, USA", 
+        "date": "May 2017",
+    },
+}
