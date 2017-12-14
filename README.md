@@ -2,12 +2,11 @@
 
 Rainbow is a tool that helps improve the I/O performance of wide tables stored in columnar formats on HDFS.
 
-### Demonstration Demo
-![Image](https://github.com/dbiir/rainbow/blob/master/docs/resources/images/rainbow-website.png)
-- Our project webpage is [here] [rainbow-website](https://dbiir.github.io/rainbow/); regular updates will be posted at this webpage.
-
+### Demonstration
 ![Image](https://github.com/dbiir/rainbow/blob/master/docs/resources/images/video.png)
-- Our project demonstration demo video is [here] [rainbow-video](https://www.youtube.com/embed/6qaJBPZiHSA).
+- [Demonstration Video](https://www.youtube.com/embed/6qaJBPZiHSA).
+
+More information in our [project main page](https://dbiir.github.io/rainbow/).
 
 ### HDFS Column Store
 In many industrial and academic data analytical applications, huge amount of structured data is stored as wide two-dimension tables in columnar file formats on HDFS.
