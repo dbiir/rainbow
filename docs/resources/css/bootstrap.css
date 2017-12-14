@@ -5569,7 +5569,7 @@ button.close {
   height: 10px;
   margin: 1px;
   text-indent: -999px;
-  border: 1px solid #550800;
+  border: 1px solid #3c8dbc;
   border-radius: 10px;
   cursor: pointer;
   background-color: #000 \9;
@@ -5579,7 +5579,7 @@ button.close {
   margin: 0;
   width: 12px;
   height: 12px;
-  background-color: #550800;
+  background-color: #3c8dbc;
 }
 .carousel-caption {
   position: absolute;
