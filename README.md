@@ -7,8 +7,6 @@ Rainbow is a tool that helps improve the I/O performance of wide tables stored i
 
 [![IMAGE](https://github.com/dbiir/rainbow/blob/master/docs/resources/images/video.png)](https://www.youtube.com/embed/6qaJBPZiHSA)
 
-![Image](https://github.com/dbiir/rainbow/blob/master/docs/resources/images/video.png)
-
 More information in our [project main page](https://dbiir.github.io/rainbow/).
 
 ### HDFS Column Store
