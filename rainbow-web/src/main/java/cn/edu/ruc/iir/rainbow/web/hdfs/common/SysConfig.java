@@ -21,7 +21,7 @@ public class SysConfig {
     public static List<Layout> CurLayout = new ArrayList<Layout>(); // Current Layout list
     public static List<Estimate> CurEstimate = new ArrayList<Estimate>(); // Estimate list
     public static List<OrderedLayout> CurOrderedLayout = new ArrayList<OrderedLayout>(); // Current OrderedLayout list
-    public static String[] PipelineState = {"Pipeline Created", "Data Loading Started", "Sampling Started", "Sampling Finished", "Workload Uploading Started", "Workload Uploading Finished", "Optimization Started", "Optimization Finished", "Evaluation Started", "Evaluation Finished", "Accepting Optimized Strategy", "Stopped", "Removed", "Client Upload"};
+    public static String[] PipelineState = {"Pipeline Created", "Data Loading Started", "Sampling Started", "Sampling Finished", "Workload Gathering Started", "Workload Gathering Finished", "Optimization Started", "Optimization Finished", "Evaluation Started", "Evaluation Finished", "Accepting Optimized Strategy", "Stopped", "Removed", "Client Upload"};
 
     public static boolean APC_FLAG = false;
 
