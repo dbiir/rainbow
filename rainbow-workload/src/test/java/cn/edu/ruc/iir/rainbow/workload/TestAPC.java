@@ -1,7 +1,5 @@
-package cn.edu.ruc.iir.rainbow.common;
+package cn.edu.ruc.iir.rainbow.workload;
 
-import cn.edu.ruc.iir.rainbow.common.workload.AccessPattern;
-import cn.edu.ruc.iir.rainbow.common.workload.AccessPatternCache;
 import org.apache.commons.httpclient.util.DateUtil;
 import org.junit.jupiter.api.Test;
 
