@@ -1,4 +1,4 @@
-package cn.edu.ruc.iir.rainbow.common.workload;
+package cn.edu.ruc.iir.rainbow.workload;
 
 import java.util.HashSet;
 import java.util.Set;

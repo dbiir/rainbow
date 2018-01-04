@@ -1,4 +1,4 @@
-package cn.edu.ruc.iir.rainbow.common.workload;
+package cn.edu.ruc.iir.rainbow.workload;
 
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionType;

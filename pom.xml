@@ -41,6 +41,7 @@
         <module>rainbow-benchmark</module>
         <module>rainbow-client</module>
         <module>rainbow-web</module>
+        <module>rainbow-workload</module>
     </modules>
 
 </project>
