@@ -44,7 +44,11 @@ public class PrestoEvaluator {
     }
 
     public void execute(String tableName, String columns, String orderByColumn) {
-
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String sql = "";
         try {
             Statement statement = connection.createStatement();
@@ -54,11 +58,6 @@ public class PrestoEvaluator {
                 sql = "select " + columns + " from " + tableName + " order by " + orderByColumn + " limit 10";
             }
             ResultSet resultSet = statement.executeQuery(sql);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             resultSet.next();
             resultSet.close();
             statement.close();

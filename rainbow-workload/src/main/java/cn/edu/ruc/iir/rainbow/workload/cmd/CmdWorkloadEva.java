@@ -1,5 +1,6 @@
 package cn.edu.ruc.iir.rainbow.workload.cmd;
 
+import cn.edu.ruc.iir.rainbow.benchmark.util.DateUtil;
 import cn.edu.ruc.iir.rainbow.common.cmd.Command;
 import cn.edu.ruc.iir.rainbow.common.cmd.Receiver;
 import cn.edu.ruc.iir.rainbow.common.exception.ExceptionHandler;
@@ -10,6 +11,7 @@ import cn.edu.ruc.iir.rainbow.workload.util.Settings;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -38,6 +40,7 @@ public class CmdWorkloadEva implements Command {
 
             // begin evaluate
             String line;
+            int i = 0;
             while ((line = workloadReader.readLine()) != null) {
                 String columns = line.split("\t")[2];
                 String queryId = line.split("\t")[0];
@@ -51,6 +54,11 @@ public class CmdWorkloadEva implements Command {
                 }
                 PrestoEvaluator instance = PrestoEvaluator.Instance();
                 instance.execute(tableName, columns, orderByColumn);
+                i++;
+                if (i % 300 == 0 || i % 1000 == 0) {
+                    System.out.print(DateUtil.formatTime(new Date()) + "\t");
+                    System.out.println("line: " + i);
+                }
             }
         } catch (Exception e) {
             System.out.println("CmdWorkloadEva Error. \n" + e.getMessage());
