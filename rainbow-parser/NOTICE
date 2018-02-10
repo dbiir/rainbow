@@ -1,0 +1,2 @@
+This parser module is copied from Presto parser 0.192, which is licenced under Apache 2:
+https://github.com/prestodb/presto/tree/0.192/presto-parser
