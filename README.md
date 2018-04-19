@@ -56,7 +56,7 @@ Or follow the steps in [Rainbow Web](https://github.com/dbiir/rainbow/blob/maste
 ## Contact us
 For feedback and questions, feel free to email us:
 * Haoqiong Bian bianhaoqiong@gmail.com
-* Guodong Jin jelly.guodong.jin@gmail.com
+* Guodong Jin guod.jin@gmail.com
 * Youxian Tao taoyouxian@aliyun.com
 
 Welcome to contribute and submit pull requests :)
