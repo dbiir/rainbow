@@ -9,7 +9,7 @@ entities={
     },
      "rainbow": {
         "title": "Rainbow: Adaptive Layout Optimization for Wide Tables",
-        "link: "https://github.com/dbiir/rainbow/blob/master/docs/ref/rainbow-icde-2018.pdf",
+        "link": "https://github.com/dbiir/rainbow/blob/master/docs/ref/rainbow-icde-2018.pdf",
         "authors": "Haoqiong Bian, Youxian Tao, Guodong Jin, Yueguo Chen, Xiongpai Qin, Xiaoyong Du",
         "type": "ICDE Demo",
         "location": "Paris, France",
