@@ -7,4 +7,12 @@ entities={
         "location": "Chicago, USA", 
         "date": "May 2017",
     },
+     "rainbow": {
+        "title": "Rainbow: Adaptive Layout Optimization for Wide Tables",
+        "link: "https://",
+        "authors": "Haoqiong Bian, Youxian Tao, Guodong Jin, Yueguo Chen, Xiongpai Qin, Xiaoyong Du",
+        "type": "ICDE Demo",
+        "location": "Paris, France",
+        "date": "April 2018",
+    },
 }
